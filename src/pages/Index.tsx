@@ -3,6 +3,7 @@ import { TechStack } from "@/components/sections/TechStack";
 import { About } from "@/components/sections/About";
 import { Projects } from "@/components/sections/Projects";
 import { Footer } from "@/components/sections/Footer";
+import { BackToTop } from "@/components/BackToTop";
 
 const Index = () => {
   return (
@@ -12,6 +13,7 @@ const Index = () => {
       <About />
       <Projects />
       <Footer />
+      <BackToTop />
     </div>
   );
 };
