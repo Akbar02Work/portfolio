@@ -166,45 +166,143 @@
 }
 
 @layer utilities {
+
   /* WebKit scrollbar styling for better appearance on Safari/Mac */
   .scrollbar-hide {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
+    /* Chrome, Safari, Opera */
   }
-  
+
   /* Optional: Custom scrollbar styling */
   .scrollbar-custom::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
-  
+
   .scrollbar-custom::-webkit-scrollbar-track {
     @apply bg-gray-100;
   }
-  
+
   .scrollbar-custom::-webkit-scrollbar-thumb {
     @apply bg-gray-300 rounded-full;
   }
-  
+
   .scrollbar-custom::-webkit-scrollbar-thumb:hover {
     @apply bg-gray-400;
   }
 
   /* Hero section mesh gradient */
   .hero-gradient {
-    background: radial-gradient(at 0% 0%, hsla(253,16%,90%,1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, hsla(225,39%,90%,1) 0, transparent 50%), 
-                radial-gradient(at 100% 0%, hsla(339,49%,90%,1) 0, transparent 50%);
+    background: radial-gradient(at 0% 0%, hsla(253, 16%, 90%, 1) 0, transparent 50%),
+      radial-gradient(at 50% 0%, hsla(225, 39%, 90%, 1) 0, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(339, 49%, 90%, 1) 0, transparent 50%);
+  }
+
+  /* Hero section - uses dvh for dynamic viewport and flexbox for content distribution */
+  .hero-section {
+    min-height: 100dvh;
+    padding-top: 5rem;
+    /* Account for fixed header */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Fallback for browsers without dvh support */
+  @supports not (min-height: 100dvh) {
+    .hero-section {
+      min-height: 100vh;
+    }
+  }
+
+  /* Hero content wrapper - centers content vertically */
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+  }
+
+  /* Fluid typography with clamp */
+  .hero-title {
+    font-size: clamp(2.5rem, 5vw + 1rem, 6rem);
+    line-height: 1.1;
+  }
+
+  .hero-tagline {
+    font-size: clamp(1rem, 0.5vw + 0.875rem, 1.25rem);
+  }
+
+  .hero-description {
+    font-size: clamp(0.9rem, 0.4vw + 0.8rem, 1.125rem);
+  }
+
+  /* Portrait responsive sizing */
+  .hero-portrait {
+    width: clamp(280px, 25vw + 150px, 400px);
+  }
+
+  /* Sticky TechStack bar - pins to header after scroll */
+  .tech-stack-bar {
+    position: sticky;
+    top: 72px;
+    /* Height of nav + some padding */
+    z-index: 40;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .tech-stack-bar.is-stuck {
+    box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Premium carousel animations */
+  @keyframes slide-left {
+    0% {
+      opacity: 0;
+      transform: translateX(60px) scale(0.97);
+      filter: blur(4px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes slide-right {
+    0% {
+      opacity: 0;
+      transform: translateX(-60px) scale(0.97);
+      filter: blur(4px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      filter: blur(0);
+    }
+  }
+
+  .animate-slide-left {
+    animation: slide-left 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .animate-slide-right {
+    animation: slide-right 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .invert-hover {
     @apply transition-all duration-300 ease-in-out;
   }
-  
+
   .invert-hover:hover {
     @apply bg-foreground text-background;
   }

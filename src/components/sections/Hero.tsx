@@ -113,26 +113,26 @@ export const Hero = () => {
             {/* Hero Section with Mesh Gradient */}
             <section
                 id="home"
-                className="relative pt-24 pb-16 md:pt-32 md:pb-32 overflow-hidden hero-gradient dark:bg-slate-950"
+                className="hero-section relative overflow-hidden hero-gradient dark:bg-slate-950"
             >
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#f8f9fa] dark:to-slate-950 pointer-events-none" />
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-                        <div className="flex-1 space-y-6 text-center md:text-left">
-                            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-tight text-gray-900 dark:text-white">
+                <div className="hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20 md:py-0">
+                    <div className="hero-layout flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
+                        <div className="flex-1 space-y-5 text-center md:text-left">
+                            <h1 className="hero-title font-black tracking-tight leading-tight text-gray-900 dark:text-white">
                                 I'm <span className="underline decoration-4 decoration-gray-400 dark:decoration-slate-500 underline-offset-8">Akbar Azizov</span>
                                 <br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-slate-400">
                                     Android Developer
                                 </span>
                             </h1>
-                            <p className="text-xl text-gray-600 dark:text-slate-300 max-w-lg mx-auto md:mx-0 font-medium">
+                            <p className="hero-tagline text-gray-600 dark:text-slate-300 max-w-lg mx-auto md:mx-0 font-medium">
                                 Building AI-Powered Mobile Apps
                             </p>
-                            <p className="text-lg text-gray-500 dark:text-slate-400 max-w-lg mx-auto md:mx-0">
+                            <p className="hero-description text-gray-500 dark:text-slate-400 max-w-lg mx-auto md:mx-0">
                                 Engineering reliable, privacy-aware AI integrations for mobile. Bridging the gap between LLMs and Android production code.
                             </p>
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-4 w-full sm:w-auto">
+                            <div className="hero-cta flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-2 w-full sm:w-auto">
                                 <a
                                     href="#projects"
                                     onClick={(e) => {
@@ -155,7 +155,7 @@ export const Hero = () => {
                             </div>
                         </div>
                         <div className="flex-1 flex justify-center md:justify-end relative">
-                            <div className="w-80 h-auto md:w-[380px] relative">
+                            <div className="hero-portrait relative">
                                 <img
                                     src="/avatar.png"
                                     alt="Akbar Azizov"

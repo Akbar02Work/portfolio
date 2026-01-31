@@ -15,7 +15,7 @@ const techStack = [
 export const TechStack = () => {
     return (
         <AnimatedSection delay={ANIMATION_DELAYS.TECH_STACK}>
-            <div className="w-full border-y border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 overflow-hidden">
+            <div className="tech-stack-bar w-full border-y border-gray-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-6 overflow-hidden">
                 <ul className="flex flex-wrap justify-center items-center list-none m-0 p-0 max-w-6xl mx-auto px-4">
                     {techStack.map((tech, index) => (
                         <li
