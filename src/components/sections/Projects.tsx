@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from "react";
+import { useThrottledCallback } from "@/hooks/useThrottledCallback";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { ANIMATION_DELAYS } from "@/constants/animation.constants";
 import { projects } from "@/data/projects";
@@ -13,6 +14,7 @@ const projectStyles = [
 
 const AUTO_SCROLL_INTERVAL = 4000;
 const SWIPE_THRESHOLD = 50; // Minimum pixels to trigger swipe
+const SCROLL_THROTTLE_DELAY = 500;
 const projectList = projects.slice(0, 4);
 
 export const Projects = () => {
@@ -131,17 +133,20 @@ export const Projects = () => {
         setIsHovered(false);
     };
 
+    const throttledNext = useThrottledCallback(handleNext, SCROLL_THROTTLE_DELAY);
+    const throttledPrev = useThrottledCallback(handlePrev, SCROLL_THROTTLE_DELAY);
+
     // Wheel scroll
     const handleWheel = useCallback((e: React.WheelEvent) => {
         if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
             e.preventDefault();
             if (e.deltaX > 30) {
-                handleNext();
+                throttledNext();
             } else if (e.deltaX < -30) {
-                handlePrev();
+                throttledPrev();
             }
         }
-    }, [handleNext, handlePrev]);
+    }, [throttledNext, throttledPrev]);
 
     const project = projectList[currentIndex];
     const style = projectStyles[currentIndex % projectStyles.length];
