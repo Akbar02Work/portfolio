@@ -31,22 +31,18 @@ export const Projects = () => {
 
     const goToIndex = useCallback((newIndex: number, direction: 'left' | 'right') => {
         setSlideDirection(direction);
-        if (newIndex < 0) {
-            setCurrentIndex(totalProjects - 1);
-        } else if (newIndex >= totalProjects) {
-            setCurrentIndex(0);
-        } else {
-            setCurrentIndex(newIndex);
-        }
-    }, [totalProjects]);
+        setCurrentIndex(newIndex);
+    }, []);
 
     const handleNext = useCallback(() => {
-        goToIndex(currentIndex + 1, 'left');
-    }, [currentIndex, goToIndex]);
+        setSlideDirection('left');
+        setCurrentIndex((prev) => (prev + 1 >= totalProjects ? 0 : prev + 1));
+    }, [totalProjects]);
 
     const handlePrev = useCallback(() => {
-        goToIndex(currentIndex - 1, 'right');
-    }, [currentIndex, goToIndex]);
+        setSlideDirection('right');
+        setCurrentIndex((prev) => (prev - 1 < 0 ? totalProjects - 1 : prev - 1));
+    }, [totalProjects]);
 
     // Auto-scroll
     useEffect(() => {
