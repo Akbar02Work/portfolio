@@ -325,4 +325,40 @@
     box-shadow: none !important;
   }
 
+  .easter-confetti-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 80;
+  }
+
+  .easter-confetti-piece {
+    position: absolute;
+    top: -14vh;
+    opacity: 0;
+    border-radius: 2px;
+    animation-name: easter-confetti-fall;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    will-change: transform, opacity;
+  }
+
+  @keyframes easter-confetti-fall {
+    0% {
+      opacity: 0;
+      transform: translate3d(0, -14vh, 0) rotate(var(--confetti-start-rotate, 0deg));
+    }
+
+    32% {
+      opacity: 1;
+      transform: translate3d(calc(var(--confetti-drift, 0px) * 0.12), 6vh, 0) rotate(calc(var(--confetti-start-rotate, 0deg) + 90deg));
+    }
+
+    100% {
+      opacity: 1;
+      transform: translate3d(var(--confetti-drift, 0px), 132vh, 0) rotate(var(--confetti-end-rotate, 720deg));
+    }
+  }
+
 }

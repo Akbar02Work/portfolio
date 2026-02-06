@@ -8,19 +8,23 @@ type MainLayoutProps = {
     children: ReactNode;
     variant?: "home" | "detail";
     className?: string;
+    showFooter?: boolean;
+    showBackToTop?: boolean;
 };
 
 export const MainLayout = ({
     children,
     variant = "home",
     className = "",
+    showFooter = true,
+    showBackToTop = true,
 }: MainLayoutProps) => {
     return (
         <div className={cn("min-h-screen", className)}>
             <Navbar variant={variant} />
             <main>{children}</main>
-            <Footer />
-            <BackToTop />
+            {showFooter ? <Footer /> : null}
+            {showBackToTop ? <BackToTop /> : null}
         </div>
     );
 };

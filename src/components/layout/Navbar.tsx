@@ -20,6 +20,12 @@ const navLinks = [
     { id: "projects", label: "Projects" },
     { id: "contact", label: "Contact" },
 ];
+const EASTER_CLICKS_REQUIRED = 5;
+const EASTER_CLICK_WINDOW_MS = 1600;
+type NavLinkId = (typeof navLinks)[number]["id"];
+const getDetailActiveSection = (pathname: string): NavLinkId | "" =>
+    pathname.startsWith("/projects/") ? "projects" : "";
+
 type NavbarProps = {
     variant?: "home" | "detail";
 };
@@ -135,11 +141,15 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
     const location = useLocation();
     const navigate = useNavigate();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [activeSection, setActiveSection] = useState(isHome ? "home" : "projects");
+    const [activeSection, setActiveSection] = useState<NavLinkId | "">(
+        isHome ? "home" : getDetailActiveSection(location.pathname)
+    );
     const [isProjectsMenuOpen, setIsProjectsMenuOpen] = useState(false);
     const projectMenu = projectsSummary;
     const projectsMenuRef = useRef<HTMLDivElement | null>(null);
     const projectsTriggerRef = useRef<HTMLButtonElement | null>(null);
+    const easterClickCountRef = useRef(0);
+    const easterResetTimerRef = useRef<number | null>(null);
 
     const handleNavClick = () => {
         setMobileMenuOpen(false);
@@ -170,9 +180,33 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
         }
     };
 
+    const resetEasterSequence = () => {
+        easterClickCountRef.current = 0;
+        if (easterResetTimerRef.current !== null) {
+            window.clearTimeout(easterResetTimerRef.current);
+            easterResetTimerRef.current = null;
+        }
+    };
+
+    const scheduleEasterReset = () => {
+        if (easterResetTimerRef.current !== null) {
+            window.clearTimeout(easterResetTimerRef.current);
+        }
+        easterResetTimerRef.current = window.setTimeout(() => {
+            resetEasterSequence();
+        }, EASTER_CLICK_WINDOW_MS);
+    };
+
     const handleLogoClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
         if (location.pathname === "/") {
             event.preventDefault();
+            easterClickCountRef.current += 1;
+            if (easterClickCountRef.current >= EASTER_CLICKS_REQUIRED) {
+                resetEasterSequence();
+                navigate("/easter");
+                return;
+            }
+            scheduleEasterReset();
             window.scrollTo({ top: 0, behavior: "smooth" });
         }
     };
@@ -211,7 +245,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
 
     useEffect(() => {
         if (!isHome) {
-            setActiveSection("projects");
+            setActiveSection(getDetailActiveSection(location.pathname));
             return;
         }
 
@@ -332,7 +366,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
             window.removeEventListener("resize", onScroll);
             observer.disconnect();
         };
-    }, [isHome]);
+    }, [isHome, location.pathname]);
 
     const navPosition = isHome ? "fixed" : "sticky";
 

@@ -1,6 +1,31 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
+import { execSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+
+const getPackageVersion = () => {
+  try {
+    const raw = readFileSync(path.resolve(__dirname, "package.json"), "utf-8");
+    const parsed = JSON.parse(raw) as { version?: string };
+    return typeof parsed.version === "string" ? parsed.version : "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
+};
+
+const getGitCommitSha = () => {
+  try {
+    return execSync("git rev-parse --short=7 HEAD", {
+      cwd: __dirname,
+      stdio: ["ignore", "pipe", "ignore"],
+    })
+      .toString()
+      .trim();
+  } catch {
+    return "unknown";
+  }
+};
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -10,6 +35,8 @@ export default defineConfig(({ mode }) => {
   const isProd = mode === "production";
   const sourcemap = !isProd || env.VITE_SOURCEMAP === "true";
   const devPort = Number(env.VITE_DEV_PORT) || 8080;
+  const appVersion = getPackageVersion();
+  const gitCommitSha = getGitCommitSha();
 
   return {
     base,
@@ -21,6 +48,10 @@ export default defineConfig(({ mode }) => {
       },
     },
     plugins: [react()],
+    define: {
+      __APP_VERSION__: JSON.stringify(appVersion),
+      __GIT_COMMIT_SHA__: JSON.stringify(gitCommitSha),
+    },
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),

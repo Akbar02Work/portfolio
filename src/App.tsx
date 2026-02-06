@@ -11,6 +11,7 @@ import { ThemeProvider } from "./hooks/useTheme";
 // Lazy load secondary pages
 const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Easter = lazy(() => import("./pages/Easter"));
 
 const App = () => {
   useDynamicFavicon();
@@ -28,6 +29,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/projects/:slug" element={<ProjectDetail />} />
+                <Route path="/easter" element={<Easter />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
