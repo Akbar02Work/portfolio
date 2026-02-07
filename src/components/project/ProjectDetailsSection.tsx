@@ -17,8 +17,8 @@ export const ProjectDetailsSection = ({
       <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent dark:via-slate-700"></div>
     </div>
 
-    <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-20">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-16 pb-20">
+    <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pb-14">
         <div className="space-y-6">
           <div className="flex items-center gap-5 md:gap-6">
             <div className="h-px w-6 sm:w-8 md:w-10 bg-gray-300 dark:bg-gray-700"></div>
@@ -43,8 +43,8 @@ export const ProjectDetailsSection = ({
         <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent dark:via-slate-700"></div>
       </div>
 
-      <div className="pt-6 sm:pt-8 pb-20">
-        <div className="flex items-center gap-5 md:gap-6 mb-8">
+      <div className="pt-4 sm:pt-6 pb-8 sm:pb-10">
+        <div className="flex items-center gap-5 md:gap-6 mb-6">
           <div className="h-px w-8 sm:w-10 md:w-12 bg-gray-300 dark:bg-gray-700"></div>
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Technologies</h3>
         </div>
@@ -52,7 +52,7 @@ export const ProjectDetailsSection = ({
           {project.technologies.map((tech) => (
             <span
               key={tech}
-              className="px-5 py-2.5 border border-gray-300 dark:border-gray-700 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-gray-900 dark:hover:border-gray-500 transition-colors cursor-default"
+              className="inline-flex items-center justify-center px-5 py-2.5 border border-gray-300 dark:border-gray-700 rounded-full text-sm sm:text-base font-medium leading-none text-gray-700 dark:text-gray-300 hover:border-gray-900 dark:hover:border-gray-500 transition-colors cursor-default"
             >
               {tech}
             </span>
@@ -64,8 +64,8 @@ export const ProjectDetailsSection = ({
         <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent dark:via-slate-700"></div>
       </div>
 
-      <div className="pt-6 sm:pt-8 mb-20">
-        <div className="flex items-center gap-5 md:gap-6 mb-8">
+      <div className="pt-4 sm:pt-6 mb-12">
+        <div className="flex items-center gap-5 md:gap-6 mb-6">
           <div className="h-px w-8 sm:w-10 md:w-12 bg-gray-300 dark:bg-gray-700"></div>
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Key Features</h3>
         </div>
@@ -77,7 +77,7 @@ export const ProjectDetailsSection = ({
             const panelId = `feature-panel-${index}`;
 
             return (
-              <div key={feature.title} className="pt-6">
+              <div key={feature.title} className="pt-4">
                 <button
                   id={buttonId}
                   type="button"

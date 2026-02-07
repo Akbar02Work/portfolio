@@ -1,4 +1,4 @@
-VERSION: v0.71
+VERSION: v1
 
 # Portfolio: история коммитов, push-события и подсказки для пасхалочной страницы
 
@@ -355,3 +355,43 @@ VERSION: v0.71
 - `npm run build` -> passed.
 - `npm run check:bundle` -> passed (entry chunk в лимите `150 KB`).
 - `npm run test:e2e tests/e2e/critical-flows.spec.ts` -> passed (`4/4`).
+
+## 9) Пропущенные обновления после `v0.71` (`2026-02-07`)
+
+> Этот блок закрывает изменения из последних пушей в `main`, которые не были добавлены в список выше.
+
+1. `c4330d6` — 2026-02-07 — `Revise README for clarity and project details`
+- Добавлено: структурированные разделы и более подробное описание проекта/стека в `README.md`.
+- Изменено: переработана подача контента (перестановка и чистка формулировок).
+- Оптимизировано: onboarding и понимание проекта при первом открытии репозитория.
+
+2. `8c61332` — 2026-02-07 — `Update README.md`
+- Добавлено: точечные уточнения по документации.
+- Изменено: финальная редактура `README.md` после крупного ревью.
+- Оптимизировано: читабельность и консистентность README.
+
+3. `71258b0` — 2026-02-07 — `chore: update eslint-plugin-react-refresh, sonner, tailwind-merge, vitest`
+- Добавлено: нет.
+- Изменено: обновлены lockfile-зависимости для dev/tooling пакетов.
+- Оптимизировано: стабильность локального CI и инструментов разработки.
+
+4. `7821ba7` — 2026-02-07 — `chore: add LICENSE and update ci script`
+- Добавлено: файл `LICENSE`.
+- Изменено: в `package.json` скорректирован порядок шагов в `ci:full` (`build/check` перед `test:e2e`).
+- Оптимизировано: юридическая прозрачность репозитория и более логичный CI-пайплайн.
+
+5. `7c86584` — 2026-02-07 — `feat: add Vercel Speed Insights for RUM monitoring`
+- Добавлено: пакет `@vercel/speed-insights` и рендер `<SpeedInsights />` в `src/App.tsx`.
+- Изменено: `package.json` и `package-lock.json`.
+- Оптимизировано: сбор полевых метрик производительности (Real User Monitoring) в проде.
+
+6. `35b3ab4` — 2026-02-07 — `feat: replace all projects with real GitHub projects`
+- Добавлено: новые проекты и изображения-заглушки: `quiz-learnwords`, `voicenotes`, `secbench`, `money-manager`, обновленный `loyalist`.
+- Изменено: `src/data/projects.ts`, `src/data/projectsSummary.ts`, `src/constants/projectStyles.ts`, удалены старые SVG-экраны предыдущих демо-проектов.
+- Оптимизировано: портфолио синхронизировано с реальными GitHub-репозиториями и актуальным контентом.
+
+### Быстрый чек для Easter-page
+
+- Актуальный HEAD для runtime-версии: `35b3ab4`.
+- Актуальные project routes: `/projects/quiz-learnwords`, `/projects/loyalist`, `/projects/voicenotes`, `/projects/secbench`, `/projects/money-manager`.
+- Формулировка про старые demo-проекты (`voicebrain/market-r/llm-security`) в UI больше неактуальна после `35b3ab4`.

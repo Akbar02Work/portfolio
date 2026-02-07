@@ -23,11 +23,11 @@ const CarouselScreen = ({ screen, style, slideDirection }: CarouselScreenProps) 
   const showIcon = imageError || !screen.image || screen.image.includes("placeholder");
 
   return (
-    <div className={`bg-white dark:bg-slate-800/50 rounded-[2rem] border-2 border-gray-100 dark:border-slate-700/50 overflow-hidden shadow-lg flex flex-col md:flex-row group ${style.hoverBorder} transition-colors duration-300 ${slideDirection === "left" ? "animate-slide-left" : "animate-slide-right"}`}>
-      <div className={`flex-1 ${style.gradient} relative flex items-center justify-center p-8 md:p-12 min-h-[300px] md:min-h-[400px] order-1`}>
-        <div className="relative w-40 md:w-56 aspect-[9/19] rounded-[2rem] shadow-2xl overflow-hidden border-4 border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center">
+    <div className={`bg-white dark:bg-slate-800/50 rounded-[2rem] border-2 border-gray-100 dark:border-slate-700/50 overflow-hidden shadow-lg flex flex-col md:flex-row group min-h-[320px] md:min-h-[360px] w-full max-w-[920px] mx-auto ${style.hoverBorder} transition-colors duration-300 ${slideDirection === "left" ? "animate-slide-left" : "animate-slide-right"}`}>
+      <div className={`w-full md:w-[44%] flex-none ${style.gradient} relative flex items-center justify-center p-6 md:p-8 min-h-[210px] md:min-h-[300px] order-1`}>
+        <div className="relative w-32 md:w-40 aspect-[9/19] rounded-[2rem] shadow-2xl overflow-hidden border-4 border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center">
           {showIcon ? (
-            <IconComponent className="w-16 md:w-24 h-16 md:h-24 text-white/40" strokeWidth={1} />
+            <IconComponent className="w-12 md:w-14 h-12 md:h-14 text-white/40" strokeWidth={1} />
           ) : (
             <img
               src={imageSrc}
@@ -43,11 +43,11 @@ const CarouselScreen = ({ screen, style, slideDirection }: CarouselScreenProps) 
         </div>
       </div>
 
-      <div className="flex-1 p-6 md:p-12 flex flex-col justify-center items-start order-2">
-        <h3 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-white">
+      <div className="w-full md:flex-1 min-w-0 p-5 md:p-8 flex flex-col justify-center items-center text-center order-2">
+        <h3 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight mb-4 text-gray-900 dark:text-white">
           {screen.title}
         </h3>
-        <p className="text-gray-600 dark:text-slate-300 leading-relaxed text-base md:text-lg">
+        <p className="mx-auto max-w-2xl text-gray-600 dark:text-slate-300 leading-relaxed text-base md:text-lg">
           {screen.description}
         </p>
       </div>
@@ -85,7 +85,7 @@ export const ProjectCarouselSection = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {screens.length > 0 && activeScreen ? (
           <div className="relative">
-            <div className="max-w-5xl mx-auto flex items-center gap-4 md:gap-8">
+            <div className="max-w-6xl mx-auto flex items-center gap-4 md:gap-8">
               <button
                 onClick={onPrev}
                 className="hidden md:flex flex-shrink-0 w-12 h-12 rounded-full border border-gray-200 dark:border-slate-700 items-center justify-center hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors bg-white dark:bg-slate-800/50"
@@ -119,7 +119,7 @@ export const ProjectCarouselSection = ({
               Screen {currentIndex + 1} of {screens.length}: {activeScreen.title}
             </div>
 
-            <div className="flex justify-center gap-2 mt-8">
+            <div className="flex justify-center gap-2 mt-6 md:mt-8">
               {screens.map((_, idx) => (
                 <button
                   key={idx}
