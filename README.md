@@ -4,16 +4,16 @@
 ![Performance](https://img.shields.io/badge/Lighthouse-100%2F100-success)
 ![Stack](https://img.shields.io/badge/Tech-React%20%7C%20TypeScript%20%7C%20Vite-blue)
 
-## 🚀 About The Project
+## About The Project
 
 This repository houses the source code for my personal portfolio website.
 As a **Mobile-First Developer** (specializing in Android/Kotlin), I approached this web project with the same engineering rigor I apply to mobile apps: focusing on performance, smooth animations, and clean architecture.
 
-**Live Demo:** [Вставь сюда ссылку на Vercel]
+**Live Demo:** https://www.akbar02work.xyz
 
 ---
 
-## 🛠 Tech Stack & Methodology
+## Tech Stack & Methodology
 
 This project was built using a **AI-Assisted Development** workflow to maximize efficiency while maintaining strict architectural control.
 
@@ -29,7 +29,7 @@ This project was built using a **AI-Assisted Development** workflow to maximize 
 
 ---
 
-## ✨ Key Engineering Features
+## Key Engineering Features
 
 Even though this is a "simple" portfolio, it implements production-grade patterns:
 
@@ -47,7 +47,7 @@ Even though this is a "simple" portfolio, it implements production-grade pattern
 
 ---
 
-## 📱 Why this matters for Mobile Dev?
+## Why this matters for Mobile Dev?
 
 I believe that specific platform knowledge (Android) is crucial, but general **Software Engineering principles** are universal.
 This project demonstrates my ability to:
@@ -57,7 +57,7 @@ This project demonstrates my ability to:
 
 ---
 
-## ⚡️ Getting Started
+## Getting Started
 
 To run this project locally:
 
@@ -75,14 +75,10 @@ npm run dev
 
 ---
 
-## 📬 Contact
+## Contact
 
-**Akbar [Last Name]** — Android Engineer
+**Akbar** — Android Engineer
 
-* [LinkedIn](https://www.google.com/search?q=%D0%A1%D1%81%D1%8B%D0%BB%D0%BA%D0%B0)
-* [Telegram](https://www.google.com/search?q=%D0%A1%D1%81%D1%8B%D0%BB%D0%BA%D0%B0)
-* [Email](mailto:твоя@почта)
-
-*Как тебе такой подход?*
-
-```
+* [LinkedIn](https://www.linkedin.com/in/akbar02work)
+* [Telegram](https://t.me/Akbar02Work)
+* [Email](mailto:akbar02work@gmail.com)
