@@ -25,72 +25,6 @@ export interface Project extends ProjectSummary {
 type ProjectDetails = Pick<Project, "challenge" | "features" | "screens" | "links">;
 
 const projectDetails: Record<ProjectSlug, ProjectDetails> = {
-  "quiz-learnwords": {
-    challenge:
-      "Learning new vocabulary requires consistent practice and repetition. The goal was to create an engaging quiz-based app that makes memorization fun and tracks progress over time.",
-    features: [
-      {
-        title: "Interactive quizzes",
-        description:
-          "Multiple quiz formats including multiple choice, typing, and flashcards to reinforce vocabulary learning.",
-      },
-      {
-        title: "Progress tracking",
-        description:
-          "Detailed statistics show mastery level per word, study streaks, and areas that need more practice.",
-      },
-      {
-        title: "Custom word lists",
-        description:
-          "Import or create custom word lists for different languages or specialized vocabulary sets.",
-      },
-    ],
-    screens: [
-      {
-        id: "ql-1",
-        title: "Quiz Screen",
-        description:
-          "Main quiz interface with word cards, answer options, and real-time feedback.",
-        image: "/projects/quiz-learnwords/placeholder.png",
-      },
-    ],
-    links: {
-      github: "https://github.com/Akkbar618/Quiz_LearnWords",
-    },
-  },
-  loyalist: {
-    challenge:
-      "Service businesses needed a modern loyalty system that goes beyond simple point collection to create personalized customer experiences and measurable retention improvements.",
-    features: [
-      {
-        title: "Digital rewards wallet",
-        description:
-          "Customers track points, vouchers, and tier progress in a fast-loading, offline-capable mobile screen.",
-      },
-      {
-        title: "Campaign management",
-        description:
-          "Business owners create targeted campaigns with audience filters, offer previews, and scheduling controls.",
-      },
-      {
-        title: "Retention analytics",
-        description:
-          "Dashboards connect campaign actions to repeat visits, redemption rates, and customer lifetime value.",
-      },
-    ],
-    screens: [
-      {
-        id: "loy-1",
-        title: "Rewards Dashboard",
-        description:
-          "Overview of active rewards, point balance, and available offers.",
-        image: "/projects/loyalist/placeholder.png",
-      },
-    ],
-    links: {
-      github: "https://github.com/Akkbar618/LoyalistTest",
-    },
-  },
   voicenotes: {
     challenge:
       "Voice recordings are useful but hard to search and organize. The app transforms spoken thoughts into structured, searchable notes with AI-generated summaries.",
@@ -121,7 +55,7 @@ const projectDetails: Record<ProjectSlug, ProjectDetails> = {
       },
     ],
     links: {
-      github: "https://github.com/Akkbar618/VoiceNotes",
+      github: "https://github.com/Akbar02Work/VoiceNotes",
     },
   },
   secbench: {
@@ -154,40 +88,7 @@ const projectDetails: Record<ProjectSlug, ProjectDetails> = {
       },
     ],
     links: {
-      github: "https://github.com/Akkbar618/secbench-25",
-    },
-  },
-  "money-manager": {
-    challenge:
-      "Personal finance tracking apps are often overcomplicated. This pet project focuses on simplicity — quick expense entry, clear category breakdowns, and useful charts.",
-    features: [
-      {
-        title: "Quick expense entry",
-        description:
-          "Add transactions in seconds with smart category suggestions and recent entries.",
-      },
-      {
-        title: "Budget tracking",
-        description:
-          "Set monthly budgets per category and get visual progress indicators.",
-      },
-      {
-        title: "Charts and insights",
-        description:
-          "Visual breakdowns of spending patterns by category, time period, and trends.",
-      },
-    ],
-    screens: [
-      {
-        id: "mm-1",
-        title: "Dashboard",
-        description:
-          "Main screen with balance overview, recent transactions, and spending chart.",
-        image: "/projects/money-manager/placeholder.png",
-      },
-    ],
-    links: {
-      github: "https://github.com/Akkbar618/Money_Manager_20",
+      github: "https://github.com/Akbar02Work/secbench-25",
     },
   },
 };

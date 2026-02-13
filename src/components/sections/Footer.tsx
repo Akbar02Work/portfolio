@@ -7,7 +7,7 @@ import { Mail, Send, Github, Linkedin } from "lucide-react";
 const socialLinks = [
     { href: "mailto:akbar02work@gmail.com", icon: Mail, label: "Email", color: "border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 hover:bg-blue-500" },
     { href: "https://t.me/Akbar02Work", icon: Send, label: "Telegram", color: "border-[#0088CC] text-[#0088CC] hover:bg-[#0088CC]" },
-    { href: "https://github.com/Akkbar618", icon: Github, label: "GitHub", color: "border-gray-900 dark:border-slate-400 text-gray-900 dark:text-slate-300 hover:bg-gray-900 dark:hover:bg-slate-700" },
+    { href: "https://github.com/Akbar02Work", icon: Github, label: "GitHub", color: "border-gray-900 dark:border-slate-400 text-gray-900 dark:text-slate-300 hover:bg-gray-900 dark:hover:bg-slate-700" },
     { href: "https://www.linkedin.com/in/akbar02work", icon: Linkedin, label: "LinkedIn", color: "border-[#0077B5] text-[#0077B5] hover:bg-[#0077B5]" },
 ];
 
