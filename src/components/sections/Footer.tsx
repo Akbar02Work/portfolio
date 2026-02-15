@@ -30,7 +30,7 @@ export const Footer = () => {
 
     return (
         <AnimatedSection delay={ANIMATION_DELAYS.CONTACT_SECTION}>
-            <footer id="contact" className="py-16 bg-[#f8f9fa] dark:bg-slate-950">
+            <footer id="contact" className="pt-16 pb-8 bg-[#f8f9fa] dark:bg-slate-950">
                 <div className="max-w-4xl mx-auto px-5 sm:px-6 lg:px-8 text-center">
                     <h2 className="text-3xl font-semibold text-gray-900 dark:text-white mb-12">
                         Have an idea? Drop me a line

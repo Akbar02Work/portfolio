@@ -81,10 +81,9 @@ const ThemeMenu = () => {
         );
 
     const itemClass = (value: "light" | "dark" | "system") =>
-        `block w-full text-left px-4 py-2.5 text-sm transition-colors first:pt-3 last:pb-3 ${
-            mode === value
-                ? "text-black dark:text-white font-semibold"
-                : "text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white hover:bg-gray-100/70 dark:hover:bg-slate-800/70"
+        `block w-full text-left px-4 py-2.5 text-sm transition-colors first:pt-3 last:pb-3 ${mode === value
+            ? "text-black dark:text-white font-semibold"
+            : "text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white hover:bg-gray-100/70 dark:hover:bg-slate-800/70"
         }`;
 
     return (
@@ -105,11 +104,10 @@ const ThemeMenu = () => {
                 id={menuId}
                 ref={menuRef}
                 role="menu"
-                className={`absolute left-1/2 top-full z-50 mt-5 w-36 -translate-x-1/2 rounded-2xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-black/80 backdrop-blur-3xl shadow-2xl shadow-black/10 dark:shadow-black/40 transition-all duration-200 ease-out overflow-hidden before:content-[''] before:absolute before:-top-6 before:left-0 before:h-6 before:w-full before:bg-white/80 dark:before:bg-black/80 before:backdrop-blur-2xl ${
-                    isOpen
-                        ? "opacity-100 pointer-events-auto translate-y-0 scale-100"
-                        : "opacity-0 pointer-events-none translate-y-2 scale-[0.98]"
-                }`}
+                className={`absolute left-1/2 top-full z-50 mt-5 w-36 -translate-x-1/2 rounded-2xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-black/80 backdrop-blur-3xl shadow-2xl shadow-black/10 dark:shadow-black/40 transition-all duration-200 ease-out overflow-hidden before:content-[''] before:absolute before:-top-6 before:left-0 before:h-6 before:w-full before:bg-white/80 dark:before:bg-black/80 before:backdrop-blur-2xl ${isOpen
+                    ? "opacity-100 pointer-events-auto translate-y-0 scale-100"
+                    : "opacity-0 pointer-events-none translate-y-2 scale-[0.98]"
+                    }`}
             >
                 <div className="py-0">
                     <button type="button" role="menuitem" className={itemClass("light")} onClick={() => applyTheme("light")}>
@@ -246,8 +244,38 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
 
     useEffect(() => {
         if (!isHome) {
-            setActiveSection(getDetailActiveSection(location.pathname));
-            return;
+            const detailDefault = getDetailActiveSection(location.pathname);
+            setActiveSection(detailDefault);
+
+            let rafId = 0;
+            const handleBottomCheck = () => {
+                const contactSection = document.getElementById("contact");
+                if (!contactSection) return;
+                const isAtBottom =
+                    window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 50;
+                if (isAtBottom) {
+                    setActiveSection((prev) => (prev === "contact" ? prev : "contact"));
+                } else {
+                    setActiveSection((prev) => (prev === detailDefault ? prev : detailDefault));
+                }
+            };
+            const onScroll = () => {
+                if (rafId) return;
+                rafId = window.requestAnimationFrame(() => {
+                    rafId = 0;
+                    handleBottomCheck();
+                });
+            };
+
+            handleBottomCheck();
+            window.addEventListener("scroll", onScroll, { passive: true });
+            window.addEventListener("resize", onScroll);
+
+            return () => {
+                if (rafId) window.cancelAnimationFrame(rafId);
+                window.removeEventListener("scroll", onScroll);
+                window.removeEventListener("resize", onScroll);
+            };
         }
 
         const sections = navLinks
@@ -328,7 +356,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
                 setActiveSection((prev) => (prev === nextId ? prev : nextId));
             },
             {
-                rootMargin: `-${offset}px 0px -40% 0px`,
+                rootMargin: `-${offset}px 0px -20% 0px`,
                 threshold: [0, 0.25, 0.5, 0.75, 1],
             }
         );
@@ -343,7 +371,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
             const contactSection = document.getElementById("contact");
             if (!contactSection) return;
             const isAtBottom =
-                window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+                window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 50;
             if (isAtBottom) {
                 setActiveSection((prev) => (prev === "contact" ? prev : "contact"));
             }
