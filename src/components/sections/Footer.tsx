@@ -30,9 +30,9 @@ export const Footer = () => {
 
     return (
         <AnimatedSection delay={ANIMATION_DELAYS.CONTACT_SECTION}>
-            <footer id="contact" className="pt-16 pb-8 bg-[#f8f9fa] dark:bg-slate-950">
+            <footer id="contact" className="pt-24 pb-8 bg-[#f8f9fa] dark:bg-slate-950">
                 <div className="max-w-4xl mx-auto px-5 sm:px-6 lg:px-8 text-center">
-                    <h2 className="text-3xl font-semibold text-gray-900 dark:text-white mb-12">
+                    <h2 className="text-heading-2 text-gray-900 dark:text-white mb-12">
                         Have an idea? Drop me a line
                     </h2>
 
@@ -46,7 +46,7 @@ export const Footer = () => {
                                     href={link.href}
                                     target={openInNewTab ? "_blank" : undefined}
                                     rel={openInNewTab ? "noopener noreferrer" : undefined}
-                                    className={`h-12 w-12 md:w-full flex items-center justify-center gap-2 border-2 rounded-full font-medium hover:text-white dark:hover:text-white transition-all duration-200 ${link.color}`}
+                                    className={`h-12 w-12 md:w-full flex items-center justify-center gap-2 border-2 rounded-full text-button hover:text-white dark:hover:text-white transition-all duration-200 ${link.color}`}
                                     aria-label={link.label}
                                 >
                                     <link.icon className="w-5 h-5" strokeWidth={2} />
@@ -57,7 +57,7 @@ export const Footer = () => {
                         })}
                     </div>
 
-                    <p className="mt-12 text-sm text-gray-500 dark:text-gray-400 font-medium">
+                    <p className="mt-12 text-body-sm font-medium text-gray-500 dark:text-gray-400">
                         Crafted with attention to detail
                     </p>
                 </div>

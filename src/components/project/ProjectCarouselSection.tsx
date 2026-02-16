@@ -44,10 +44,10 @@ const CarouselScreen = ({ screen, style, slideDirection }: CarouselScreenProps) 
       </div>
 
       <div className="w-full md:flex-1 min-w-0 p-5 md:p-8 flex flex-col justify-center items-center text-center order-2">
-        <h3 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight mb-4 text-gray-900 dark:text-white">
+        <h3 className="text-heading-2 mb-4 text-gray-900 dark:text-white">
           {screen.title}
         </h3>
-        <p className="mx-auto max-w-2xl text-gray-600 dark:text-slate-300 leading-relaxed text-base md:text-lg">
+        <p className="mx-auto max-w-2xl text-body-lg text-gray-600 dark:text-slate-300">
           {screen.description}
         </p>
       </div>
@@ -133,7 +133,7 @@ export const ProjectCarouselSection = ({
               ))}
             </div>
 
-            <p className="md:hidden text-center text-xs text-gray-400 mt-4">Swipe to explore screens</p>
+            <p className="md:hidden text-center text-caption text-gray-400 mt-4">Swipe to explore screens</p>
           </div>
         ) : (
           <div className="text-center text-gray-500">No preview screens available.</div>

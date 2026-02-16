@@ -72,11 +72,11 @@ export const Projects = () => {
 
     return (
         <AnimatedSection delay={ANIMATION_DELAYS.PROJECTS_SECTION}>
-            <section id="projects" className="py-24 bg-white dark:bg-slate-900 overflow-hidden">
+            <section id="projects" className="py-32 bg-white dark:bg-slate-900 overflow-hidden">
                 {/* Header - centered */}
                 <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 mb-12 text-center">
-                    <h2 className="text-4xl md:text-6xl font-black mb-4 text-gray-900 dark:text-white">Selected Works</h2>
-                    <p className="text-gray-500 dark:text-slate-400 text-lg">A showcase of mobile applications and solutions.</p>
+                    <h2 className="text-heading-1 mb-4 text-gray-900 dark:text-white">Selected Works</h2>
+                    <p className="text-body-lg text-gray-500 dark:text-slate-400">A showcase of mobile applications and solutions.</p>
                 </div>
 
                 {/* Carousel with side arrows */}
@@ -127,7 +127,7 @@ export const Projects = () => {
                     </div>
 
                     {/* Visual swipe hint on mobile - card edge peeking */}
-                    <p className="md:hidden text-center text-xs text-gray-500 dark:text-slate-400 mt-4 animate-pulse motion-reduce:animate-none">
+                    <p className="md:hidden text-center text-caption text-gray-500 dark:text-slate-400 mt-4 animate-pulse motion-reduce:animate-none">
                         ← Swipe to explore →
                     </p>
 

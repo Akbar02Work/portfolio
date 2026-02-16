@@ -49,12 +49,12 @@ export const ProjectCard = ({ project, style, slideDirection }: ProjectCardProps
             <div className="w-full md:flex-1 min-w-0 p-5 md:p-8 flex flex-col justify-center items-center gap-5 md:gap-6 text-center order-2">
                 <div className="w-full space-y-4">
                     {/* Title */}
-                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight text-gray-900 dark:text-white">
+                    <h3 className="text-heading-2 text-gray-900 dark:text-white">
                         {project.title}
                     </h3>
 
                     {/* Description */}
-                    <p className="mx-auto max-w-2xl text-gray-600 dark:text-slate-300 leading-relaxed text-base md:text-lg line-clamp-3">
+                    <p className="mx-auto max-w-2xl text-body-lg text-gray-600 dark:text-slate-300 line-clamp-3">
                         {project.description}
                     </p>
                 </div>
@@ -64,7 +64,7 @@ export const ProjectCard = ({ project, style, slideDirection }: ProjectCardProps
                     {project.technologies.slice(0, 4).map((tech) => (
                         <span
                             key={tech}
-                            className="inline-flex items-center justify-center px-4 py-2 bg-gray-100 dark:bg-slate-700/80 text-gray-600 dark:text-slate-300 rounded-full text-sm font-medium leading-none border border-gray-200 dark:border-slate-600"
+                            className="inline-flex items-center justify-center px-4 py-2 bg-gray-100 dark:bg-slate-700/80 text-gray-600 dark:text-slate-300 rounded-full text-caption border border-gray-200 dark:border-slate-600"
                         >
                             {tech}
                         </span>

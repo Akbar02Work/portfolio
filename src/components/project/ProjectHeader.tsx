@@ -25,17 +25,17 @@ export const ProjectHeader = ({ project }: ProjectHeaderProps) => {
           <Link
             to={ROUTES.HOME}
             state={{ scrollTo: "projects" }}
-            className="group inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+            className="group inline-flex items-center text-button text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
           >
             <ArrowLeft className="mr-2 h-4 w-4 transform group-hover:-translate-x-1 transition-transform" />
             Back to Projects
           </Link>
         </div>
         <div className="w-full md:w-1/2 text-center order-2">
-          <h1 className="text-4xl md:text-6xl font-black tracking-tight text-gray-900 dark:text-white mb-3">
+          <h1 className="text-heading-1 text-gray-900 dark:text-white mb-3">
             {project.title}
           </h1>
-          <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 font-light">
+          <p className="text-body-lg font-light text-gray-500 dark:text-gray-400">
             {project.subtitle}
           </p>
         </div>
@@ -45,7 +45,7 @@ export const ProjectHeader = ({ project }: ProjectHeaderProps) => {
               href={githubHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-6 py-3 bg-black dark:bg-white text-white dark:text-black text-sm font-medium rounded-full hover:opacity-90 transition-opacity shadow-lg shadow-gray-200 dark:shadow-none"
+              className="inline-flex items-center px-6 py-3 bg-black dark:bg-white text-white dark:text-black text-button rounded-full hover:opacity-90 transition-opacity shadow-lg shadow-gray-200 dark:shadow-none"
             >
               <Github className="w-5 h-5 mr-2" />
               View on GitHub

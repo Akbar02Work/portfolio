@@ -49,6 +49,23 @@ export default {
 			]
 		},
 		extend: {
+			fontSize: {
+				// ── Display Layer ──────────────────────────────────────────
+				'display-hero': ['clamp(2.5rem, 5vw + 1rem, 6rem)', { lineHeight: '1.1', letterSpacing: '-0.03em', fontWeight: '900' }],
+				'display-404': ['clamp(8.5rem, 30vh, 22rem)', { lineHeight: '0.85', letterSpacing: '-0.02em', fontWeight: '700' }],
+				// ── Heading Layer (High Contrast) ──────────────────────────
+				'heading-1': ['clamp(2.25rem, 4vw + 0.75rem, 3.75rem)', { lineHeight: '1.1', letterSpacing: '-0.025em', fontWeight: '900' }],
+				'heading-2': ['clamp(1.5rem, 2vw + 0.75rem, 2.25rem)', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '700' }],
+				'heading-3': ['1.25rem', { lineHeight: '1.3', letterSpacing: '-0.01em', fontWeight: '600' }],
+				// ── Body Layer ─────────────────────────────────────────────
+				'body-lg': ['clamp(1rem, 0.5vw + 0.875rem, 1.25rem)', { lineHeight: '1.7', letterSpacing: '0em', fontWeight: '400' }],
+				'body-base': ['clamp(0.875rem, 0.3vw + 0.8rem, 1rem)', { lineHeight: '1.7', letterSpacing: '0em', fontWeight: '400' }],
+				'body-sm': ['0.875rem', { lineHeight: '1.6', letterSpacing: '0em', fontWeight: '400' }],
+				// ── Utility Layer ──────────────────────────────────────────
+				'caption': ['0.75rem', { lineHeight: '1.5', letterSpacing: '0.06em', fontWeight: '500' }],
+				'button': ['0.875rem', { lineHeight: '1', letterSpacing: '0em', fontWeight: '500' }],
+				'code': ['0.8125rem', { lineHeight: '1.6', letterSpacing: '0em', fontWeight: '400' }],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',

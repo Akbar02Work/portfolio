@@ -81,7 +81,7 @@ const ThemeMenu = () => {
         );
 
     const itemClass = (value: "light" | "dark" | "system") =>
-        `block w-full text-left px-4 py-2.5 text-sm transition-colors first:pt-3 last:pb-3 ${mode === value
+        `block w-full text-left px-4 py-2.5 text-body-sm transition-colors first:pt-3 last:pb-3 ${mode === value
             ? "text-black dark:text-white font-semibold"
             : "text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white hover:bg-gray-100/70 dark:hover:bg-slate-800/70"
         }`;
@@ -409,14 +409,14 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
                         onClick={handleLogoClick}
                         className="flex items-center space-x-3"
                     >
-                        <span className="self-center text-xl font-bold whitespace-nowrap uppercase tracking-wider text-gray-900 dark:text-white">
+                        <span className="self-center text-lg font-bold tracking-wider whitespace-nowrap uppercase text-gray-900 dark:text-white">
                             &lt;Aka<span style={{ opacity: isUnderscoreVisible ? 1 : 0, transition: 'opacity 0.1s' }}>_</span>/Portfolio/&gt;
                         </span>
                     </Link>
 
                     {/* Desktop Nav */}
                     <div className="hidden md:flex items-center gap-8">
-                        <ul className="font-medium flex flex-row space-x-8">
+                        <ul className="flex flex-row space-x-8">
                             {navLinks.map((link) => {
                                 const isActive = activeSection === link.id;
                                 if (link.id === "projects") {
@@ -438,8 +438,8 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
                                                 aria-expanded={isProjectsMenuOpen}
                                                 aria-controls="projects-menu"
                                                 className={`block py-2 px-3 transition-colors inline-flex items-center gap-1 ${isActive
-                                                    ? "text-black dark:text-white font-semibold"
-                                                    : "text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
+                                                    ? "text-[0.9375rem] font-semibold text-black dark:text-white"
+                                                    : "text-[0.9375rem] text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
                                                     }`}
                                             >
                                                 {link.label}
@@ -464,7 +464,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
                                                             }}
                                                             role="menuitem"
                                                             tabIndex={isProjectsMenuOpen ? 0 : -1}
-                                                            className="block w-full text-left px-4 py-2.5 text-sm text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white hover:bg-gray-100/70 dark:hover:bg-slate-800/70 transition-colors first:pt-3 last:pb-3"
+                                                            className="block w-full text-left px-4 py-2.5 text-body-sm text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white hover:bg-gray-100/70 dark:hover:bg-slate-800/70 transition-colors first:pt-3 last:pb-3"
                                                         >
                                                             {project.title}
                                                         </Link>
@@ -481,8 +481,8 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
                                             type="button"
                                             onClick={() => handleNavItemClick(link.id)}
                                             className={`block py-2 px-3 transition-colors ${isActive
-                                                ? "text-black dark:text-white font-semibold"
-                                                : "text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
+                                                ? "text-[0.9375rem] font-semibold text-black dark:text-white"
+                                                : "text-[0.9375rem] text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
                                                 }`}
                                         >
                                             {link.label}
@@ -522,9 +522,9 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
                                                     <button
                                                         type="button"
                                                         onClick={() => handleNavItemClick(link.id)}
-                                                        className={`text-lg transition-colors py-2 ${isActive
-                                                            ? "text-black dark:text-white font-semibold"
-                                                            : "text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
+                                                        className={`transition-colors py-2 ${isActive
+                                                            ? "text-body-base font-semibold text-black dark:text-white"
+                                                            : "text-body-base text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
                                                             }`}
                                                     >
                                                         {link.label}
@@ -535,7 +535,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
                                                                 key={project.slug}
                                                                 to={buildProjectUrl(project.slug)}
                                                                 onClick={handleNavClick}
-                                                                className="text-left text-sm text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors py-1"
+                                                                className="text-left text-body-sm text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors py-1"
                                                             >
                                                                 {project.title}
                                                             </Link>
@@ -549,9 +549,9 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
                                                 key={link.id}
                                                 type="button"
                                                 onClick={() => handleNavItemClick(link.id)}
-                                                className={`text-lg transition-colors py-2 ${isActive
-                                                    ? "text-black dark:text-white font-semibold"
-                                                    : "text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
+                                                className={`transition-colors py-2 ${isActive
+                                                    ? "text-body-base font-semibold text-black dark:text-white"
+                                                    : "text-body-base text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
                                                     }`}
                                             >
                                                 {link.label}

@@ -124,6 +124,24 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
+
+  p,
+  blockquote,
+  li {
+    hanging-punctuation: first last;
   }
 
   :where(button, a) {
@@ -213,19 +231,6 @@
     flex: 1;
   }
 
-  /* Fluid typography with clamp */
-  .hero-title {
-    font-size: clamp(2.5rem, 5vw + 1rem, 6rem);
-    line-height: 1.1;
-  }
-
-  .hero-tagline {
-    font-size: clamp(1rem, 0.5vw + 0.875rem, 1.25rem);
-  }
-
-  .hero-description {
-    font-size: clamp(0.9rem, 0.4vw + 0.8rem, 1.125rem);
-  }
 
   /* Portrait responsive sizing */
   .hero-portrait {
@@ -367,6 +372,7 @@
   }
 
   @keyframes server-loader-fade-particles {
+
     0%,
     100% {
       opacity: 1;
@@ -447,6 +453,7 @@
   }
 
   @keyframes server-loader-bounce-lines {
+
     0%,
     100% {
       transform: translateY(0);

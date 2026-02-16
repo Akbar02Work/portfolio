@@ -4,8 +4,8 @@ import { withBase } from "@/lib/urls";
 
 const HeroText = () => (
     <div className="flex-1 space-y-5 text-center md:text-left">
-        <h1 className="hero-title font-black tracking-tight leading-tight text-gray-900 dark:text-white">
-            I'm{" "}
+        <h1 className="text-display-hero text-gray-900 dark:text-white">
+            I{"\u2019"}m{" "}
             <span className="relative inline-block">
                 Akbar
                 {/* Hand-drawn stroke SVG */}
@@ -30,10 +30,10 @@ const HeroText = () => (
                 Android Developer
             </span>
         </h1>
-        <p className="hero-tagline text-gray-600 dark:text-slate-200 max-w-lg mx-auto md:mx-0 font-medium mb-2">
+        <p className="text-body-lg font-medium text-gray-600 dark:text-slate-200 max-w-lg mx-auto md:mx-0 mb-2">
             Android Engineer focused on AI.
         </p>
-        <p className="hero-description text-gray-500 dark:text-slate-400 max-w-lg mx-auto md:mx-0">
+        <p className="text-body-base text-gray-500 dark:text-slate-400 max-w-lg mx-auto md:mx-0">
             Engineering reliable, privacy-aware AI integrations for mobile. Bridging the gap between LLMs and Android production code.
         </p>
         <div className="hero-cta flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-2 w-full sm:w-auto">
@@ -43,14 +43,14 @@ const HeroText = () => (
                     const element = document.getElementById("projects");
                     element?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="h-12 px-6 bg-black dark:bg-white text-white dark:text-black font-medium rounded-full hover:opacity-90 transition-opacity text-center flex items-center justify-center"
+                className="h-12 px-6 bg-black dark:bg-white text-white dark:text-black text-button rounded-full hover:opacity-90 transition-opacity text-center flex items-center justify-center"
             >
                 Selected Works
             </button>
             <a
                 href={withBase("/CV_Akbar_Azizov_Kotlin&Compose_EN.pdf")}
                 download="Akbar_Azizov_CV.pdf"
-                className="h-12 px-6 bg-transparent border border-gray-900 dark:border-slate-500 text-gray-900 dark:text-slate-200 font-medium rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
+                className="h-12 px-6 bg-transparent border border-gray-900 dark:border-slate-500 text-gray-900 dark:text-slate-200 text-button rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
             >
                 Download CV
                 <Download className="w-4 h-4" strokeWidth={2} />

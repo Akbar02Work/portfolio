@@ -98,7 +98,7 @@ const ProjectDetail = () => {
         ) : (
           <section className="min-h-[60vh] flex items-center justify-center px-6">
             <div className="text-center space-y-4">
-              <h1 className="text-4xl font-bold">404: Project Not Found</h1>
+              <h1 className="text-heading-1">404: Project Not Found</h1>
               <Link
                 to={ROUTES.HOME}
                 state={{ scrollTo: "projects" }}

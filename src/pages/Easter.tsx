@@ -164,27 +164,27 @@ const Easter = ({
 
       <main className="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 pt-24 pb-20 space-y-8">
         <section className="rounded-3xl border border-gray-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/70 backdrop-blur px-6 py-8">
-          <p className="text-xs uppercase tracking-[0.2em] text-gray-500 dark:text-slate-400">Easter Page</p>
-          <p className="mt-2 text-sm font-medium text-gray-500 dark:text-slate-400">Site Version</p>
-          <h1 className="mt-1 text-4xl md:text-6xl font-black tracking-tight text-gray-900 dark:text-white">
+          <p className="text-caption uppercase text-gray-500 dark:text-slate-400">Easter Page</p>
+          <p className="mt-2 text-body-sm font-medium text-gray-500 dark:text-slate-400">Site Version</p>
+          <h1 className="mt-1 text-heading-1 text-gray-900 dark:text-white">
             {manualVersion}
           </h1>
-          <h2 className="mt-4 text-2xl md:text-3xl font-black text-gray-900 dark:text-white">
+          <h2 className="mt-4 text-heading-2 text-gray-900 dark:text-white">
             Manual Changelog
           </h2>
-          <p className="mt-3 text-sm text-gray-600 dark:text-slate-300">
+          <p className="mt-3 text-body-sm text-gray-600 dark:text-slate-300">
             Версия берется из первой строки <code>EASTER_PAGE_CHANGELOG.md</code> в формате{" "}
             <code>VERSION: ...</code>. Остальной текст файла показывается ниже.
           </p>
 
           <div className="mt-6 grid sm:grid-cols-2 gap-3">
             <div className="rounded-2xl border border-gray-200 dark:border-slate-700 p-4 bg-gray-50 dark:bg-slate-800/60">
-              <p className="text-xs text-gray-500 dark:text-slate-400">Current Runtime Version</p>
-              <p className="mt-1 text-lg font-bold text-gray-900 dark:text-white">{buildVersion}</p>
+              <p className="text-caption text-gray-500 dark:text-slate-400">Current Runtime Version</p>
+              <p className="mt-1 text-heading-3 text-gray-900 dark:text-white">{buildVersion}</p>
             </div>
             <div className="rounded-2xl border border-gray-200 dark:border-slate-700 p-4 bg-gray-50 dark:bg-slate-800/60">
-              <p className="text-xs text-gray-500 dark:text-slate-400">Route</p>
-              <p className="mt-1 text-lg font-bold text-gray-900 dark:text-white">{ROUTES.EASTER}</p>
+              <p className="text-caption text-gray-500 dark:text-slate-400">Route</p>
+              <p className="mt-1 text-heading-3 text-gray-900 dark:text-white">{ROUTES.EASTER}</p>
             </div>
           </div>
 
@@ -192,7 +192,7 @@ const Easter = ({
             <Link
               to={ROUTES.HOME}
               state={{ scrollTo: "home" }}
-              className="inline-flex items-center px-4 py-2 rounded-full border border-gray-300 dark:border-slate-700 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+              className="inline-flex items-center px-4 py-2 rounded-full border border-gray-300 dark:border-slate-700 text-button hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
             >
               Back to Home
             </Link>
@@ -200,7 +200,7 @@ const Easter = ({
         </section>
 
         <section className="rounded-3xl border border-gray-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/70 px-6 py-8">
-          <pre className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/90 p-4 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap break-words text-gray-700 dark:text-slate-300 overflow-x-auto">
+          <pre className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/90 p-4 text-code whitespace-pre-wrap break-words text-gray-700 dark:text-slate-300 overflow-x-auto">
             {reportBody}
           </pre>
         </section>
