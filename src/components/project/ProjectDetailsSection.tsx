@@ -46,7 +46,7 @@ export const ProjectDetailsSection = ({
       <div className="pt-4 sm:pt-6 pb-8 sm:pb-10">
         <div className="flex items-center gap-5 md:gap-6 mb-6">
           <div className="h-px w-8 sm:w-10 md:w-12 bg-gray-300 dark:bg-gray-700"></div>
-          <h3 className="text-heading-2 text-gray-900 dark:text-white">Technologies</h3>
+          <h3 className="text-heading-2 text-gray-900 dark:text-white">Tech Stack & Architecture</h3>
         </div>
         <div className="flex flex-wrap gap-3">
           {project.technologies.map((tech) => (
@@ -75,6 +75,18 @@ export const ProjectDetailsSection = ({
             const isOpen = openFeatureIndex === index;
             const buttonId = `feature-toggle-${index}`;
             const panelId = `feature-panel-${index}`;
+            const hasDetails = Boolean(feature.description?.trim());
+
+            if (!hasDetails) {
+              return (
+                <div key={feature.title} className="pt-4">
+                  <p className="pb-4 text-body-lg font-medium text-gray-700 dark:text-gray-300">
+                    {feature.title}
+                  </p>
+                  <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent dark:via-slate-700"></div>
+                </div>
+              );
+            }
 
             return (
               <div key={feature.title} className="pt-4">

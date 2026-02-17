@@ -47,9 +47,11 @@ const CarouselScreen = ({ screen, style, slideDirection }: CarouselScreenProps) 
         <h3 className="text-heading-2 mb-4 text-gray-900 dark:text-white">
           {screen.title}
         </h3>
-        <p className="mx-auto max-w-2xl text-body-lg text-gray-600 dark:text-slate-300">
-          {screen.description}
-        </p>
+        {screen.description ? (
+          <p className="mx-auto max-w-2xl text-body-lg text-gray-600 dark:text-slate-300">
+            {screen.description}
+          </p>
+        ) : null}
       </div>
     </div>
   );
