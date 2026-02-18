@@ -36,7 +36,7 @@ export const ProjectHeader = ({ project }: ProjectHeaderProps) => {
             {project.title}
           </h1>
           <p className="text-body-lg font-light text-gray-500 dark:text-gray-400">
-            {project.subtitle}
+            {project.summary}
           </p>
         </div>
         <div className="w-full md:w-1/4 flex justify-end order-3">

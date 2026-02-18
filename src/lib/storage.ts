@@ -4,6 +4,14 @@ type StorageOptions = {
   area?: StorageArea;
 };
 
+const safeJsonParse = (raw: string): unknown | null => {
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+};
+
 const getStorageInstance = (area: StorageArea): Storage | null => {
   if (typeof window === "undefined") return null;
 
@@ -21,7 +29,9 @@ export const storage = {
     try {
       const item = target.getItem(key);
       if (item === null) return fallback;
-      return JSON.parse(item) as T;
+      const parsed = safeJsonParse(item);
+      if (parsed === null || parsed === undefined) return fallback;
+      return parsed as T;
     } catch {
       return fallback;
     }

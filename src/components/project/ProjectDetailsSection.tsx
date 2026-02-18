@@ -22,10 +22,10 @@ export const ProjectDetailsSection = ({
         <div className="space-y-6">
           <div className="flex items-center gap-5 md:gap-6">
             <div className="h-px w-6 sm:w-8 md:w-10 bg-gray-300 dark:bg-gray-700"></div>
-            <h2 className="text-heading-2 text-gray-900 dark:text-white">Overview</h2>
+          <h2 className="text-heading-2 text-gray-900 dark:text-white">Overview</h2>
           </div>
           <p className="text-body-lg text-gray-600 dark:text-gray-400">
-            {project.description}
+            {project.overview}
           </p>
         </div>
         <div className="space-y-6">
@@ -48,6 +48,9 @@ export const ProjectDetailsSection = ({
           <div className="h-px w-8 sm:w-10 md:w-12 bg-gray-300 dark:bg-gray-700"></div>
           <h3 className="text-heading-2 text-gray-900 dark:text-white">Tech Stack & Architecture</h3>
         </div>
+        <p className="mb-5 text-body-lg text-gray-600 dark:text-gray-400">
+          {project.architecture}
+        </p>
         <div className="flex flex-wrap gap-3">
           {project.technologies.map((tech) => (
             <span

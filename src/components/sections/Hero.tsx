@@ -31,10 +31,10 @@ const HeroText = () => (
             </span>
         </h1>
         <p className="text-body-lg font-medium text-gray-600 dark:text-slate-200 max-w-lg mx-auto md:mx-0 mb-2">
-            Android Engineer focused on AI.
+            Turning AI models into real Android features
         </p>
         <p className="text-body-base text-gray-500 dark:text-slate-400 max-w-lg mx-auto md:mx-0">
-            Engineering reliable, privacy-aware AI integrations for mobile. Bridging the gap between LLMs and Android production code.
+            I build production-ready Android apps powered by AI. Offline-first architecture, clean code, and structured LLM outputs that turn raw models into real user features
         </p>
         <div className="hero-cta flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-2 w-full sm:w-auto">
             <button

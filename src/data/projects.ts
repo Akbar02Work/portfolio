@@ -1,5 +1,4 @@
 import { projectsCatalog } from "./projectCatalog";
-import type { ProjectSummary } from "./projectsSummary";
 
 export interface ProjectFeature {
   title: string;
@@ -13,7 +12,14 @@ export interface ProjectScreen {
   image: string;
 }
 
-export interface Project extends ProjectSummary {
+export interface Project {
+  id: number;
+  title: string;
+  slug: string;
+  summary: string;
+  overview: string;
+  image: string;
+  technologies: string[];
   challenge: string;
   features: ProjectFeature[];
   screens: ProjectScreen[];
@@ -29,8 +35,8 @@ export const projects: Project[] = projectsCatalog.map((project) => ({
   id: project.id,
   title: project.title,
   slug: project.slug,
-  subtitle: project.stackAndArchitecture.architecture,
-  description: project.overview,
+  summary: project.description,
+  overview: project.overview,
   image: project.coverImage ?? project.gallery[0]?.imageUrl ?? "",
   technologies: project.stackAndArchitecture.stack,
   challenge: project.challenge,

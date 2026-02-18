@@ -1,20 +1,25 @@
-import { useCallback, type KeyboardEvent, type WheelEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { ProjectCard } from "@/components/ProjectCard";
 import { ANIMATION_DELAYS } from "@/constants/animation.constants";
 import { CAROUSEL_AUTO_SCROLL_INTERVAL_MS } from "@/constants/ui.constants";
 import { buildProjectUrl } from "@/constants/routes";
-import { projectsSummary } from "@/data/projectsSummary";
 import { projectStylesList } from "@/constants/projectStyles";
 import { useCarouselController } from "@/hooks/useCarouselController";
 import { useSwipe } from "@/hooks/useSwipe";
+import { useWheelNavigation } from "@/hooks/useWheelNavigation";
+import type { ProjectSummary } from "@/data/projectsSummary";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const projectList = projectsSummary;
+const SWIPE_THRESHOLD = 30;
 
-export const Projects = () => {
-    const totalProjects = projectList.length;
+type ProjectsProps = {
+    projects: ProjectSummary[];
+};
+
+export const Projects = ({ projects }: ProjectsProps) => {
+    const totalProjects = projects.length;
     const {
         currentIndex,
         slideDirection,
@@ -30,41 +35,31 @@ export const Projects = () => {
     const navigate = useNavigate();
 
     const handleCardTap = useCallback(() => {
-        const targetProject = projectList[currentIndex];
+        const targetProject = projects[currentIndex];
         if (targetProject) {
             navigate(buildProjectUrl(targetProject.slug));
         }
-    }, [currentIndex, navigate]);
+    }, [currentIndex, navigate, projects]);
 
     const swipeHandlers = useSwipe({
         onSwipeLeft: handleNext,
         onSwipeRight: handlePrev,
+        // Tap is handled by the Link component naturally, or we can keep it for hybrid support
+        // Since useSwipe preventsDefault on mouseDown, we might need onTap to trigger navigation seamlessly 
+        // if the native click is blocked. Checking useSwipe source: it preventsDefault on mouseDown. 
+        // So we keep onTap to ensure navigation works for mouse users who "click" (mousedown+up).
         onTap: handleCardTap,
     });
 
-    const handleCardKeyDown = useCallback((event: KeyboardEvent<HTMLDivElement>) => {
-        if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            const targetProject = projectList[currentIndex];
-            if (targetProject) {
-                navigate(buildProjectUrl(targetProject.slug));
-            }
-        }
-    }, [currentIndex, navigate]);
+    // Removed handleCardKeyDown as Link handles accessibility (Enter/Space) natively
 
-    // Wheel scroll
-    const handleWheel = useCallback((e: WheelEvent) => {
-        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-            e.preventDefault();
-            if (e.deltaX > 30) {
-                handleNext();
-            } else if (e.deltaX < -30) {
-                handlePrev();
-            }
-        }
-    }, [handleNext, handlePrev]);
+    const { handleWheel } = useWheelNavigation({
+        onNext: handleNext,
+        onPrev: handlePrev,
+        threshold: SWIPE_THRESHOLD,
+    });
 
-    const project = projectList[currentIndex];
+    const project = projects[currentIndex];
     if (!project) {
         return null;
     }
@@ -72,11 +67,10 @@ export const Projects = () => {
 
     return (
         <AnimatedSection delay={ANIMATION_DELAYS.PROJECTS_SECTION}>
-            <section id="projects" className="py-32 bg-white dark:bg-slate-900 overflow-hidden">
+            <section id="projects" className="pt-16 pb-16 bg-white dark:bg-slate-900 overflow-hidden scroll-mt-16">
                 {/* Header - centered */}
                 <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 mb-12 text-center">
                     <h2 className="text-heading-1 mb-4 text-gray-900 dark:text-white">Selected Works</h2>
-                    <p className="text-body-lg text-gray-500 dark:text-slate-400">A showcase of mobile applications and solutions.</p>
                 </div>
 
                 {/* Carousel with side arrows */}
@@ -96,12 +90,11 @@ export const Projects = () => {
                         </button>
 
                         {/* Project Card */}
-                        <div
-                            className="flex-1 cursor-pointer active:cursor-grabbing select-none"
+                        <Link
+                            to={buildProjectUrl(project.slug)}
+                            className="flex-1 cursor-pointer active:cursor-grabbing select-none block"
                             {...swipeHandlers}
-                            onKeyDown={handleCardKeyDown}
-                            role="link"
-                            tabIndex={0}
+                            draggable={false} // Prevent native drag to allow swipe
                             aria-label={`Open project ${project.title}`}
                         >
                             <ProjectCard
@@ -110,7 +103,7 @@ export const Projects = () => {
                                 style={style}
                                 slideDirection={slideDirection}
                             />
-                        </div>
+                        </Link>
 
                         {/* Right arrow - hidden on very small screens */}
                         <button
@@ -133,7 +126,7 @@ export const Projects = () => {
 
                     {/* Progress indicators - under the card */}
                     <div className="flex justify-center gap-2 mt-6 md:mt-8">
-                        {projectList.map((_, idx) => (
+                        {projects.map((_, idx) => (
                             <button
                                 key={idx}
                                 onClick={() => {

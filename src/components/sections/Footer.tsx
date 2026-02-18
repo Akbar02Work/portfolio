@@ -30,10 +30,10 @@ export const Footer = () => {
 
     return (
         <AnimatedSection delay={ANIMATION_DELAYS.CONTACT_SECTION}>
-            <footer id="contact" className="pt-24 pb-8 bg-[#f8f9fa] dark:bg-slate-950">
+            <footer id="contact" className="pt-16 pb-8 bg-[#f8f9fa] dark:bg-slate-950">
                 <div className="max-w-4xl mx-auto px-5 sm:px-6 lg:px-8 text-center">
                     <h2 className="text-heading-2 text-gray-900 dark:text-white mb-12">
-                        Have an idea? Drop me a line
+                        Let's work together
                     </h2>
 
                     {/* Mobile: Icon-only row | Desktop: Full buttons grid */}
@@ -58,7 +58,7 @@ export const Footer = () => {
                     </div>
 
                     <p className="mt-12 text-body-sm font-medium text-gray-500 dark:text-gray-400">
-                        Crafted with attention to detail
+                        Designed by Akbar · Coded by AI
                     </p>
                 </div>
             </footer>

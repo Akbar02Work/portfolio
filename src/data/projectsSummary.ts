@@ -1,26 +1,19 @@
-import { projectsCatalog, type ProjectSlug } from "./projectCatalog";
+import { projects } from "./projects";
 
 export type ProjectSummary = {
   id: number;
   title: string;
-  slug: ProjectSlug;
-  subtitle: string;
-  description: string;
+  slug: string;
+  summary: string;
   image: string;
   technologies: string[];
 };
 
-const buildSubtitle = (stack: string[]): string =>
-  stack.slice(0, 3).join(" · ") || "Engineering Project";
-
-export const projectsSummary: ProjectSummary[] = projectsCatalog.map((project) => ({
+export const projectsSummary: ProjectSummary[] = projects.map((project) => ({
   id: project.id,
   title: project.title,
   slug: project.slug,
-  subtitle: buildSubtitle(project.stackAndArchitecture.stack),
-  description: project.description,
-  image: project.coverImage ?? project.gallery[0]?.imageUrl ?? "",
-  technologies: project.stackAndArchitecture.stack,
+  summary: project.summary,
+  image: project.image,
+  technologies: project.technologies,
 }));
-
-export type { ProjectSlug };

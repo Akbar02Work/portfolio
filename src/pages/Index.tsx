@@ -5,6 +5,7 @@ import { TechStack } from "@/components/sections/TechStack";
 import { About } from "@/components/sections/About";
 import { Projects } from "@/components/sections/Projects";
 import { MainLayout } from "@/components/layout/MainLayout";
+import { projectsSummary } from "@/data/projectsSummary";
 import { storage } from "@/lib/storage";
 
 const SCROLL_STORAGE_KEY = "scrollY";
@@ -134,7 +135,7 @@ const Index = () => {
       <Hero />
       <TechStack />
       <About />
-      <Projects />
+      <Projects projects={projectsSummary} />
     </MainLayout>
   );
 };

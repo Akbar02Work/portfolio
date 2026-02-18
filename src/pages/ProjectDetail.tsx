@@ -39,14 +39,14 @@ const ProjectDetail = () => {
   }, [slug]);
 
   const hasPlaceholderContent = projectData
-    ? /coming soon/i.test(projectData.title) || /coming soon/i.test(projectData.description)
+    ? /coming soon/i.test(projectData.title) || /coming soon/i.test(projectData.summary)
     : false;
   const pageTitle =
     projectData && !hasPlaceholderContent
       ? `${projectData.title} | Akbar Azizov`
       : DEFAULT_TITLE;
   const pageDescription =
-    projectData && !hasPlaceholderContent ? projectData.description : DEFAULT_DESCRIPTION;
+    projectData && !hasPlaceholderContent ? projectData.summary : DEFAULT_DESCRIPTION;
   const pageUrl = typeof window !== "undefined" ? window.location.href : "";
   const pageImage = toAbsoluteUrl(
     projectData && !hasPlaceholderContent && projectData.image

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { ProjectStyle } from "@/constants/projectStyles";
 import type { ProjectSummary } from "@/data/projectsSummary";
 import { withBase } from "@/lib/urls";
+import { sanitizeUrl } from "@/lib/urlSanitizer";
 
 interface ProjectCardProps {
     project: ProjectSummary;
@@ -12,7 +13,8 @@ interface ProjectCardProps {
 export const ProjectCard = ({ project, style, slideDirection }: ProjectCardProps) => {
     const IconComponent = style.icon;
     const [imageError, setImageError] = useState(false);
-    const imageSrc = project.image ? withBase(project.image) : "";
+    const normalizedSrc = project.image ? withBase(project.image) : "";
+    const imageSrc = sanitizeUrl(normalizedSrc) ?? "";
     const showIcon = imageError || !project.image || /placeholder/i.test(project.image);
 
     useEffect(() => {
@@ -55,13 +57,13 @@ export const ProjectCard = ({ project, style, slideDirection }: ProjectCardProps
 
                     {/* Description */}
                     <p className="mx-auto max-w-2xl text-body-lg text-gray-600 dark:text-slate-300 line-clamp-3">
-                        {project.description}
+                        {project.summary}
                     </p>
                 </div>
 
                 {/* Tech tags */}
                 <div className="flex flex-wrap justify-center gap-2.5">
-                    {project.technologies.slice(0, 4).map((tech) => (
+                    {project.technologies.map((tech) => (
                         <span
                             key={tech}
                             className="inline-flex items-center justify-center px-4 py-2 bg-gray-100 dark:bg-slate-700/80 text-gray-600 dark:text-slate-300 rounded-full text-caption border border-gray-200 dark:border-slate-600"

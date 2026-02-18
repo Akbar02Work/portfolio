@@ -292,6 +292,48 @@
     }
   }
 
+  /* Gentle drift animation for decorative tech icons */
+  @keyframes about-icon-drift {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+
+    33% {
+      transform: translate(4px, -10px) rotate(3deg);
+    }
+
+    66% {
+      transform: translate(-4px, -6px) rotate(-2deg);
+    }
+
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+  }
+
+  .about-float-icon {
+    animation: about-icon-drift 6s ease-in-out infinite;
+  }
+
+  .about-float-icon-slow {
+    animation: about-icon-drift 8s ease-in-out infinite;
+    animation-delay: -2s;
+  }
+
+  .about-float-icon-fast {
+    animation: about-icon-drift 5s ease-in-out infinite;
+    animation-delay: -4s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+
+    .about-float-icon,
+    .about-float-icon-slow,
+    .about-float-icon-fast {
+      animation: none;
+    }
+  }
+
   .invert-hover {
     @apply transition-all duration-300 ease-in-out;
   }
