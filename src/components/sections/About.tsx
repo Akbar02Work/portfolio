@@ -22,7 +22,7 @@ export const About = () => {
                 {floatingIcons.map(({ Icon, animClass, color, style, size }) => (
                     <div
                         key={animClass + size}
-                        className={`absolute pointer-events-none select-none hidden md:block ${animClass}`}
+                        className={`absolute pointer-events-none select-none ${animClass} scale-50 md:scale-100`}
                         style={{ ...style, color, opacity: 0.18 }}
                         aria-hidden="true"
                     >

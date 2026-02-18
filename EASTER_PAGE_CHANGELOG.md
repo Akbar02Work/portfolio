@@ -1,4 +1,4 @@
-VERSION: v1
+VERSION: v0.80
 
 ## 1) Какая сейчас версия сайта
 
@@ -391,3 +391,26 @@ VERSION: v1
 - Актуальный HEAD для runtime-версии: `35b3ab4`.
 - Актуальные project routes: `/projects/quiz-learnwords`, `/projects/loyalist`, `/projects/voicenotes`, `/projects/secbench`, `/projects/money-manager`.
 - Формулировка про старые demo-проекты (`voicebrain/market-r/llm-security`) в UI больше неактуальна после `35b3ab4`.
+
+## 10) Обновления v0.80: UX Audit & Mobile Polish (2026-02-19)
+
+1. **UX/UI & Desktop Ergonomics Audit**:
+   - Проведен детальный аудит "Pixel & Logic".
+   - Выявлены и исправлены проблемы с навигацией и доступностью.
+
+2. **Refactoring `Projects.tsx`**:
+   - Заменили `div role="link"` на семантический `<Link>`.
+   - Улучшили доступность (a11y) и SEO.
+   - Исправили конфликт свайпа и ссылок.
+
+3. **Security Hardening**:
+   - Внедрена санитайзация URL (`sanitizeUrl`) в карточках проектов и хедере.
+   - XSS-защита для внешних ссылок.
+
+4. **Mobile Polish**:
+   - Исправлена видимость плавающих иконок в секции `About` (были скрыты, теперь `scale-50`).
+   - Иконки адаптированы под мобильные экраны (не перекрывают текст).
+
+5. **General Improvements**:
+   - Обмен кнопок GitHub и LinkedIn в футере.
+   - Чистка кода и удаление магических чисел.
