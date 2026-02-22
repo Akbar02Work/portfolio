@@ -57,3 +57,4 @@
 - Восстановлен `src/test/setup.ts` и обновлён `vitest.config.ts`.
 - Небольшие правки layout/стилей.
 
+- Блять
