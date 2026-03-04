@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Home Page -->
   <url>
-    <loc>https://akbar02work.xyz/</loc>
+    <loc>https://www.akbar02work.xyz/</loc>
     <lastmod>2024-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -10,13 +10,13 @@
   
   <!-- Projects -->
   <url>
-    <loc>https://akbar02work.xyz/projects/voicenotes</loc>
+    <loc>https://www.akbar02work.xyz/projects/voicenotes</loc>
     <lastmod>2024-11-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://akbar02work.xyz/projects/secbench-25</loc>
+    <loc>https://www.akbar02work.xyz/projects/secbench-25</loc>
     <lastmod>2024-11-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

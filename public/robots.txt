@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://akbar02work.xyz/sitemap.xml
+Sitemap: https://www.akbar02work.xyz/sitemap.xml
