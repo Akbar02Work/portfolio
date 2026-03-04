@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import type { ProjectStyle } from "@/constants/projectStyles";
 import type { ProjectSummary } from "@/data/projectsSummary";
+import { buildProjectUrl } from "@/constants/routes";
 import { withBase } from "@/lib/urls";
 import { sanitizeUrl } from "@/lib/urlSanitizer";
 
@@ -50,9 +52,15 @@ export const ProjectCard = ({ project, style, slideDirection }: ProjectCardProps
             {/* Text Content */}
             <div className="w-full md:flex-1 min-w-0 p-5 md:p-8 flex flex-col justify-center items-center gap-5 md:gap-6 text-center order-2">
                 <div className="w-full space-y-4">
-                    {/* Title */}
+                    {/* Title with Semantic Link for SEO */}
                     <h3 className="text-heading-2 text-gray-900 dark:text-white">
-                        {project.title}
+                        <Link
+                            to={buildProjectUrl(project.slug)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="hover:underline hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                        >
+                            {project.title}
+                        </Link>
                     </h3>
 
                     {/* Description */}

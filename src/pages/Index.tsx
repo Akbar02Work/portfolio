@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { Hero } from "@/components/sections/Hero";
 import { TechStack } from "@/components/sections/TechStack";
 import { About } from "@/components/sections/About";
@@ -61,7 +62,7 @@ const Index = () => {
       if ("cancelIdleCallback" in window) {
         window.cancelIdleCallback(idleTaskId);
       } else {
-        window.clearTimeout(idleTaskId);
+        window.clearTimeout(idleTaskId as number);
       }
       idleTaskId = null;
     };
@@ -83,7 +84,7 @@ const Index = () => {
       idleTaskId = window.setTimeout(() => {
         idleTaskId = null;
         flushScroll();
-      }, 120);
+      }, 120) as unknown as number;
     };
 
     const throttledSaveScroll = () => {
@@ -132,6 +133,13 @@ const Index = () => {
       variant="home"
       className="bg-[#f8f9fa] dark:bg-slate-950 text-gray-900 dark:text-slate-100 antialiased overflow-x-hidden font-sans transition-colors duration-300"
     >
+      <Helmet>
+        <title>Akbar — Android &amp; AI Engineer</title>
+        <meta
+          name="description"
+          content="Building intelligent mobile apps with Kotlin & Gemini. Offline-first architecture, 99.9% crash-free stability."
+        />
+      </Helmet>
       <Hero />
       <TechStack />
       <About />

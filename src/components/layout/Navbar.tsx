@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, Sun, Moon, SunMoon, ChevronDown } from "lucide-react";
+import { Menu, Sun, Moon, SunMoon, ChevronDown, ChevronRight, X } from "lucide-react";
 import { useBlink } from "@/hooks/useBlink";
 import { useTheme } from "@/hooks/useTheme";
 import { useActiveSection } from "@/hooks/useActiveSection";
@@ -11,6 +11,7 @@ import { projectsSummary } from "@/data/projectsSummary";
 import { SCROLL_SPY_OFFSET_PX } from "@/constants/ui.constants";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetHeader,
   SheetDescription,
@@ -36,7 +37,7 @@ type NavbarProps = {
   variant?: "home" | "detail";
 };
 
-const ThemeMenu = () => {
+const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" }) => {
   const { theme, mode, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const menuId = useId();
@@ -89,14 +90,13 @@ const ThemeMenu = () => {
     );
 
   const itemClass = (value: "light" | "dark" | "system") =>
-    `block w-full text-left px-4 py-2.5 text-body-sm transition-colors first:pt-3 last:pb-3 ${
-      mode === value
-        ? "text-black dark:text-white font-semibold"
-        : "text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white hover:bg-gray-100/70 dark:hover:bg-slate-800/70"
+    `block w-full text-left px-4 py-2.5 text-body-sm transition-colors first:pt-3 last:pb-3 ${mode === value
+      ? "text-black dark:text-white font-semibold"
+      : "text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white hover:bg-gray-100/70 dark:hover:bg-slate-800/70"
     }`;
 
   return (
-    <div className="relative group after:content-[''] after:absolute after:left-0 after:right-0 after:top-full after:h-6">
+    <div className={`relative group after:content-[''] after:absolute after:left-0 after:right-0 ${direction === "down" ? "after:top-full after:h-6" : "after:bottom-full after:h-6"}`}>
       <button
         ref={triggerRef}
         onClick={() => setIsOpen((prev) => !prev)}
@@ -113,11 +113,13 @@ const ThemeMenu = () => {
         id={menuId}
         ref={menuRef}
         role="menu"
-        className={`absolute left-1/2 top-full z-50 mt-5 w-36 -translate-x-1/2 rounded-2xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-black/80 backdrop-blur-3xl shadow-2xl shadow-black/10 dark:shadow-black/40 transition-all duration-200 ease-out overflow-hidden before:content-[''] before:absolute before:-top-6 before:left-0 before:h-6 before:w-full before:bg-white/80 dark:before:bg-black/80 before:backdrop-blur-2xl ${
-          isOpen
+        className={`absolute left-1/2 z-50 w-36 -translate-x-1/2 rounded-2xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-black/80 backdrop-blur-3xl shadow-2xl shadow-black/10 dark:shadow-black/40 transition-all duration-200 ease-out overflow-hidden before:content-[''] before:absolute before:left-0 before:h-6 before:w-full before:bg-white/80 dark:before:bg-black/80 before:backdrop-blur-2xl ${direction === "down"
+          ? "top-full mt-5 before:-top-6"
+          : "bottom-full mb-5 before:-bottom-6"
+          } ${isOpen
             ? "opacity-100 pointer-events-auto translate-y-0 scale-100"
-            : "opacity-0 pointer-events-none translate-y-2 scale-[0.98]"
-        }`}
+            : `opacity-0 pointer-events-none scale-[0.98] ${direction === "down" ? "translate-y-2" : "-translate-y-2"}`
+          }`}
       >
         <div className="py-0">
           <button
@@ -165,6 +167,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileProjectsOpen, setMobileProjectsOpen] = useState(false);
 
   const { activeSection, setActiveSection } = useActiveSection<NavLinkId>({
     isHome,
@@ -196,9 +199,6 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
     navigate,
   });
 
-  const handleNavClick = () => {
-    setMobileMenuOpen(false);
-  };
 
   const scrollToSection = (sectionId: string) => {
     if (sectionId === "home") {
@@ -272,11 +272,10 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
                         aria-haspopup="menu"
                         aria-expanded={isProjectsMenuOpen}
                         aria-controls="projects-menu"
-                        className={`block py-2 px-3 transition-colors inline-flex items-center gap-1 ${
-                          isActive
-                            ? "text-[0.9375rem] font-semibold text-black dark:text-white"
-                            : "text-[0.9375rem] text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
-                        }`}
+                        className={`block py-2 px-3 transition-colors inline-flex items-center gap-1 ${isActive
+                          ? "text-[0.9375rem] font-semibold text-black dark:text-white"
+                          : "text-[0.9375rem] text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
+                          }`}
                       >
                         {link.label}
                         <ChevronDown className="w-4 h-4" />
@@ -289,11 +288,10 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
                         onKeyDown={handleProjectsMenuKeyDown}
                         onMouseEnter={openProjectsMenu}
                         onMouseLeave={scheduleCloseProjectsMenu}
-                        className={`absolute left-1/2 top-full z-50 mt-5 w-56 -translate-x-1/2 rounded-2xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-black/80 backdrop-blur-3xl shadow-2xl shadow-black/10 dark:shadow-black/40 transition-all duration-200 ease-out overflow-hidden before:content-[''] before:absolute before:-top-6 before:left-0 before:h-6 before:w-full before:bg-white/80 dark:before:bg-black/80 before:backdrop-blur-2xl ${
-                          isProjectsMenuOpen
-                            ? "opacity-100 pointer-events-auto translate-y-0 scale-100"
-                            : "opacity-0 pointer-events-none translate-y-2 scale-[0.98]"
-                        }`}
+                        className={`absolute left-1/2 top-full z-50 mt-5 w-56 -translate-x-1/2 rounded-2xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-black/80 backdrop-blur-3xl shadow-2xl shadow-black/10 dark:shadow-black/40 transition-all duration-200 ease-out overflow-hidden before:content-[''] before:absolute before:-top-6 before:left-0 before:h-6 before:w-full before:bg-white/80 dark:before:bg-black/80 before:backdrop-blur-2xl ${isProjectsMenuOpen
+                          ? "opacity-100 pointer-events-auto translate-y-0 scale-100"
+                          : "opacity-0 pointer-events-none translate-y-2 scale-[0.98]"
+                          }`}
                       >
                         <div className="py-0">
                           {projectMenu.map((project) => (
@@ -322,11 +320,10 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
                     <button
                       type="button"
                       onClick={() => handleNavItemClick(link.id)}
-                      className={`block py-2 px-3 transition-colors ${
-                        isActive
-                          ? "text-[0.9375rem] font-semibold text-black dark:text-white"
-                          : "text-[0.9375rem] text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
-                      }`}
+                      className={`block py-2 px-3 transition-colors ${isActive
+                        ? "text-[0.9375rem] font-semibold text-black dark:text-white"
+                        : "text-[0.9375rem] text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
+                        }`}
                     >
                       {link.label}
                     </button>
@@ -339,9 +336,12 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
           </div>
 
           <div className="flex items-center gap-2 md:hidden">
-            <ThemeMenu />
-
-            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <Sheet open={mobileMenuOpen} onOpenChange={(open) => {
+              setMobileMenuOpen(open);
+              if (!open) {
+                setMobileProjectsOpen(false);
+              }
+            }}>
               <SheetTrigger asChild>
                 <button
                   className="text-gray-500 dark:text-slate-400 p-2 w-10 h-10 inline-flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800"
@@ -352,64 +352,128 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
               </SheetTrigger>
               <SheetContent
                 side="right"
-                className="w-[280px] bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700"
+                className="!w-full !max-w-full !inset-0 bg-white dark:bg-slate-950 border-none flex flex-col [&>button:last-child]:hidden"
               >
-                <SheetHeader>
-                  <SheetTitle className="text-gray-900 dark:text-white">
-                    Menu
-                  </SheetTitle>
-                  <SheetDescription className="sr-only">
-                    Mobile navigation menu
-                  </SheetDescription>
+                <SheetHeader className="sr-only">
+                  <SheetTitle>Menu</SheetTitle>
+                  <SheetDescription>Mobile navigation menu</SheetDescription>
                 </SheetHeader>
-                <nav className="flex flex-col gap-4 mt-8">
+
+                {/* ── Header: Logo + Close ── */}
+                <div className="flex items-center justify-between px-6 pt-[clamp(1rem,3vh,2rem)] pb-2">
+                  <Link
+                    to={ROUTES.HOME}
+                    state={{ scrollTo: "home" }}
+                    onClick={(e) => {
+                      handleLogoClick(e);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="flex items-center"
+                  >
+                    <span className="text-[clamp(1rem,2.5vh,1.5rem)] font-bold tracking-wider whitespace-nowrap uppercase text-gray-900 dark:text-white">
+                      &lt;Aka
+                      <span
+                        style={{
+                          opacity: isUnderscoreVisible ? 1 : 0,
+                          transition: "opacity 0.1s",
+                        }}
+                      >
+                        _
+                      </span>
+                      /Portfolio/&gt;
+                    </span>
+                  </Link>
+                  <SheetClose className="p-[clamp(0.25rem,1vh,0.5rem)] rounded-lg text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+                    <X className="w-[clamp(1.25rem,3vh,2rem)] h-[clamp(1.25rem,3vh,2rem)]" />
+                    <span className="sr-only">Close</span>
+                  </SheetClose>
+                </div>
+
+                {/* ── Nav Links ── */}
+                <nav className="flex-1 flex flex-col justify-center px-10 gap-[clamp(0.25rem,1.5vh,1rem)]">
                   {navLinks.map((link) => {
                     const isActive = activeSection === link.id;
-                    if (link.id === "projects") {
-                      return (
-                        <div key={link.id} className="flex flex-col gap-2">
-                          <button
-                            type="button"
-                            onClick={() => handleNavItemClick(link.id)}
-                            className={`transition-colors py-2 ${
-                              isActive
-                                ? "text-body-base font-semibold text-black dark:text-white"
-                                : "text-body-base text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
-                            }`}
-                          >
-                            {link.label}
-                          </button>
-                          <div className="pl-4 flex flex-col gap-2">
-                            {projectMenu.map((project) => (
-                              <Link
-                                key={project.slug}
-                                to={buildProjectUrl(project.slug)}
-                                onClick={handleNavClick}
-                                className="text-left text-body-sm text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors py-1"
-                              >
-                                {project.title}
-                              </Link>
-                            ))}
-                          </div>
-                        </div>
-                      );
-                    }
+                    const isProjects = link.id === "projects";
+
                     return (
-                      <button
-                        key={link.id}
-                        type="button"
-                        onClick={() => handleNavItemClick(link.id)}
-                        className={`transition-colors py-2 ${
-                          isActive
-                            ? "text-body-base font-semibold text-black dark:text-white"
-                            : "text-body-base text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
-                        }`}
-                      >
-                        {link.label}
-                      </button>
+                      <div key={link.id}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (isProjects) {
+                              setMobileProjectsOpen((prev) => !prev);
+                            } else {
+                              handleNavItemClick(link.id);
+                            }
+                          }}
+                          className={`relative flex items-center gap-[clamp(0.5rem,2vw,1rem)] py-[clamp(0.25rem,1vh,0.75rem)] transition-colors text-left ${isActive
+                            ? "text-[clamp(1.75rem,5vh,3rem)] font-bold text-gray-900 dark:text-white"
+                            : "text-[clamp(1.75rem,5vh,3rem)] font-light text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-300"
+                            }`}
+                        >
+                          {/* Active dot marker */}
+                          {isActive && (
+                            <span
+                              className="absolute -left-[clamp(1rem,4vw,2rem)] w-[clamp(0.4rem,1.2vh,0.75rem)] h-[clamp(0.4rem,1.2vh,0.75rem)] rounded-full bg-gray-900 dark:bg-white animate-in zoom-in duration-300"
+                            />
+                          )}
+                          <span>
+                            {link.label}
+                          </span>
+                          {isProjects && (
+                            <ChevronRight
+                              className={`w-[clamp(1.25rem,4vh,2rem)] h-[clamp(1.25rem,4vh,2rem)] ml-[clamp(0.25rem,1vw,1rem)] transition-transform duration-300 ${mobileProjectsOpen ? "rotate-90" : ""
+                                } ${isActive
+                                  ? "text-gray-900 dark:text-white"
+                                  : "text-gray-400 dark:text-slate-500"
+                                }`}
+                            />
+                          )}
+                        </button>
+
+                        {/* Projects accordion */}
+                        {isProjects && (
+                          <div
+                            className="overflow-hidden transition-all duration-300 ease-in-out"
+                            style={{
+                              maxHeight: mobileProjectsOpen
+                                ? `${projectMenu.length * 5}vh`
+                                : "0",
+                              opacity: mobileProjectsOpen ? 1 : 0,
+                            }}
+                          >
+                            <div className="pl-[clamp(1.5rem,6vw,3rem)] pt-[clamp(0.1rem,0.5vh,0.5rem)] pb-[clamp(0.25rem,1vh,1rem)] flex flex-col gap-[clamp(0.2rem,0.5vh,0.5rem)]">
+                              {projectMenu.map((project) => (
+                                <Link
+                                  key={project.slug}
+                                  to={buildProjectUrl(project.slug)}
+                                  onClick={() => {
+                                    setMobileMenuOpen(false);
+                                    setMobileProjectsOpen(false);
+                                  }}
+                                  className="text-[clamp(1rem,3vh,1.5rem)] text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-colors py-[clamp(0.25rem,1vh,0.75rem)]"
+                                >
+                                  {project.title}
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     );
                   })}
                 </nav>
+
+                {/* ── Bottom: Text + Theme ── */}
+                <div className="px-6 pb-[clamp(1rem,4vh,2rem)] pt-[clamp(0.5rem,2vh,1.5rem)]">
+                  <div className="flex items-center justify-between">
+                    <p className="text-[clamp(0.65rem,1.5vh,0.875rem)] font-medium text-gray-400 dark:text-slate-500">
+                      Designed by Akbar · Coded by AI
+                    </p>
+
+                    <ThemeMenu direction="up" />
+                  </div>
+                </div>
               </SheetContent>
             </Sheet>
           </div>

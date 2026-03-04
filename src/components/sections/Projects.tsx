@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { ProjectCard } from "@/components/ProjectCard";
 import { ANIMATION_DELAYS } from "@/constants/animation.constants";
@@ -90,10 +90,10 @@ export const Projects = ({ projects }: ProjectsProps) => {
                         </button>
 
                         {/* Project Card */}
-                        <Link
-                            to={buildProjectUrl(project.slug)}
-                            className="flex-1 cursor-pointer active:cursor-grabbing select-none block"
+                        <div
+                            className="flex-1 cursor-pointer active:cursor-grabbing select-none block group"
                             {...swipeHandlers}
+                            onClick={handleCardTap}
                             draggable={false} // Prevent native drag to allow swipe
                             aria-label={`Open project ${project.title}`}
                         >
@@ -103,7 +103,7 @@ export const Projects = ({ projects }: ProjectsProps) => {
                                 style={style}
                                 slideDirection={slideDirection}
                             />
-                        </Link>
+                        </div>
 
                         {/* Right arrow - hidden on very small screens */}
                         <button
