@@ -168,6 +168,8 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileProjectsOpen, setMobileProjectsOpen] = useState(false);
+  const [mobileProjectsHeight, setMobileProjectsHeight] = useState(0);
+  const mobileProjectsContentRef = useRef<HTMLDivElement | null>(null);
 
   const { activeSection, setActiveSection } = useActiveSection<NavLinkId>({
     isHome,
@@ -223,6 +225,16 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
   };
 
   const navPosition = isHome ? "fixed" : "sticky";
+
+  useEffect(() => {
+    const updateMobileProjectsHeight = () => {
+      setMobileProjectsHeight(mobileProjectsContentRef.current?.scrollHeight ?? 0);
+    };
+
+    updateMobileProjectsHeight();
+    window.addEventListener("resize", updateMobileProjectsHeight);
+    return () => window.removeEventListener("resize", updateMobileProjectsHeight);
+  }, [projectMenu.length, mobileMenuOpen]);
 
   return (
     <nav
@@ -437,12 +449,15 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
                             className="overflow-hidden transition-all duration-300 ease-in-out"
                             style={{
                               maxHeight: mobileProjectsOpen
-                                ? `${projectMenu.length * 5}vh`
+                                ? `${mobileProjectsHeight}px`
                                 : "0",
                               opacity: mobileProjectsOpen ? 1 : 0,
                             }}
                           >
-                            <div className="pl-[clamp(1.5rem,6vw,3rem)] pt-[clamp(0.1rem,0.5vh,0.5rem)] pb-[clamp(0.25rem,1vh,1rem)] flex flex-col gap-[clamp(0.2rem,0.5vh,0.5rem)]">
+                            <div
+                              ref={mobileProjectsContentRef}
+                              className="pl-[clamp(1.5rem,6vw,3rem)] pt-[clamp(0.1rem,0.5vh,0.5rem)] pb-[clamp(0.25rem,1vh,1rem)] flex flex-col gap-[clamp(0.2rem,0.5vh,0.5rem)]"
+                            >
                               {projectMenu.map((project) => (
                                 <Link
                                   key={project.slug}
