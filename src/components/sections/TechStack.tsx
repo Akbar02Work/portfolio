@@ -1,28 +1,34 @@
-import { AnimatedSection } from "@/components/AnimatedSection";
-import { ANIMATION_DELAYS } from "@/constants/animation.constants";
 import { techStack } from "@/data/techStack";
+
+const MarqueeRow = ({ id, hidden }: { id: string; hidden?: boolean }) => (
+    <div className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
+        {techStack.map((tech) => (
+            <span
+                key={`${id}-${tech}`}
+                className="flex items-center whitespace-nowrap font-mono text-caption uppercase tracking-[0.18em] text-gray-500 dark:text-slate-400"
+            >
+                <span className="px-6 md:px-8">{tech}</span>
+                <span aria-hidden="true" className="text-volt-ink dark:text-volt select-none">
+                    //
+                </span>
+            </span>
+        ))}
+    </div>
+);
 
 export const TechStack = () => {
     return (
-        <AnimatedSection delay={ANIMATION_DELAYS.TECH_STACK}>
-            <section aria-label="Tech stack">
-                <h2 className="sr-only">Tech stack</h2>
-                <div className="tech-stack-bar w-full border-y border-gray-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-none md:backdrop-blur-sm py-4 md:py-6">
-                    {/* Horizontal scroll on mobile, centered wrap on desktop */}
-                    <div className="overflow-x-auto scrollbar-hide md:overflow-visible">
-                        <ul className="flex gap-2 md:gap-3 md:flex-wrap md:justify-center items-center list-none m-0 px-5 md:px-4 max-w-6xl mx-auto whitespace-nowrap md:whitespace-normal">
-                            {techStack.map((tech) => (
-                                <li key={tech}>
-                                    {/* Chip/Tag style */}
-                                    <span className="inline-flex items-center justify-center px-4 py-2 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 text-caption rounded-full border border-gray-200 dark:border-slate-700">
-                                        {tech}
-                                    </span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+        <section
+            aria-label="Tech stack"
+            className="marquee w-full border-y border-gray-200 dark:border-slate-800 bg-background/95 py-4 md:py-5 overflow-hidden"
+        >
+            <h2 className="sr-only">Tech stack</h2>
+            <div className="marquee-mask overflow-hidden">
+                <div className="marquee-track flex w-max">
+                    <MarqueeRow id="a" />
+                    <MarqueeRow id="b" hidden />
                 </div>
-            </section>
-        </AnimatedSection>
+            </div>
+        </section>
     );
 };

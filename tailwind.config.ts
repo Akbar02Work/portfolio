@@ -27,19 +27,11 @@ export default {
 				'Noto Sans',
 				'sans-serif'
 			],
-			serif: [
-				'Crimson Pro',
-				'ui-serif',
-				'Georgia',
-				'Cambria',
-				'Times New Roman',
-				'Times',
-				'serif'
-			],
 			mono: [
-				'SF Mono',
+				'JetBrains Mono',
 				'ui-monospace',
 				'SFMono-Regular',
+				'SF Mono',
 				'Menlo',
 				'Monaco',
 				'Consolas',
@@ -49,8 +41,7 @@ export default {
 			]
 		},
 		extend: {
-			fontSize: {
-				// ── Display Layer ──────────────────────────────────────────
+			fontSize: {				// ── Display Layer ──────────────────────────────────────────
 				'display-hero': ['clamp(2.5rem, 5vw + 1rem, 6rem)', { lineHeight: '1.1', letterSpacing: '-0.03em', fontWeight: '900' }],
 				'display-404': ['clamp(8.5rem, 30vh, 22rem)', { lineHeight: '0.85', letterSpacing: '-0.02em', fontWeight: '700' }],
 				// ── Heading Layer (High Contrast) ──────────────────────────
@@ -72,6 +63,10 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				volt: {
+					DEFAULT: 'hsl(var(--volt))',
+					ink: 'hsl(var(--volt-ink))'
+				},
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'

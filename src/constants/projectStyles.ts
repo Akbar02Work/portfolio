@@ -7,21 +7,26 @@ export type ProjectStyle = {
   hoverBorder: string;
 };
 
+/* MONO/VOLT: media surfaces are neutral, the accent lives in the volt hover border */
+const MUTED_GRADIENT =
+  "bg-gradient-to-br from-neutral-200 to-neutral-300 dark:from-neutral-800 dark:to-neutral-900";
+const VOLT_HOVER_BORDER = "hover:border-volt-ink dark:hover:border-volt";
+
 const projectStyleEntries = [
   {
     slug: "voicenotes",
     style: {
-      gradient: "bg-gradient-to-br from-fuchsia-500 to-pink-500",
+      gradient: MUTED_GRADIENT,
       icon: Mic,
-      hoverBorder: "hover:border-fuchsia-500 dark:hover:border-fuchsia-400",
+      hoverBorder: VOLT_HOVER_BORDER,
     },
   },
   {
     slug: "secbench-25",
     style: {
-      gradient: "bg-gradient-to-br from-amber-500 to-orange-500",
+      gradient: MUTED_GRADIENT,
       icon: Shield,
-      hoverBorder: "hover:border-amber-500 dark:hover:border-amber-400",
+      hoverBorder: VOLT_HOVER_BORDER,
     },
   },
 ] as const;
@@ -31,7 +36,7 @@ export const projectStylesBySlug: Record<string, ProjectStyle> = Object.fromEntr
 );
 
 export const fallbackProjectStyle: ProjectStyle = {
-  gradient: "bg-gray-100",
+  gradient: MUTED_GRADIENT,
   icon: Mic,
-  hoverBorder: "",
+  hoverBorder: VOLT_HOVER_BORDER,
 };

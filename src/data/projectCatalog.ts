@@ -1,6 +1,20 @@
+export type ProjectMediaType = "phone" | "terminal";
+
+export interface ProjectMetric {
+  value: string;
+  label: string;
+}
+
 export interface ProjectData {
   title: string;
   description: string;
+  role: string;
+  year: number;
+  metrics: ProjectMetric[];
+  media: {
+    type: ProjectMediaType;
+    alt: string;
+  };
   links: {
     github: string;
   };
@@ -51,6 +65,17 @@ const projectDefinitions = [
     title: "VoiceNotes",
     description:
       "Android app for voice notes with AI summarization and reliable offline storage.",
+    role: "Product design & Android development — solo",
+    year: 2025,
+    metrics: [
+      { value: "100%", label: "offline-first storage" },
+      { value: "1-tap", label: "recording flow" },
+      { value: "Gemini", label: "AI summarization" },
+    ],
+    media: {
+      type: "phone",
+      alt: "VoiceNotes recording screen with waveform",
+    },
     links: {
       github: "https://github.com/Akbar02Work/VoiceNotes",
     },
@@ -79,12 +104,23 @@ const projectDefinitions = [
     title: "SecBench-25",
     description:
       "Benchmark framework to evaluate LLM jailbreak resistance and defense-layer effectiveness.",
+    role: "Research & framework development — solo",
+    year: 2025,
+    metrics: [
+      { value: "T.R.I.A.D.", label: "defense layers evaluated" },
+      { value: "A/B", label: "baseline vs protected runs" },
+      { value: "100%", label: "reproducible reports" },
+    ],
+    media: {
+      type: "terminal",
+      alt: "SecBench-25 benchmark results dashboard",
+    },
     links: {
       github: "https://github.com/Akbar02Work/secbench-25",
     },
     gallery: [
       {
-        imageUrl: "/projects/secbench/placeholder.png",
+        imageUrl: "/projects/secbench-25/placeholder.png",
         caption: "Benchmark dashboard with attack outcomes and defense effectiveness metrics.",
       },
     ],

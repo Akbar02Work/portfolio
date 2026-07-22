@@ -138,7 +138,7 @@ const Index = () => {
   return (
     <MainLayout
       variant="home"
-      className="bg-[#f8f9fa] dark:bg-slate-950 text-gray-900 dark:text-slate-100 antialiased overflow-x-hidden font-sans transition-colors duration-300"
+      className="bg-background text-gray-900 dark:text-slate-100 antialiased overflow-x-hidden font-sans transition-colors duration-300"
     >
       <Helmet>
         <title>Akbar — Android &amp; AI Engineer</title>

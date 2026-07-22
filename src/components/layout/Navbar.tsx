@@ -242,7 +242,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
 
   return (
     <nav
-      className={`${navPosition} w-full z-50 top-0 start-0 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800`}
+      className={`${navPosition} w-full z-50 top-0 start-0 bg-background/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800`}
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
         <div className="flex flex-wrap items-center justify-between mx-auto p-4">
@@ -252,7 +252,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
             onClick={handleLogoClick}
             className="flex items-center space-x-3"
           >
-            <span className="self-center text-lg font-bold tracking-wider whitespace-nowrap uppercase text-gray-900 dark:text-white">
+            <span className="self-center font-mono text-lg font-bold tracking-wider whitespace-nowrap uppercase text-gray-900 dark:text-white">
               &lt;Aka
               <span
                 style={{
@@ -387,7 +387,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
                     }}
                     className="flex items-center"
                   >
-                    <span className="text-[clamp(1rem,2.5vh,1.5rem)] font-bold tracking-wider whitespace-nowrap uppercase text-gray-900 dark:text-white">
+                    <span className="font-mono text-[clamp(1rem,2.5vh,1.5rem)] font-bold tracking-wider whitespace-nowrap uppercase text-gray-900 dark:text-white">
                       &lt;Aka
                       <span
                         style={{

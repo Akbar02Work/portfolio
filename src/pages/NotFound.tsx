@@ -19,7 +19,7 @@ const NotFound = () => {
   return (
     <MainLayout
       variant="detail"
-      className="bg-white dark:bg-slate-950 text-gray-900 dark:text-white transition-colors duration-300"
+      className="bg-background text-gray-900 dark:text-white transition-colors duration-300"
       showFooter={false}
       showBackToTop={false}
     >

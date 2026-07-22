@@ -1,4 +1,5 @@
 import { projectsCatalog } from "./projectCatalog";
+import type { ProjectMediaType, ProjectMetric } from "./projectCatalog";
 
 export interface ProjectFeature {
   title: string;
@@ -17,6 +18,13 @@ export interface Project {
   title: string;
   slug: string;
   summary: string;
+  role: string;
+  year: number;
+  metrics: ProjectMetric[];
+  media: {
+    type: ProjectMediaType;
+    alt: string;
+  };
   overview: string;
   image: string;
   technologies: string[];
@@ -36,6 +44,10 @@ export const projects: Project[] = projectsCatalog.map((project) => ({
   title: project.title,
   slug: project.slug,
   summary: project.description,
+  role: project.role,
+  year: project.year,
+  metrics: project.metrics,
+  media: project.media,
   overview: project.overview,
   image: project.coverImage ?? project.gallery[0]?.imageUrl ?? "",
   technologies: project.stackAndArchitecture.stack,
