@@ -4,10 +4,14 @@ import { withBase } from "@/lib/urls";
 
 const HeroText = () => (
     <div className="flex-1 space-y-5 text-center md:text-left">
+        <p className="text-caption uppercase tracking-[0.14em] text-gray-500 dark:text-slate-400">
+            Akbar Azizov — Android &amp; AI Engineer
+        </p>
         <h1 className="text-display-hero text-gray-900 dark:text-white">
-            I{"\u2019"}m{" "}
-            <span className="relative inline-block">
-                Akbar
+            Android
+            <br />
+            <span className="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-slate-400">
+                Developer
                 {/* Hand-drawn stroke SVG */}
                 <svg
                     className="absolute -bottom-2 left-0 w-full h-3"
@@ -24,10 +28,6 @@ const HeroText = () => (
                         className="text-gray-400/70 dark:text-slate-500/70"
                     />
                 </svg>
-            </span>
-            <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-slate-400">
-                Android Developer
             </span>
         </h1>
         <p className="text-body-lg font-medium text-gray-600 dark:text-slate-200 max-w-lg mx-auto md:mx-0 mb-2">
@@ -59,6 +59,8 @@ const HeroText = () => (
     </div>
 );
 
+const highFetchPriority = { fetchpriority: "high" };
+
 const HeroPortrait = () => {
     const [imageError, setImageError] = useState(false);
     const avatarSrc = withBase("/avatar.png");
@@ -80,7 +82,7 @@ const HeroPortrait = () => {
                         alt="Akbar Azizov"
                         width={586}
                         height={934}
-                        fetchpriority="high"
+                        {...highFetchPriority}
                         loading="eager"
                         decoding="async"
                         draggable="false"

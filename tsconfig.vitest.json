@@ -3,5 +3,9 @@
   "compilerOptions": {
     "types": ["vitest/globals"]
   },
-  "include": ["src/**/*.{test,spec}.{ts,tsx}", "src/**/__tests__/**/*"]
+  "include": [
+    "src/vite-env.d.ts",
+    "src/**/*.{test,spec}.{ts,tsx}",
+    "src/**/__tests__/**/*"
+  ]
 }

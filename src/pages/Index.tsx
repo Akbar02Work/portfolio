@@ -52,6 +52,13 @@ const Index = () => {
     let throttleTimerId: number | null = null;
     let idleTaskId: number | null = null;
     let lastWriteAt = 0;
+    const idleWindow = window as unknown as {
+      requestIdleCallback?: (
+        callback: () => void,
+        options?: { timeout: number }
+      ) => number;
+      cancelIdleCallback?: (handle: number) => void;
+    };
 
     const flushScroll = () => {
       storage.set(SCROLL_STORAGE_KEY, window.scrollY, { area: "session" });
@@ -59,8 +66,8 @@ const Index = () => {
 
     const cancelIdleTask = () => {
       if (idleTaskId === null) return;
-      if ("cancelIdleCallback" in window) {
-        window.cancelIdleCallback(idleTaskId);
+      if (typeof idleWindow.cancelIdleCallback === "function") {
+        idleWindow.cancelIdleCallback(idleTaskId);
       } else {
         window.clearTimeout(idleTaskId as number);
       }
@@ -70,8 +77,8 @@ const Index = () => {
     const scheduleIdleFlush = () => {
       cancelIdleTask();
 
-      if ("requestIdleCallback" in window) {
-        idleTaskId = window.requestIdleCallback(
+      if (typeof idleWindow.requestIdleCallback === "function") {
+        idleTaskId = idleWindow.requestIdleCallback(
           () => {
             idleTaskId = null;
             flushScroll();

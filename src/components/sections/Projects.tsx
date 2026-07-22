@@ -5,14 +5,11 @@ import { ProjectCard } from "@/components/ProjectCard";
 import { ANIMATION_DELAYS } from "@/constants/animation.constants";
 import { CAROUSEL_AUTO_SCROLL_INTERVAL_MS } from "@/constants/ui.constants";
 import { buildProjectUrl } from "@/constants/routes";
-import { projectStylesList } from "@/constants/projectStyles";
+import { fallbackProjectStyle, projectStylesBySlug } from "@/constants/projectStyles";
 import { useCarouselController } from "@/hooks/useCarouselController";
 import { useSwipe } from "@/hooks/useSwipe";
-import { useWheelNavigation } from "@/hooks/useWheelNavigation";
 import type { ProjectSummary } from "@/data/projectsSummary";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-const SWIPE_THRESHOLD = 30;
 
 type ProjectsProps = {
     projects: ProjectSummary[];
@@ -53,31 +50,22 @@ export const Projects = ({ projects }: ProjectsProps) => {
 
     // Removed handleCardKeyDown as Link handles accessibility (Enter/Space) natively
 
-    const { handleWheel } = useWheelNavigation({
-        onNext: handleNext,
-        onPrev: handlePrev,
-        threshold: SWIPE_THRESHOLD,
-    });
-
     const project = projects[currentIndex];
     if (!project) {
         return null;
     }
-    const style = projectStylesList[currentIndex % projectStylesList.length] ?? projectStylesList[0]!;
+    const style = projectStylesBySlug[project.slug] ?? fallbackProjectStyle;
 
     return (
         <AnimatedSection delay={ANIMATION_DELAYS.PROJECTS_SECTION}>
-            <section id="projects" className="pt-16 pb-16 bg-white dark:bg-slate-900 overflow-hidden scroll-mt-16">
+            <section id="projects" className="pt-16 pb-16 bg-white dark:bg-slate-950 overflow-hidden scroll-mt-16">
                 {/* Header - centered */}
                 <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 mb-12 text-center">
                     <h2 className="text-heading-1 mb-4 text-gray-900 dark:text-white">Selected Works</h2>
                 </div>
 
                 {/* Carousel with side arrows */}
-                <div
-                    className="relative px-6 sm:px-8 lg:px-12"
-                    onWheel={handleWheel}
-                >
+                <div className="relative px-6 sm:px-8 lg:px-12">
                     {/* Container with arrows on sides */}
                     <div className="max-w-6xl mx-auto flex items-center gap-4 md:gap-8">
                         {/* Left arrow - hidden on very small screens, shown on sides */}

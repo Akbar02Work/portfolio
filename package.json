@@ -1,5 +1,5 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "akbar-azizov-portfolio",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -15,9 +15,10 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "analyze": "ANALYZE=true vite build",
+    "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.vitest.json",
     "check:bundle": "node scripts/check-bundle.js",
-    "ci:full": "npm run lint && npm run test && npm run build && npm run check:bundle && npm run test:e2e",
-    "ci": "npm run lint:all && npm run test && npm run build && npm run check:bundle"
+    "ci:full": "npm run lint && npm run typecheck && npm run test && npm run build && npm run check:bundle && npm run test:e2e",
+    "ci": "npm run lint:all && npm run typecheck && npm run test && npm run build && npm run check:bundle"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",

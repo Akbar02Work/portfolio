@@ -79,6 +79,7 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks(id) {
             if (!id.includes("node_modules")) return;
+            if (id.includes("@sentry")) return "monitoring";
             if (id.includes("react-router") || id.includes("@remix-run/router")) return "router";
             if (id.includes("@radix-ui") || id.includes("lucide-react")) return "ui";
             return "vendor";

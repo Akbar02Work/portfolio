@@ -7,7 +7,7 @@ export const TechStack = () => {
         <AnimatedSection delay={ANIMATION_DELAYS.TECH_STACK}>
             <section aria-label="Tech stack">
                 <h2 className="sr-only">Tech stack</h2>
-                <div className="tech-stack-bar w-full border-y border-gray-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-none md:backdrop-blur-sm py-4 md:py-6">
+                <div className="tech-stack-bar w-full border-y border-gray-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-none md:backdrop-blur-sm py-4 md:py-6">
                     {/* Horizontal scroll on mobile, centered wrap on desktop */}
                     <div className="overflow-x-auto scrollbar-hide md:overflow-visible">
                         <ul className="flex gap-2 md:gap-3 md:flex-wrap md:justify-center items-center list-none m-0 px-5 md:px-4 max-w-6xl mx-auto whitespace-nowrap md:whitespace-normal">

@@ -116,20 +116,25 @@ export const useDynamicFavicon = () => {
 
         document.addEventListener("visibilitychange", handleVisibility);
 
-        if ("addEventListener" in mediaQuery) {
+        const legacyMediaQuery = mediaQuery as MediaQueryList & {
+            addListener?: (listener: () => void) => void;
+            removeListener?: (listener: () => void) => void;
+        };
+
+        if (typeof mediaQuery.addEventListener === "function") {
             mediaQuery.addEventListener("change", handleReduceMotion);
         } else {
-            mediaQuery.addListener(handleReduceMotion);
+            legacyMediaQuery.addListener?.(handleReduceMotion);
         }
 
         return () => {
             clearTimer();
             observer.disconnect();
             document.removeEventListener("visibilitychange", handleVisibility);
-            if ("addEventListener" in mediaQuery) {
+            if (typeof mediaQuery.removeEventListener === "function") {
                 mediaQuery.removeEventListener("change", handleReduceMotion);
             } else {
-                mediaQuery.removeListener(handleReduceMotion);
+                legacyMediaQuery.removeListener?.(handleReduceMotion);
             }
         };
     }, []);

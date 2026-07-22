@@ -113,7 +113,8 @@ const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" }) => {
         id={menuId}
         ref={menuRef}
         role="menu"
-        className={`absolute left-1/2 z-50 w-36 -translate-x-1/2 rounded-2xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-black/80 backdrop-blur-3xl shadow-2xl shadow-black/10 dark:shadow-black/40 transition-all duration-200 ease-out overflow-hidden before:content-[''] before:absolute before:left-0 before:h-6 before:w-full before:bg-white/80 dark:before:bg-black/80 before:backdrop-blur-2xl ${direction === "down"
+        aria-hidden={!isOpen}
+        className={`absolute right-0 z-50 w-36 rounded-2xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-black/80 backdrop-blur-3xl shadow-2xl shadow-black/10 dark:shadow-black/40 transition-all duration-200 ease-out overflow-hidden before:content-[''] before:absolute before:left-0 before:h-6 before:w-full before:bg-white/80 dark:before:bg-black/80 before:backdrop-blur-2xl ${direction === "down"
           ? "top-full mt-5 before:-top-6"
           : "bottom-full mb-5 before:-bottom-6"
           } ${isOpen
@@ -125,6 +126,7 @@ const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" }) => {
           <button
             type="button"
             role="menuitem"
+            tabIndex={isOpen ? 0 : -1}
             className={itemClass("light")}
             onClick={() => applyTheme("light")}
           >
@@ -136,6 +138,7 @@ const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" }) => {
           <button
             type="button"
             role="menuitem"
+            tabIndex={isOpen ? 0 : -1}
             className={itemClass("dark")}
             onClick={() => applyTheme("dark")}
           >
@@ -147,6 +150,7 @@ const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" }) => {
           <button
             type="button"
             role="menuitem"
+            tabIndex={isOpen ? 0 : -1}
             className={itemClass("system")}
             onClick={() => applyTheme("system")}
           >
@@ -296,6 +300,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
                         id="projects-menu"
                         role="menu"
                         aria-label="Projects"
+                        aria-hidden={!isProjectsMenuOpen}
                         ref={projectsMenuRef}
                         onKeyDown={handleProjectsMenuKeyDown}
                         onMouseEnter={openProjectsMenu}
@@ -483,7 +488,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
                 <div className="px-6 pb-[clamp(1rem,4vh,2rem)] pt-[clamp(0.5rem,2vh,1.5rem)]">
                   <div className="flex items-center justify-between">
                     <p className="text-[clamp(0.65rem,1.5vh,0.875rem)] font-medium text-gray-400 dark:text-slate-500">
-                      Designed by Akbar · Coded by AI
+                      Designed &amp; built by Akbar
                     </p>
 
                     <ThemeMenu direction="up" />

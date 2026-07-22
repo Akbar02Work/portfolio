@@ -75,7 +75,7 @@ export const useActiveSection = <T extends string>({
 
     if (sections.length === 0) return;
 
-    if (!("IntersectionObserver" in window)) {
+    if (typeof IntersectionObserver === "undefined") {
       let rafId = 0;
 
       const updateActiveSection = () => {
@@ -149,7 +149,7 @@ export const useActiveSection = <T extends string>({
           (a, b) => Math.abs(a[1].top - offsetPx) - Math.abs(b[1].top - offsetPx)
         );
 
-        const nextId = visibleSections[0][0] as T;
+        const nextId = visibleSections[0]![0] as T;
         setActiveSection((prev) => (prev === nextId ? prev : nextId));
       },
       {

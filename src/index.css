@@ -206,6 +206,11 @@
       radial-gradient(at 100% 0%, hsla(339, 49%, 90%, 1) 0, transparent 50%);
   }
 
+  /* Dark theme: pastel mesh turns into muddy grey — disable until volt glow (Phase 3) */
+  .dark .hero-gradient {
+    background: none;
+  }
+
   /* Hero section - uses dvh for dynamic viewport and flexbox for content distribution */
   .hero-section {
     min-height: 100dvh;

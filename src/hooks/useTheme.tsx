@@ -52,12 +52,17 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
         apply();
         if (mode !== "system") return;
 
-        if ("addEventListener" in mediaQuery) {
+        if (typeof mediaQuery.addEventListener === "function") {
             mediaQuery.addEventListener("change", apply);
             return () => mediaQuery.removeEventListener("change", apply);
         }
-        mediaQuery.addListener(apply);
-        return () => mediaQuery.removeListener(apply);
+
+        const legacyMediaQuery = mediaQuery as MediaQueryList & {
+            addListener?: (listener: () => void) => void;
+            removeListener?: (listener: () => void) => void;
+        };
+        legacyMediaQuery.addListener?.(apply);
+        return () => legacyMediaQuery.removeListener?.(apply);
     }, [mode]);
 
     useEffect(() => {

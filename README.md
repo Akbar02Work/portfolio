@@ -20,7 +20,7 @@ This project was built using a **AI-Assisted Development** workflow to maximize 
 * **Core:** React 18, TypeScript, Vite
 * **Styling:** Tailwind CSS (Mobile-first responsive design)
 * **Architecture:** Feature-sliced folder structure
-* **Tooling:** ESLint, Prettier, Husky (Git hooks)
+* **Tooling:** TypeScript, ESLint, Vitest, Playwright
 
 > **Transparency Note:**
 > This project serves as a showcase of my ability to orchestrate modern development tools.

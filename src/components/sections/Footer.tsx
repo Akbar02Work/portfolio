@@ -58,7 +58,7 @@ export const Footer = () => {
                     </div>
 
                     <p className="mt-12 text-body-sm font-medium text-gray-500 dark:text-gray-400">
-                        Designed by Akbar · Coded by AI
+                        Designed &amp; built by Akbar
                     </p>
                 </div>
             </footer>
