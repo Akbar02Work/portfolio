@@ -70,7 +70,7 @@ describe("ThemeMenu", () => {
     expect(trigger.getAttribute("aria-expanded")).toBe("false");
   });
 
-  it("opens on hover", () => {
+  it("toggles from the trigger without hover state conflicts", () => {
     render(
       <ThemeProvider>
         <ThemeMenu />
@@ -78,13 +78,10 @@ describe("ThemeMenu", () => {
     );
 
     const trigger = screen.getByRole("button", { name: "Select theme" });
-    const shell = trigger.parentElement;
-    expect(shell).toBeTruthy();
-
-    fireEvent.mouseEnter(shell!);
+    fireEvent.click(trigger);
     expect(trigger.getAttribute("aria-expanded")).toBe("true");
 
-    fireEvent.mouseLeave(shell!);
+    fireEvent.click(trigger);
     expect(trigger.getAttribute("aria-expanded")).toBe("false");
   });
 });

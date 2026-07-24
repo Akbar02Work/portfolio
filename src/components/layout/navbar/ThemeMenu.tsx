@@ -9,7 +9,6 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
   const menuRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
 
-  const openMenu = () => setIsOpen(true);
   const closeMenu = () => setIsOpen(false);
 
   useEffect(() => {
@@ -62,11 +61,7 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
     }`;
 
   return (
-    <div
-      className={`relative group after:content-[''] after:absolute after:left-0 after:right-0 ${direction === "down" ? "after:top-full after:h-6" : "after:bottom-full after:h-6"}`}
-      onMouseEnter={openMenu}
-      onMouseLeave={closeMenu}
-    >
+    <div className="relative">
       <button
         ref={triggerRef}
         type="button"
