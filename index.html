@@ -3,21 +3,86 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#050505" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.akbar02work.xyz/" />
     <title>Akbar Azizov — Signal Lab</title>
     <meta
       name="description"
       content="Experimental portfolio signal — Android & AI engineer. Built at 110%."
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="Akbar Azizov — Signal Lab" />
+    <meta property="og:title" content="Akbar Azizov — Android & AI Engineer" />
+    <meta
+      property="og:description"
+      content="Experimental portfolio signal — Android, AI, WebGL, and product craft."
     />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Akbar Azizov — Android & AI Engineer" />
+    <meta
+      name="twitter:description"
+      content="Experimental portfolio signal — Android, AI, WebGL, and product craft."
+    />
+    <link
+      rel="preload"
+      href="/fonts/syne-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/instrument-serif-italic-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/ibm-plex-mono-400-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <!-- Critical paint: dark canvas before CSS/JS, plus a static boot curtain -->
+    <style>
+      html,
+      body,
+      #root {
+        background: #050505;
+        color: #ecebe4;
+        color-scheme: dark;
+      }
+      #boot-curtain {
+        position: fixed;
+        inset: 0;
+        z-index: 85;
+        background: #050505;
+        pointer-events: none;
+      }
+    </style>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Akbar Azizov",
+        "jobTitle": "Android & AI Engineer",
+        "email": "mailto:akbar02work@gmail.com",
+        "url": "https://www.akbar02work.xyz/",
+        "sameAs": [
+          "https://github.com/Akbar02Work",
+          "https://www.linkedin.com/in/akbar02work",
+          "https://t.me/Akbar02Work"
+        ]
+      }
+    </script>
   </head>
-  <body>
+  <body class="is-loading">
+    <div id="boot-curtain" aria-hidden="true"></div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

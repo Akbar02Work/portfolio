@@ -23,12 +23,36 @@ export function Cursor() {
     if (!root || !dotEl || !ringEl || !labelEl) return;
 
     let raf = 0;
+    let running = false;
+
+    const tick = () => {
+      ring.current.x += (target.current.x - ring.current.x) * 0.22;
+      ring.current.y += (target.current.y - ring.current.y) * 0.22;
+      ringEl.style.transform = `translate(${ring.current.x}px, ${ring.current.y}px) translate(-50%, -50%)`;
+
+      const remaining = Math.hypot(
+        target.current.x - ring.current.x,
+        target.current.y - ring.current.y,
+      );
+      if (remaining > 0.1) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        running = false;
+      }
+    };
+
+    const startTick = () => {
+      if (running) return;
+      running = true;
+      raf = requestAnimationFrame(tick);
+    };
 
     const onMove = (e: PointerEvent) => {
       target.current.x = e.clientX;
       target.current.y = e.clientY;
       // Dot sticks to the pointer immediately
       dotEl.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+      startTick();
     };
 
     const onOver = (e: PointerEvent) => {
@@ -40,20 +64,12 @@ export function Cursor() {
       labelEl.textContent = label;
     };
 
-    const tick = () => {
-      // Soft follow — small lag, always in the same coordinate space as the dot
-      ring.current.x += (target.current.x - ring.current.x) * 0.22;
-      ring.current.y += (target.current.y - ring.current.y) * 0.22;
-      ringEl.style.transform = `translate(${ring.current.x}px, ${ring.current.y}px) translate(-50%, -50%)`;
-      raf = requestAnimationFrame(tick);
-    };
-
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerover", onOver, { passive: true });
-    raf = requestAnimationFrame(tick);
     document.documentElement.style.cursor = "none";
 
     return () => {
+      running = false;
       cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerover", onOver);
