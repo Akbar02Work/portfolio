@@ -3,6 +3,22 @@
 This file records meaningful public milestones, not every deployment or
 dependency update.
 
+## Unreleased — 2026-07-25
+
+### Maintenance
+
+- Upgraded the Business app from React Router 6 to 7.18.1 and removed the
+  obsolete v7 future-flag configuration; declarative routes, direct URLs, 404,
+  back/forward navigation, and project links remain covered by tests.
+- Upgraded the root build from Vite 5 to 8.1.5, moved console/debugger removal
+  to Rolldown minification, and adopted the Vite 8 React plugin.
+- Kept automatic code splitting under the existing 150 KB initial gzip budget;
+  the validated Business build is 110.81 KB.
+- Re-ran the dependency audit: the previous Vite/esbuild findings are gone.
+  The remaining React Router advisory is restricted to unstable RSC APIs and
+  does not apply to this declarative client; a React 19 / Router 8 migration is
+  intentionally tracked separately rather than forced into this maintenance pass.
+
 ## [2.0.0] — 2026-07-24
 
 ### One portfolio, two expressions

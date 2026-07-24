@@ -1,5 +1,5 @@
 import { defineConfig, loadEnv } from "vite";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
 import path from "path";
 import { execSync } from "node:child_process";
@@ -109,20 +109,16 @@ export default defineConfig(({ mode }) => {
     build: {
       sourcemap,
       reportCompressedSize: true,
-      rollupOptions: {
+      rolldownOptions: {
         output: {
-          manualChunks(id) {
-            if (!id.includes("node_modules")) return;
-            if (id.includes("@sentry")) return "monitoring";
-            if (id.includes("react-router") || id.includes("@remix-run/router")) return "router";
-            if (id.includes("@radix-ui") || id.includes("lucide-react")) return "ui";
-            return "vendor";
+          minify: {
+            compress: {
+              dropConsole: true,
+              dropDebugger: true,
+            },
           },
         },
       },
-    },
-    esbuild: {
-      drop: ["console", "debugger"],
     },
   };
 });
