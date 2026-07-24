@@ -23,18 +23,22 @@
       ]
     }
   ],
-  "rewrites": [
+  "redirects": [
+    {
+      "source": "/old",
+      "destination": "/old/",
+      "permanent": false
+    },
     {
       "source": "/creative",
-      "destination": "/creative/index.html"
-    },
+      "destination": "/creative/",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
     {
       "source": "/creative/",
       "destination": "/creative/index.html"
-    },
-    {
-      "source": "/old",
-      "destination": "/old/index.html"
     },
     {
       "source": "/old/",
