@@ -25,7 +25,7 @@ jobs:
         run: npm --prefix creative ci
 
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install --with-deps chromium
 
       - name: Full Business and Creative CI pipeline
         run: npm run ci:full
