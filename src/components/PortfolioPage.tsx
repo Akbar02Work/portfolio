@@ -1,5 +1,6 @@
 import type { MouseEvent } from "react";
 import { useBlink, useTashkentClock } from "../hooks/useSignalStatus";
+import { withBase } from "../lib/urls";
 import { getBusinessUrl } from "../siteConfig";
 import { PROJECTS, STACK } from "../siteData";
 import { Corners } from "./Corners";
@@ -270,18 +271,18 @@ export function PortfolioPage({
                 <picture>
                   <source
                     type="image/avif"
-                    srcSet="/avatar-320.avif 320w, /avatar-480.avif 480w, /avatar.avif 586w"
+                    srcSet={`${withBase("avatar-320.avif")} 320w, ${withBase("avatar-480.avif")} 480w, ${withBase("avatar.avif")} 586w`}
                     sizes="(min-width: 860px) 380px, 70vw"
                   />
                   <source
                     type="image/webp"
-                    srcSet="/avatar-320.webp 320w, /avatar-480.webp 480w, /avatar.webp 586w"
+                    srcSet={`${withBase("avatar-320.webp")} 320w, ${withBase("avatar-480.webp")} 480w, ${withBase("avatar.webp")} 586w`}
                     sizes="(min-width: 860px) 380px, 70vw"
                   />
                   <img
                     className="about__portrait-img"
-                    src="/avatar.png"
-                    srcSet="/avatar-320.png 320w, /avatar-480.png 480w, /avatar.png 586w"
+                    src={withBase("avatar.png")}
+                    srcSet={`${withBase("avatar-320.png")} 320w, ${withBase("avatar-480.png")} 480w, ${withBase("avatar.png")} 586w`}
                     sizes="(min-width: 860px) 380px, 70vw"
                     width={586}
                     height={934}
