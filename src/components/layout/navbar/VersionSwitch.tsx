@@ -19,22 +19,12 @@ export const VersionSwitch = ({ className = "" }: VersionSwitchProps) => {
       >
         Business
       </span>
-      {creativeUrl ? (
-        <a
-          href={creativeUrl}
-          className="px-2.5 py-1.5 rounded-md text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-        >
-          Creative
-        </a>
-      ) : (
-        <span
-          aria-disabled="true"
-          title="Creative version is not deployed yet"
-          className="cursor-not-allowed px-2.5 py-1.5 text-gray-400 dark:text-slate-600"
-        >
-          Creative
-        </span>
-      )}
+      <a
+        href={creativeUrl}
+        className="px-2.5 py-1.5 rounded-md text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+      >
+        Creative
+      </a>
     </div>
   );
 };
