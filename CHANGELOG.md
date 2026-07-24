@@ -1,72 +1,46 @@
-# История изменений
+# Changelog
 
-## Unreleased — 2026-07-24
+This file records meaningful public milestones, not every deployment or
+dependency update.
 
-- Creative теперь автоматически собирается вместе с Business, проверяется в
-  общем CI, а рассинхронизация `public/creative` блокирует проверку.
-- Исторические дизайн-аудиты перенесены из корня в `docs/history/`.
-- Перенесён исходный код Creative-портфолио в `creative/`: обе версии сайта
-  теперь хранятся и клонируются в одном Git-репозитории.
-- Объединён визуальный стиль MONO/VOLT и обновлена подача VoiceNotes.
-- Удалены приватные и дублирующиеся скриншоты проекта.
-- Бесконечная карусель заменена компактной семантической галереей.
-- Исправлены TypeScript, mobile layout, theme menu, scroll reveal и 404.
-- Удалены неиспользуемые зависимости, runtime динамического favicon и устаревшие планы.
-- Обновлены SEO-описания, footer, manifest и release-документация.
+## [2.0.0] — 2026-07-24
 
-Этот файл основан на истории коммитов ветки `main`. Тегов Git и релизов GitHub нет, поэтому «версии» и «подверсии» ниже соответствуют последовательным коммитам `main`, упорядоченным по дате.
+### One portfolio, two expressions
 
-## Версия 1 — 2026-01-30 (коммит `d92841a`)
-- Начальный каркас и конфигурация проекта (Vite + React + TypeScript, Tailwind, ESLint, Vitest).
-- Роутинг и страницы: `Index`, `ProjectDetail`, `NotFound`.
-- Базовые UI-хелперы и хуки: анимированные секции, навигационные ссылки, toasts/tooltips, анимация скролла.
-- Данные и ассеты: данные проектов, плейсхолдеры, резюме PDF, аватар, глобальные стили.
+- Brought the Business and Creative experiences into one repository and one
+  deployment, with an in-product switch between them.
+- Established the MONO/VOLT visual system across the editorial Business site
+  while keeping the Creative site deliberately cinematic and exploratory.
+- Rebuilt the featured VoiceNotes work as a focused case study with safe,
+  reviewed product media.
 
-## Версия 2 — 2026-01-31 (коммит `b215e7e`)
-- Рефакторинг архитектуры на секционные компоненты (`Hero`, `About`, `Projects`, `TechStack`, `Footer`).
-- Добавлена поддержка темы через `useTheme` и стили тёмного режима.
-- Обновления SEO/брендинга в `index.html` и добавлен `public/og-image.png`.
+### Engineering
 
-## Версия 3 — 2026-01-31 (коммит `7d826ec`)
-- Адаптивные исправления с `dvh` единицами и липким поведением `TechStack`.
-- Редизайн карусели проектов: бесконечная лента и поддержка свайпа.
-- Направленные анимации (slide/scale/blur) и улучшения мобильных отступов.
-- Добавлен `CHANGES_CODEX.md` (позже удалён).
+- Added a unified build that compiles Creative into `/creative/` and fails CI
+  when the committed embed drifts from its source.
+- Restored TypeScript, unit, production-build, bundle-budget, and Playwright
+  gates; CI installs only the Chromium browser it uses.
+- Fixed direct static routes, mobile navigation and layout, theme interaction,
+  scroll behavior, reduced-motion handling, and 404 overflow.
+- Removed unused dependencies, private or duplicate media, obsolete runtime
+  behavior, and superseded planning documents.
+- Added focused Dependabot coverage for both applications and GitHub Actions,
+  grouping minor and patch updates while leaving major migrations manual.
 
-## Версия 4 — 2026-01-31 (коммит `75b70de`)
-- Полировка контента About/Hero в более «senior/engineering» тоне.
-- Улучшения мобильного UX: подсказки свайпа, горизонтальный скролл стека, правки футера.
-- Визуальная полировка: единый стиль статистики, стеклянные иконки, hand-drawn stroke.
-- Обновлены описания проектов; исправлены проблемы с drag и отступами.
+### Repository
 
-## Версия 5 — 2026-02-01 (коммит `091bc43`)
-- Снижение размера бандла и чистка (удалены неиспользуемые ассеты и файлы).
-- Динамический SEO через `react-helmet-async` и обновление метаданных страниц.
-- Новые компоненты: `BackToTop`, `ProjectCard`, `PageLoader`.
-- Удалена старая toast-система и тестовый каркас; доработаны стили и страница деталей проекта.
-- Включены более строгие настройки TypeScript и упрощены конфиги.
+- Reframed the README as an engineering case study with an explicit account of
+  AI-assisted work and human ownership.
+- Split licensing so implementation code remains MIT while personal branding,
+  design, writing, CV, photographs, and project media remain all rights reserved.
+- Consolidated release documentation into this changelog.
 
-## Версия 6 — 2026-02-02 (коммит `b2907fa`)
-- Производительность: оптимизация загрузки изображений, scroll-spy через IntersectionObserver, throttling высокочастотных событий, настройка `manualChunks`.
-- Качество кода: строгий TS, глобальный `ErrorBoundary`, улучшенная обработка битых изображений.
-- Архитектура: введены layout-компоненты (`MainLayout`, `Navbar`, `Footer`), дедупликация данных проектов, добавлен `useSwipe`.
-- UX/Accessibility: синхронизация с системной темой, deep-linking/восстановление позиции скролла, улучшены ARIA/клавиатурная навигация.
-- Хаускипинг: удалён мёртвый код; обновлён README с подробным списком фич.
+## [1.0.0] — 2026-02-07
 
-## Версия 6.1 — 2026-02-02 (коммит `6b4f8e6`)
-- Удалён `manualChunks` в `vite.config.ts` для устранения ошибки циклической зависимости.
+- Established the first production-ready Business portfolio.
+- Added project detail routes, theme support, responsive navigation, SEO
+  metadata, unit and browser tests, performance checks, and deployment
+  hardening.
 
-## Версия 6.2 — 2026-02-02 (коммит `6fbcb9a`)
-- Обновления build-конфига: улучшен `manualChunks`, условные sourcemaps, future flags React Router v7.
-- E2E тестирование: добавлен Playwright, скрипт `test:e2e`, CI workflow, smoke-тесты.
-- Обновлён README.
-
-## Версия 6.3 — 2026-02-05 (коммит `5c9583f`)
-- Добавлена синхронная анимация мигающего подчёркивания для favicon/логотипа (`useBlink`, `useDynamicFavicon`).
-- Обновлён текст футера и связанные правки UI.
-- Обновлены preview и аватар-ассеты.
-
-## Версия 6.4 — 2026-02-05 (коммит `993b4c0`)
-- Добавлен шрифт Inter и подключение в стилях и `index.html`.
-- Восстановлен `src/test/setup.ts` и обновлён `vitest.config.ts`.
-- Небольшие правки layout/стилей.
+[2.0.0]: https://github.com/Akbar02Work/portfolio/releases/tag/v2.0.0
+[1.0.0]: https://github.com/Akbar02Work/portfolio/commit/71258b0d5fd641f75a4f70e3d386d9291027ceff

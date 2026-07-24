@@ -1,6 +1,10 @@
-MIT License
+Portfolio source code license
+=============================
 
-Copyright (c) 2026 akkbar
+Copyright (c) 2026 Akbar Azizov
+
+Except for the excluded material described below, the source code in this
+repository is licensed under the MIT License:
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +23,27 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+Excluded portfolio material — All rights reserved
+=================================================
+
+The MIT License above does not grant permission to reuse, reproduce, publish,
+redistribute, or create derivative works from the following material:
+
+- the portfolio's written copy, case-study narratives, and project descriptions;
+- Akbar Azizov's name, personal brand, logos, and visual identity;
+- the portfolio's original visual design and trade dress;
+- photographs, portraits, CV/resume files, illustrations, and other personal
+  media;
+- product screenshots, videos, recordings, and project-specific media; and
+- third-party trademarks or assets, which remain subject to their respective
+  owners' rights.
+
+Those materials are provided for viewing in this portfolio only and are
+copyright (c) 2026 Akbar Azizov, all rights reserved, unless a file or its
+accompanying notice states otherwise.
+
+In practical terms: the implementation code may be studied and reused under
+MIT, but this portfolio may not be cloned and presented as another person's
+identity, work, or case study.

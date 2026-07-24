@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { ROUTES } from "@/constants/routes";
 import { parseEasterReport } from "@/lib/easterReport";
-import reportMarkdown from "../../EASTER_PAGE_CHANGELOG.md?raw";
+import reportMarkdown from "../../CHANGELOG.md?raw";
 
 type ConfettiPiece = {
   id: number;
@@ -146,7 +146,7 @@ const Easter = ({
         <title>Easter Page | Akbar Portfolio</title>
         <meta
           name="description"
-          content="Manual changelog and easter notes for the Portfolio site."
+          content="Release notes and build information for the Portfolio site."
         />
       </Helmet>
 
@@ -170,11 +170,11 @@ const Easter = ({
             {manualVersion}
           </h1>
           <h2 className="mt-4 text-heading-2 text-gray-900 dark:text-white">
-            Manual Changelog
+            Release Changelog
           </h2>
           <p className="mt-3 text-body-sm text-gray-600 dark:text-slate-300">
-            Версия берется из первой строки <code>EASTER_PAGE_CHANGELOG.md</code> в формате{" "}
-            <code>VERSION: ...</code>. Остальной текст файла показывается ниже.
+            The latest milestone is read directly from the repository&apos;s single{" "}
+            <code>CHANGELOG.md</code>; the runtime build remains visible separately.
           </p>
 
           <div className="mt-6 grid sm:grid-cols-2 gap-3">

@@ -7,19 +7,20 @@ export const parseEasterReport = (
   reportMarkdown: string,
   fallbackVersion: string
 ): EasterReportData => {
-  const lines = reportMarkdown.replace(/\r\n/g, "\n").split("\n");
-  const firstLine = lines[0]?.trim() ?? "";
-  const versionMatch = firstLine.match(/^version\s*:\s*(.+)$/i);
+  const normalizedMarkdown = reportMarkdown.replace(/\r\n/g, "\n");
+  const versionMatch = normalizedMarkdown.match(
+    /^##\s+\[?v?(\d+\.\d+\.\d+)\]?(?:\s+[—-].*)?$/m
+  );
 
   if (!versionMatch) {
     return {
       manualVersion: fallbackVersion,
-      reportBody: reportMarkdown,
+      reportBody: normalizedMarkdown,
     };
   }
 
   return {
-    manualVersion: versionMatch[1]?.trim() || fallbackVersion,
-    reportBody: lines.slice(1).join("\n").replace(/^\n+/, ""),
+    manualVersion: `v${versionMatch[1]}`,
+    reportBody: normalizedMarkdown,
   };
 };

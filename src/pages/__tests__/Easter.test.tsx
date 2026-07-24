@@ -23,9 +23,10 @@ const renderEaster = (options: {
   );
 
 describe("Easter page", () => {
-  it("renders manual version parsed from markdown first line", () => {
+  it("renders the latest version parsed from the changelog", () => {
     renderEaster({
-      reportMarkdownOverride: "VERSION: v9.9.9\n\nRelease notes body",
+      reportMarkdownOverride:
+        "# Changelog\n\n## [9.9.9] — 2026-07-24\n\nRelease notes body",
       buildVersionOverride: "v0.0.0+test-sha",
     });
 
@@ -33,7 +34,7 @@ describe("Easter page", () => {
     expect(screen.getByText(/Release notes body/i)).toBeTruthy();
   });
 
-  it("falls back to build version when markdown version header is invalid", () => {
+  it("falls back to build version when the changelog has no release heading", () => {
     renderEaster({
       reportMarkdownOverride: "No version header here\n\nSome details",
       buildVersionOverride: "v1.2.3+fallback",

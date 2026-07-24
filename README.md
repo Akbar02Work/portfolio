@@ -1,64 +1,97 @@
-# Akbar Azizov — Portfolio
+# Akbar Azizov — Android × AI
 
-Source for [akbar02work.xyz](https://www.akbar02work.xyz), a static portfolio for
-Android and AI engineering work.
+[![CI](https://github.com/Akbar02Work/portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Akbar02Work/portfolio/actions/workflows/ci.yml)
 
-The repository contains both portfolio experiences:
+[![Akbar Azizov portfolio](public/og-image.png)](https://www.akbar02work.xyz)
 
-- The Business site at the repository root.
-- The Creative site in `creative/`, published at `/creative/`.
+**One portfolio, two ways to read the same engineer.**
 
-## Stack
+[Business](https://www.akbar02work.xyz) is the direct version: work, decisions, and
+evidence. [Creative](https://www.akbar02work.xyz/creative/) is the expressive
+version: motion, atmosphere, and personality. They are intentionally different
+interfaces, but they ship from one repository and one release pipeline.
 
-- React 18, TypeScript, Vite
-- Tailwind CSS
-- React Router
-- Vitest and Playwright
-- Vercel static hosting
+## Why two versions?
 
-## Project structure
+Most portfolios force engineering credibility and creative identity into the same
+layout. This one keeps the tension visible.
 
-- `src/components` — layout, sections, project presentation, and shared UI
-- `src/data` — project catalog and derived view models
-- `src/hooks` — navigation, theme, and scroll behavior
-- `src/pages` — home, project detail, Easter, and client-side 404 pages
-- `public` — static fonts, icons, social image, CV, and safe public media
-- `scripts` — bundle checks, image optimization, route prerendering, and cycle checks
+| Business | Creative |
+| --- | --- |
+| Editorial and restrained | Kinetic and cinematic |
+| Optimized for scanning | Designed for exploration |
+| Project evidence first | Personality and atmosphere first |
+| React app at the repository root | Independent React app in [`creative/`](creative/) |
 
-## Local development
+The switch between them is part of the product idea—not a theme toggle. Each
+version answers a different question: “Can this person build the work?” and “What
+does it feel like to work with this person?”
+
+## The engineering behind the presentation
+
+This repository is more than a generated landing page. Its difficult parts live
+at the seams:
+
+- **Two applications, one deploy.** The Creative app is built independently,
+  embedded at `/creative/`, and checked for output drift before CI can pass.
+- **A case study, not a card grid.** Project data is modeled once and transformed
+  into summaries, detail pages, metrics, galleries, and navigation without
+  duplicating editorial content.
+- **Motion with an exit path.** WebGL, scroll choreography, view transitions, and
+  responsive interaction add character while reduced-motion behavior, keyboard
+  navigation, semantic markup, and a conventional Business version keep the site
+  usable.
+- **Static hosting without static UX.** Client-side routes, direct project URLs,
+  `/creative/`, `/old/`, metadata, and 404 behavior are prepared for a single
+  Vercel deployment.
+- **Privacy as a release constraint.** Public media is deliberately curated;
+  project screenshots, the downloadable CV, claims, and external links are
+  reviewed as publishable product data rather than copied into `public/`
+  indiscriminately.
+- **Quality gates that match the architecture.** Linting, cycle detection,
+  TypeScript, unit tests, production builds, bundle budgets, Creative embed drift,
+  and Playwright browser tests run as one CI contract.
+
+The current featured case is
+[VoiceNotes](https://www.akbar02work.xyz/projects/voicenotes): an offline-first
+Android voice-notes app that turns recordings into structured, searchable notes
+with Gemini or OpenAI summarization.
+
+## Human direction, AI-assisted execution
+
+AI tools were used as accelerators for exploration, implementation passes,
+debugging, review, and documentation. They did not choose the product direction
+or publish the result.
+
+I remained responsible for the architecture, visual direction, project claims,
+source selection, privacy review, trade-offs, and final release acceptance.
+That boundary matters here: generated output is input to an engineering process,
+not evidence of completion.
+
+## Repository map
+
+```text
+src/                 Business portfolio and case-study system
+creative/            Creative portfolio application
+public/creative/     Generated Creative embed shipped by the root app
+scripts/             Build integration, route, image, cycle, and bundle checks
+tests/               Browser-level release checks
+docs/history/        Archived design and audit context
+```
+
+For a local review, use Node.js 24:
 
 ```bash
 npm install
 npm --prefix creative install
-npm run dev
+npm run dev:pair
 ```
 
-Run both sites locally with `npm run dev:pair`. To rebuild the Creative site
-embedded at `/creative/`, run `npm run embed:creative`.
+`npm run ci` runs the fast production gates for both applications.
+`npm run ci:full` adds Playwright.
 
-The production `npm run build` command builds both applications and refreshes
-the committed `/creative/` embed automatically.
+## License
 
-## Quality gates
-
-```bash
-npm run ci
-npm run ci:full
-```
-
-`ci` checks Creative lint/build/embed drift plus Business linting, cycle
-detection, TypeScript, unit tests, production build, and the initial-payload
-budget. `ci:full` additionally runs Playwright.
-
-## Content safety
-
-Only deliberately public, reviewed media belongs in `public/`. Product screenshots
-must not contain personal conversations, contact data, credentials, or unrelated
-applications. Keep claims measurable and avoid publishing unverified reliability
-percentages.
-
-## AI-assisted development
-
-AI assistants were used for implementation and review. Architecture, product
-decisions, source selection, and final validation remain the repository owner's
-responsibility.
+The source code is available under the MIT License. The portfolio's visual
+identity, written content, personal brand, CV, photographs, and project media are
+not licensed for reuse. See [LICENSE](LICENSE) for the exact boundary.
