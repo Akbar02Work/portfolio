@@ -17,6 +17,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "optimize:images": "node scripts/optimize-images.ts",
+    "archive:old": "node scripts/archive-old.mjs",
     "analyze": "ANALYZE=true vite build",
     "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.vitest.json",
     "check:bundle": "node scripts/check-bundle.js",

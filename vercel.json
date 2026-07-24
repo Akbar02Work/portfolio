@@ -25,6 +25,22 @@
   ],
   "rewrites": [
     {
+      "source": "/old",
+      "destination": "/old/index.html"
+    },
+    {
+      "source": "/old/",
+      "destination": "/old/index.html"
+    },
+    {
+      "source": "/old/projects/:path*",
+      "destination": "/old/index.html"
+    },
+    {
+      "source": "/old/easter",
+      "destination": "/old/index.html"
+    },
+    {
       "source": "/projects/voicenotes",
       "destination": "/projects/voicenotes/index.html"
     },

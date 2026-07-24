@@ -12,5 +12,7 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /old
+Disallow: /old/
 
 Sitemap: https://www.akbar02work.xyz/sitemap.xml
