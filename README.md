@@ -36,6 +36,9 @@ npm run dev
 Run both sites locally with `npm run dev:pair`. To rebuild the Creative site
 embedded at `/creative/`, run `npm run embed:creative`.
 
+The production `npm run build` command builds both applications and refreshes
+the committed `/creative/` embed automatically.
+
 ## Quality gates
 
 ```bash
@@ -43,8 +46,9 @@ npm run ci
 npm run ci:full
 ```
 
-`ci` runs linting, cycle detection, TypeScript, unit tests, production build, and
-the initial-payload budget. `ci:full` additionally runs Playwright.
+`ci` checks Creative lint/build/embed drift plus Business linting, cycle
+detection, TypeScript, unit tests, production build, and the initial-payload
+budget. `ci:full` additionally runs Playwright.
 
 ## Content safety
 

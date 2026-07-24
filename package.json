@@ -7,7 +7,9 @@
     "dev": "vite",
     "dev:pair": "node scripts/dev-portfolios.mjs",
     "dev:pair:stop": "node scripts/dev-portfolios.mjs --stop",
-    "build": "vite build",
+    "build": "npm run build:creative && npm run build:business",
+    "build:business": "vite build",
+    "build:creative": "node scripts/embed-creative.mjs",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "lint:cycles": "node scripts/check-cycles.mjs",
@@ -19,11 +21,14 @@
     "optimize:images": "node scripts/optimize-images.ts",
     "archive:old": "node scripts/archive-old.mjs",
     "embed:creative": "node scripts/embed-creative.mjs",
+    "lint:creative": "npm --prefix creative run lint",
+    "check:creative-drift": "git diff --exit-code -- public/creative",
     "analyze": "ANALYZE=true vite build",
     "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.vitest.json",
     "check:bundle": "node scripts/check-bundle.js",
-    "ci:full": "npm run lint && npm run typecheck && npm run test && npm run build && npm run check:bundle && npm run test:e2e",
-    "ci": "npm run lint:all && npm run typecheck && npm run test && npm run build && npm run check:bundle"
+    "ci:business": "npm run lint:all && npm run typecheck && npm run test && npm run build:business && npm run check:bundle",
+    "ci:full": "npm run ci && npm run test:e2e",
+    "ci": "npm run lint:creative && npm run build:creative && npm run ci:business && npm run check:creative-drift"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",

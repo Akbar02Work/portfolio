@@ -18,16 +18,16 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install
+      - name: Install Business dependencies
         run: npm ci
 
-      - name: Check import cycles
-        run: npm run lint:cycles
+      - name: Install Creative dependencies
+        run: npm --prefix creative ci
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Full CI pipeline
+      - name: Full Business and Creative CI pipeline
         run: npm run ci:full
         env:
           VITE_SOURCEMAP: "true"

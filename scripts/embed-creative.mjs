@@ -26,6 +26,15 @@ if (!existsSync(wowRoot)) {
   process.exit(1);
 }
 
+const creativeBuildTool = path.join(wowRoot, "node_modules", ".bin", "tsc");
+if (!existsSync(creativeBuildTool)) {
+  console.log("Creative dependencies are missing; installing from package-lock.json …");
+  execSync("npm ci", {
+    cwd: wowRoot,
+    stdio: "inherit",
+  });
+}
+
 console.log("Building Creative with base /creative/ …");
 execSync("npm run build", {
   cwd: wowRoot,
