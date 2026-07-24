@@ -1,12 +1,14 @@
 import { projects } from "./projects";
 import type { ProjectMediaType, ProjectMetric } from "./projectCatalog";
 
+const toWebpPath = (imagePath: string): string =>
+  imagePath.replace(/\.(?:png|jpe?g)$/i, ".webp");
+
 export type ProjectSummary = {
   id: number;
   title: string;
   slug: string;
   summary: string;
-  role: string;
   year: number;
   metrics: ProjectMetric[];
   media: {
@@ -22,10 +24,9 @@ export const projectsSummary: ProjectSummary[] = projects.map((project) => ({
   title: project.title,
   slug: project.slug,
   summary: project.summary,
-  role: project.role,
   year: project.year,
   metrics: project.metrics,
   media: project.media,
-  image: project.image,
+  image: toWebpPath(project.image),
   technologies: project.technologies,
 }));

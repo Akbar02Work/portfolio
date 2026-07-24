@@ -22,8 +22,8 @@ export const MainLayout = ({
     return (
         <div className={cn("min-h-screen", className)}>
             <Navbar variant={variant} />
-            <main>{children}</main>
-            {showFooter ? <Footer /> : null}
+            <main className="flex-grow">{children}</main>
+            {showFooter ? <Footer showSectionNumber={variant === "home"} /> : null}
             {showBackToTop ? <BackToTop /> : null}
         </div>
     );

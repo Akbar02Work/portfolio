@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { storage } from "@/lib/storage";
 
 type ThemeMode = "light" | "dark" | "system";
@@ -23,7 +23,6 @@ const getStoredMode = (): ThemeMode => {
 type ThemeContextValue = {
     theme: ResolvedTheme;
     mode: ThemeMode;
-    toggleTheme: () => void;
     setTheme: (mode: ThemeMode) => void;
 };
 
@@ -70,18 +69,9 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
         root.classList.toggle("dark", resolvedTheme === "dark");
     }, [resolvedTheme]);
 
-    const toggleTheme = useCallback(() => {
-        setMode((prev) => {
-            if (prev === "system") {
-                return resolvedTheme === "dark" ? "light" : "dark";
-            }
-            return "system";
-        });
-    }, [resolvedTheme]);
-
     const value = useMemo(
-        () => ({ theme: resolvedTheme, mode, toggleTheme, setTheme: setMode }),
-        [resolvedTheme, mode, toggleTheme]
+        () => ({ theme: resolvedTheme, mode, setTheme: setMode }),
+        [resolvedTheme, mode]
     );
 
     return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

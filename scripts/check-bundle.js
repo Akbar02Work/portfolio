@@ -1,8 +1,9 @@
-import { existsSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { gzipSync } from "node:zlib";
 
 const MAX_INITIAL_PAYLOAD_KB = Number(
-  process.env.MAX_BUNDLE_SIZE_KB ?? 401.75
+  process.env.MAX_BUNDLE_SIZE_KB ?? 150
 );
 const distDir = path.resolve(process.cwd(), "dist");
 const indexPath = path.join(distDir, "index.html");
@@ -45,22 +46,26 @@ const initialAssets = initialAssetFiles.map((file) => {
     process.exit(1);
   }
 
+  const contents = readFileSync(filePath);
   return {
     file,
-    sizeKb: statSync(filePath).size / 1024,
+    rawSizeKb: contents.byteLength / 1024,
+    gzipSizeKb: gzipSync(contents).byteLength / 1024,
   };
 });
 
 const initialPayloadKb = initialAssets.reduce(
-  (total, asset) => total + asset.sizeKb,
+  (total, asset) => total + asset.gzipSizeKb,
   0
 );
 
-console.log("Initial payload assets (raw size):");
+console.log("Initial payload assets (raw / gzip):");
 for (const asset of initialAssets) {
-  console.log(` - ${asset.file}: ${asset.sizeKb.toFixed(2)} KB`);
+  console.log(
+    ` - ${asset.file}: ${asset.rawSizeKb.toFixed(2)} KB / ${asset.gzipSizeKb.toFixed(2)} KB`
+  );
 }
-console.log(`Total initial payload: ${initialPayloadKb.toFixed(2)} KB`);
+console.log(`Total initial payload (gzip): ${initialPayloadKb.toFixed(2)} KB`);
 
 if (initialPayloadKb > MAX_INITIAL_PAYLOAD_KB) {
   console.error(

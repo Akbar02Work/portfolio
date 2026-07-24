@@ -7,150 +7,78 @@ import { About } from "@/components/sections/About";
 import { Projects } from "@/components/sections/Projects";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { projectsSummary } from "@/data/projectsSummary";
-import { storage } from "@/lib/storage";
-
-const SCROLL_STORAGE_KEY = "scrollY";
-const SCROLL_WRITE_THROTTLE_MS = 500;
-const IDLE_WRITE_TIMEOUT_MS = 1000;
 
 const Index = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Handle state-driven navigation (e.g., from ProjectDetail)
+  // Handle state-driven navigation (e.g., from ProjectDetail).
+  // Instant jump — the curtain already handles the visual transition.
   useLayoutEffect(() => {
     const scrollTo = (location.state as { scrollTo?: string } | null)?.scrollTo;
     if (!scrollTo) return;
 
-    const rafId = window.requestAnimationFrame(() => {
-      if (scrollTo === "home") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        const element = document.getElementById(scrollTo);
-        element?.scrollIntoView({ behavior: "smooth" });
-      }
-      navigate(location.pathname, { replace: true, state: null });
-    });
-
-    return () => window.cancelAnimationFrame(rafId);
-  }, [location.pathname, location.state, navigate]);
-
-  useLayoutEffect(() => {
-    const navEntry = performance.getEntriesByType("navigation")[0];
-    const isReload =
-      navEntry && "type" in navEntry && navEntry.type === "reload";
-
-    if (isReload) {
-      const savedScrollY = storage.get<number>(SCROLL_STORAGE_KEY, 0, { area: "session" });
-      if (savedScrollY > 0) {
-        window.scrollTo({ top: savedScrollY, behavior: "auto" });
+    if (scrollTo === "home") {
+      window.scrollTo(0, 0);
+    } else {
+      const element = document.getElementById(scrollTo);
+      if (element) {
+        const top = element.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo(0, Math.max(0, top));
       }
     }
-  }, []);
+
+    navigate(location.pathname, { replace: true, state: null });
+  }, [location.pathname, location.state, navigate]);
 
   useEffect(() => {
-    let throttleTimerId: number | null = null;
-    let idleTaskId: number | null = null;
-    let lastWriteAt = 0;
-    const idleWindow = window as unknown as {
-      requestIdleCallback?: (
-        callback: () => void,
-        options?: { timeout: number }
-      ) => number;
-      cancelIdleCallback?: (handle: number) => void;
+    const navigationEntry = performance.getEntriesByType(
+      "navigation"
+    )[0] as PerformanceNavigationTiming | undefined;
+    if (navigationEntry?.type !== "reload") return;
+
+    const handleFirstWheel = (event: WheelEvent) => {
+      if (event.deltaY === 0) return;
+
+      window.removeEventListener("wheel", handleFirstWheel);
+      const scrollYBeforeWheel = window.scrollY;
+      const deltaMultiplier =
+        event.deltaMode === WheelEvent.DOM_DELTA_LINE
+          ? 16
+          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+            ? window.innerHeight
+            : 1;
+
+      window.requestAnimationFrame(() => {
+        if (Math.abs(window.scrollY - scrollYBeforeWheel) < 1) {
+          window.scrollBy({
+            top: event.deltaY * deltaMultiplier,
+            behavior: "auto",
+          });
+        }
+      });
     };
 
-    const flushScroll = () => {
-      storage.set(SCROLL_STORAGE_KEY, window.scrollY, { area: "session" });
-    };
-
-    const cancelIdleTask = () => {
-      if (idleTaskId === null) return;
-      if (typeof idleWindow.cancelIdleCallback === "function") {
-        idleWindow.cancelIdleCallback(idleTaskId);
-      } else {
-        window.clearTimeout(idleTaskId as number);
-      }
-      idleTaskId = null;
-    };
-
-    const scheduleIdleFlush = () => {
-      cancelIdleTask();
-
-      if (typeof idleWindow.requestIdleCallback === "function") {
-        idleTaskId = idleWindow.requestIdleCallback(
-          () => {
-            idleTaskId = null;
-            flushScroll();
-          },
-          { timeout: IDLE_WRITE_TIMEOUT_MS }
-        );
-        return;
-      }
-
-      idleTaskId = window.setTimeout(() => {
-        idleTaskId = null;
-        flushScroll();
-      }, 120) as unknown as number;
-    };
-
-    const throttledSaveScroll = () => {
-      const now = Date.now();
-      const elapsed = now - lastWriteAt;
-
-      if (elapsed >= SCROLL_WRITE_THROTTLE_MS) {
-        lastWriteAt = now;
-        scheduleIdleFlush();
-        return;
-      }
-
-      if (throttleTimerId !== null) return;
-
-      throttleTimerId = window.setTimeout(() => {
-        throttleTimerId = null;
-        lastWriteAt = Date.now();
-        scheduleIdleFlush();
-      }, SCROLL_WRITE_THROTTLE_MS - elapsed);
-    };
-
-    const handlePageHide = () => {
-      if (throttleTimerId !== null) {
-        window.clearTimeout(throttleTimerId);
-        throttleTimerId = null;
-      }
-      cancelIdleTask();
-      flushScroll();
-    };
-
-    window.addEventListener("scroll", throttledSaveScroll, { passive: true });
-    window.addEventListener("pagehide", handlePageHide);
-
-    return () => {
-      if (throttleTimerId !== null) {
-        window.clearTimeout(throttleTimerId);
-      }
-      cancelIdleTask();
-      window.removeEventListener("scroll", throttledSaveScroll);
-      window.removeEventListener("pagehide", handlePageHide);
-    };
+    window.addEventListener("wheel", handleFirstWheel, { passive: true });
+    return () => window.removeEventListener("wheel", handleFirstWheel);
   }, []);
 
   return (
     <MainLayout
       variant="home"
-      className="bg-background text-gray-900 dark:text-slate-100 antialiased overflow-x-hidden font-sans transition-colors duration-300"
+      className="bg-background text-gray-900 dark:text-slate-100 antialiased overflow-x-clip font-sans"
     >
       <Helmet>
         <title>Akbar — Android &amp; AI Engineer</title>
         <meta
           name="description"
-          content="Building intelligent mobile apps with Kotlin & Gemini. Offline-first architecture, 99.9% crash-free stability."
+          content="Android apps built with Kotlin and Jetpack Compose, with practical AI integrations."
         />
       </Helmet>
       <Hero />
       <TechStack />
-      <About />
       <Projects projects={projectsSummary} />
+      <About />
     </MainLayout>
   );
 };

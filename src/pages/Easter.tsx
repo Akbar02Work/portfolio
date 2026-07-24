@@ -140,7 +140,7 @@ const Easter = ({
   return (
     <MainLayout
       variant="detail"
-      className="bg-[#f8f9fa] dark:bg-slate-950 text-gray-900 dark:text-slate-100 transition-colors duration-300"
+      className="bg-[#f8f9fa] dark:bg-slate-950 text-gray-900 dark:text-slate-100"
     >
       <Helmet>
         <title>Easter Page | Akbar Portfolio</title>
@@ -162,7 +162,7 @@ const Easter = ({
         </div>
       )}
 
-      <main className="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 pt-24 pb-20 space-y-8">
+      <div className="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 pt-24 pb-20 space-y-8">
         <section className="rounded-3xl border border-gray-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/70 backdrop-blur px-6 py-8">
           <p className="text-caption uppercase text-gray-500 dark:text-slate-400">Easter Page</p>
           <p className="mt-2 text-body-sm font-medium text-gray-500 dark:text-slate-400">Site Version</p>
@@ -204,7 +204,7 @@ const Easter = ({
             {reportBody}
           </pre>
         </section>
-      </main>
+      </div>
     </MainLayout>
   );
 };

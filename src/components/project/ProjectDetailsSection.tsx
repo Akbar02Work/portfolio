@@ -1,135 +1,89 @@
-import { ChevronDown } from "lucide-react";
 import type { Project } from "@/data/projects";
 
 type ProjectDetailsSectionProps = {
-  project: Project;
-  openFeatureIndex: number | null;
-  setOpenFeatureIndex: (index: number | null) => void;
+    project: Project;
 };
 
-export const ProjectDetailsSection = ({
-  project,
-  openFeatureIndex,
-  setOpenFeatureIndex,
-}: ProjectDetailsSectionProps) => (
-  <>
-    <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8 my-4 sm:my-8">
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent dark:via-slate-700"></div>
+const STACK_ROLES: Record<string, string> = {
+    Kotlin: "language",
+    "Jetpack Compose": "ui",
+    "Gemini API": "ai",
+    Room: "storage",
+    MVVM: "pattern",
+    "Clean Arch": "architecture",
+    Hilt: "di",
+    Coroutines: "async",
+};
+
+const stackRole = (tech: string) => STACK_ROLES[tech] ?? "module";
+
+const SectionLabel = ({ children }: { children: string }) => (
+    <div className="flex items-center gap-4 mb-6">
+        <span
+            className="inline-block h-px w-8 shrink-0 bg-volt-ink dark:bg-volt"
+            aria-hidden="true"
+        />
+        <h2 className="text-heading-2 text-gray-900 dark:text-white">{children}</h2>
     </div>
+);
 
-    <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-12">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pb-14">
-        <div className="space-y-6">
-          <div className="flex items-center gap-5 md:gap-6">
-            <div className="h-px w-6 sm:w-8 md:w-10 bg-gray-300 dark:bg-gray-700"></div>
-          <h2 className="text-heading-2 text-gray-900 dark:text-white">Overview</h2>
-          </div>
-          <p className="text-body-lg text-gray-600 dark:text-gray-400">
-            {project.overview}
-          </p>
-        </div>
-        <div className="space-y-6">
-          <div className="flex items-center gap-5 md:gap-6">
-            <div className="h-px w-6 sm:w-8 md:w-10 bg-gray-300 dark:bg-gray-700"></div>
-            <h2 className="text-heading-2 text-gray-900 dark:text-white">The Challenge</h2>
-          </div>
-          <p className="text-body-lg text-gray-600 dark:text-gray-400">
-            {project.challenge}
-          </p>
-        </div>
-      </div>
-
-      <div className="mx-auto w-full max-w-5xl my-4 sm:my-8">
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent dark:via-slate-700"></div>
-      </div>
-
-      <div className="pt-4 sm:pt-6 pb-8 sm:pb-10">
-        <div className="flex items-center gap-5 md:gap-6 mb-6">
-          <div className="h-px w-8 sm:w-10 md:w-12 bg-gray-300 dark:bg-gray-700"></div>
-          <h3 className="text-heading-2 text-gray-900 dark:text-white">Tech Stack & Architecture</h3>
-        </div>
-        <p className="mb-5 text-body-lg text-gray-600 dark:text-gray-400">
-          {project.architecture}
-        </p>
-        <div className="flex flex-wrap gap-3">
-          {project.technologies.map((tech) => (
-            <span
-              key={tech}
-              className="inline-flex items-center justify-center px-5 py-2.5 border border-gray-300 dark:border-gray-700 rounded-full text-caption text-gray-700 dark:text-gray-300 hover:border-gray-900 dark:hover:border-gray-500 transition-colors cursor-default"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <div className="mx-auto w-full max-w-5xl my-4 sm:my-8">
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent dark:via-slate-700"></div>
-      </div>
-
-      <div className="pt-4 sm:pt-6 mb-12">
-        <div className="flex items-center gap-5 md:gap-6 mb-6">
-          <div className="h-px w-8 sm:w-10 md:w-12 bg-gray-300 dark:bg-gray-700"></div>
-          <h3 className="text-heading-2 text-gray-900 dark:text-white">Key Features</h3>
+export const ProjectDetailsSection = ({ project }: ProjectDetailsSectionProps) => (
+    <section className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-16 md:pb-24">
+        {/* Overview + Challenge */}
+        <div className="border-t border-neutral-200 dark:border-neutral-800 pt-12 md:pt-16 grid grid-cols-1 md:grid-cols-2 md:gap-0">
+            <div className="md:pr-12 lg:pr-14 pb-12 md:pb-0">
+                <SectionLabel>Overview</SectionLabel>
+                <p className="text-body-lg font-light text-gray-600 dark:text-gray-400 max-w-[65ch]">
+                    {project.overview}
+                </p>
+            </div>
+            <div className="md:pl-12 lg:pl-14 pt-12 md:pt-0 border-t md:border-t-0 md:border-l border-neutral-200 dark:border-neutral-800">
+                <SectionLabel>The Challenge</SectionLabel>
+                <p className="text-body-lg font-light text-gray-600 dark:text-gray-400 max-w-[65ch]">
+                    {project.challenge}
+                </p>
+            </div>
         </div>
 
-        <div className="flex flex-col">
-          {project.features.map((feature, index) => {
-            const isOpen = openFeatureIndex === index;
-            const buttonId = `feature-toggle-${index}`;
-            const panelId = `feature-panel-${index}`;
-            const hasDetails = Boolean(feature.description?.trim());
+        {/* Stack + Key Features */}
+        <div className="border-t border-neutral-200 dark:border-neutral-800 pt-12 md:pt-16 mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 md:gap-0">
+            <div className="md:pr-12 lg:pr-14 pb-12 md:pb-0">
+                <SectionLabel>Stack</SectionLabel>
+                <ul className="list-none grid grid-cols-2 gap-x-8 gap-y-8 sm:gap-x-10 sm:gap-y-10">
+                    {project.technologies.map((tech) => (
+                        <li key={tech} className="flex flex-col items-start">
+                            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-volt-ink dark:text-volt">
+                                {stackRole(tech)}
+                            </span>
+                            <span className="mt-3 text-[clamp(1rem,0.8vw+0.85rem,1.25rem)] leading-tight tracking-[-0.02em] font-semibold text-gray-900 dark:text-white min-h-[2.5em]">
+                                {tech}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
 
-            if (!hasDetails) {
-              return (
-                <div key={feature.title} className="pt-4">
-                  <p className="pb-4 text-body-lg font-medium text-gray-700 dark:text-gray-300">
-                    {feature.title}
-                  </p>
-                  <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent dark:via-slate-700"></div>
-                </div>
-              );
-            }
-
-            return (
-              <div key={feature.title} className="pt-4">
-                <button
-                  id={buttonId}
-                  type="button"
-                  onClick={() => setOpenFeatureIndex(isOpen ? null : index)}
-                  className="w-full flex items-center justify-between gap-4 pb-4 text-left group transition-colors hover:text-gray-900 dark:hover:text-gray-200"
-                  aria-expanded={isOpen}
-                  aria-controls={panelId}
-                >
-                  <span className={`text-body-lg font-medium transition-colors duration-300 ${isOpen ? "text-gray-900 dark:text-white" : "text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"
-                    }`}>
-                    {feature.title}
-                  </span>
-                  <ChevronDown
-                    className={`w-5 h-5 flex-shrink-0 text-gray-400 dark:text-gray-500 transition-transform duration-300 ${isOpen ? "rotate-180 text-gray-900 dark:text-white" : "group-hover:text-gray-600 dark:group-hover:text-gray-300"}`}
-                  />
-                </button>
-
-                <div
-                  id={panelId}
-                  role="region"
-                  aria-labelledby={buttonId}
-                  aria-hidden={!isOpen}
-                  className={`grid transition-[grid-template-rows,opacity] duration-400 ease-out-expo ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-                    }`}
-                >
-                  <div className={`overflow-hidden transition-all duration-300 ease-out ${isOpen ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"}`}>
-                    <p className="text-body-base text-gray-500 dark:text-gray-400 pr-4 md:pr-12 pb-6">
-                      {feature.description}
-                    </p>
-                  </div>
-                </div>
-                <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent dark:via-slate-700"></div>
-              </div>
-            );
-          })}
+            <div className="md:pl-12 lg:pl-14 pt-12 md:pt-0 border-t md:border-t-0 md:border-l border-neutral-200 dark:border-neutral-800">
+                <SectionLabel>Key Features</SectionLabel>
+                <ul className="list-none relative pl-6 before:absolute before:left-[3px] before:top-2 before:bottom-2 before:w-px before:bg-neutral-200 dark:before:bg-neutral-800">
+                    {project.features.map((feature) => (
+                        <li key={feature.title} className="relative pb-6 last:pb-0">
+                            <span
+                                className="absolute -left-6 top-2 h-2 w-2 rounded-full bg-volt-ink dark:bg-volt ring-4 ring-background"
+                                aria-hidden="true"
+                            />
+                            <p className="text-[clamp(1rem,0.8vw+0.85rem,1.2rem)] leading-snug tracking-[-0.015em] font-medium text-gray-900 dark:text-white">
+                                {feature.title}
+                            </p>
+                            {feature.description?.trim() ? (
+                                <p className="mt-2 text-body-base font-light text-gray-500 dark:text-gray-400 max-w-[65ch]">
+                                    {feature.description}
+                                </p>
+                            ) : null}
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
-      </div>
     </section>
-  </>
 );

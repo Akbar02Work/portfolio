@@ -12,14 +12,16 @@ export const AnimatedSection = ({
   className = "",
   delay = 0,
 }: AnimatedSectionProps) => {
-  const { ref, isVisible, reduceMotion } = useScrollAnimation();
+  const { ref, isVisible, reduceMotion, skipTransition } = useScrollAnimation({
+    rootMargin: "0px 0px 200px 0px",
+  });
 
   return (
     <div
       ref={ref}
-      className={`${reduceMotion ? "transition-none" : "transition-opacity duration-500"} ${className} ${isVisible ? "opacity-100" : "opacity-0"}`}
+      className={`${reduceMotion || skipTransition ? "transition-none" : "transition-transform duration-700 ease-out"} ${className} ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
       style={{
-        transitionDelay: reduceMotion ? "0ms" : `${delay}ms`,
+        transitionDelay: reduceMotion || skipTransition ? "0ms" : `${delay}ms`,
       }}
     >
       {children}

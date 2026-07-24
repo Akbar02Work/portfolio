@@ -16,7 +16,7 @@ const setMatchMedia = (matches: boolean) => {
 };
 
 const Probe = ({ triggerOnce = true }: { triggerOnce?: boolean }) => {
-  const { ref, isVisible, reduceMotion } = useScrollAnimation({ triggerOnce });
+  const { ref, isVisible, reduceMotion, skipTransition } = useScrollAnimation({ triggerOnce });
 
   return (
     <div
@@ -24,12 +24,13 @@ const Probe = ({ triggerOnce = true }: { triggerOnce?: boolean }) => {
       data-testid="probe"
       data-visible={String(isVisible)}
       data-reduce-motion={String(reduceMotion)}
+      data-skip-transition={String(skipTransition)}
     />
   );
 };
 
 type IntersectionObserverDriver = {
-  trigger: (isIntersecting: boolean) => void;
+  trigger: (isIntersecting: boolean, top?: number) => void;
   observe: ReturnType<typeof vi.fn>;
   disconnect: ReturnType<typeof vi.fn>;
 };
@@ -61,7 +62,7 @@ const installIntersectionObserverMock = (): IntersectionObserverDriver => {
   return {
     observe,
     disconnect,
-    trigger: (isIntersecting: boolean) => {
+    trigger: (isIntersecting: boolean, top = 0) => {
       if (!callback || !observedElement) {
         throw new Error("IntersectionObserver callback is not initialized");
       }
@@ -69,6 +70,7 @@ const installIntersectionObserverMock = (): IntersectionObserverDriver => {
       const entry = {
         isIntersecting,
         target: observedElement,
+        boundingClientRect: { top },
       } as IntersectionObserverEntry;
 
       callback([entry], {} as IntersectionObserver);
@@ -121,5 +123,25 @@ describe("useScrollAnimation", () => {
       expect(screen.getByTestId("probe").getAttribute("data-visible")).toBe("false");
     });
     expect(observer.disconnect).not.toHaveBeenCalled();
+  });
+
+  it("reveals content that a rapid scroll passes without an observer threshold crossing", async () => {
+    setMatchMedia(false);
+    installIntersectionObserverMock();
+    render(<Probe />);
+
+    const probe = screen.getByTestId("probe");
+    vi.spyOn(probe, "getBoundingClientRect").mockReturnValue({
+      top: -100,
+    } as DOMRect);
+
+    act(() => {
+      window.dispatchEvent(new Event("scroll"));
+    });
+
+    await waitFor(() => {
+      expect(probe.getAttribute("data-visible")).toBe("true");
+      expect(probe.getAttribute("data-skip-transition")).toBe("true");
+    });
   });
 });

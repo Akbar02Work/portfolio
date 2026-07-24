@@ -1,4 +1,4 @@
-import { Mic, Shield } from "lucide-react";
+import { Mic } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export type ProjectStyle = {
@@ -18,14 +18,6 @@ const projectStyleEntries = [
     style: {
       gradient: MUTED_GRADIENT,
       icon: Mic,
-      hoverBorder: VOLT_HOVER_BORDER,
-    },
-  },
-  {
-    slug: "secbench-25",
-    style: {
-      gradient: MUTED_GRADIENT,
-      icon: Shield,
       hoverBorder: VOLT_HOVER_BORDER,
     },
   },

@@ -1,50 +1,48 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { MainLayout } from "@/components/layout/MainLayout";
-import { ProjectCarouselSection } from "@/components/project/ProjectCarouselSection";
+import ProjectGallery from "@/components/project/ProjectGallery";
+import NextProjectTeaser from "@/components/project/NextProjectTeaser";
 import { ProjectDetailsSection } from "@/components/project/ProjectDetailsSection";
+import { ProjectEngineeringNote } from "@/components/project/ProjectEngineeringNote";
 import { ProjectHeader } from "@/components/project/ProjectHeader";
 import { ROUTES } from "@/constants/routes";
 import { fallbackProjectStyle, projectStylesBySlug } from "@/constants/projectStyles";
-import { CAROUSEL_AUTO_SCROLL_INTERVAL_MS } from "@/constants/ui.constants";
 import { projects } from "@/data/projects";
-import { useCarouselController } from "@/hooks/useCarouselController";
 import { toAbsoluteUrl } from "@/lib/urls";
+import { ViewTransitionLink } from "@/hooks/usePageTransition";
 
 const DEFAULT_TITLE = "Akbar — Android & AI Engineer";
 const DEFAULT_DESCRIPTION =
-  "Building intelligent mobile apps with Kotlin & Gemini. Offline-first architecture, 99.9% crash-free stability.";
+  "Android apps built with Kotlin and Jetpack Compose, with practical AI integrations.";
 
 const ProjectDetail = () => {
   const { slug } = useParams<{ slug?: string }>();
-  const projectData = projects.find((project) => project.slug === slug);
-  const [openFeatureIndex, setOpenFeatureIndex] = useState<number | null>(null);
+  const projectIndex = projects.findIndex((project) => project.slug === slug);
+  const projectData = projectIndex >= 0 ? projects[projectIndex] : undefined;
+  const nextProject =
+    projectIndex >= 0 && projects.length > 1
+      ? projects[(projectIndex + 1) % projects.length]
+      : undefined;
 
-  const screens = projectData?.screens ?? [];
   const style = projectData
     ? (projectStylesBySlug[projectData.slug] ?? fallbackProjectStyle)
     : fallbackProjectStyle;
 
-  const { currentIndex, slideDirection, handleNext, handlePrev, goToIndex } =
-    useCarouselController({
-      totalItems: screens.length,
-      autoScrollMs: CAROUSEL_AUTO_SCROLL_INTERVAL_MS,
-      onSlugChange: slug,
-    });
-
   useEffect(() => {
     window.scrollTo(0, 0);
-    setOpenFeatureIndex(null);
   }, [slug]);
 
   const hasPlaceholderContent = projectData
     ? /coming soon/i.test(projectData.title) || /coming soon/i.test(projectData.summary)
     : false;
   const pageTitle =
-    projectData && !hasPlaceholderContent
-      ? `${projectData.title} | Akbar Azizov`
-      : DEFAULT_TITLE;
+    projectData
+      ? !hasPlaceholderContent
+        ? `${projectData.title} | Akbar Azizov`
+        : DEFAULT_TITLE
+      : "Project not found | Akbar Azizov";
   const pageDescription =
     projectData && !hasPlaceholderContent ? projectData.summary : DEFAULT_DESCRIPTION;
   const pageUrl = typeof window !== "undefined" ? window.location.href : "";
@@ -57,11 +55,15 @@ const ProjectDetail = () => {
   return (
     <MainLayout
       variant="detail"
-      className="bg-background text-gray-900 dark:text-white transition-colors duration-300"
+      className="bg-background text-gray-900 dark:text-white"
     >
       <Helmet>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
+        <meta
+          name="robots"
+          content={projectData ? "index, follow" : "noindex, nofollow"}
+        />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
         <meta property="og:type" content="website" />
@@ -73,43 +75,30 @@ const ProjectDetail = () => {
         <meta name="twitter:image" content={pageImage} />
       </Helmet>
 
-      <main className="flex-grow">
+      <div data-project-detail>
         {projectData ? (
           <>
             <ProjectHeader project={projectData} />
-            <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8 my-3 sm:my-6">
-              <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent dark:via-slate-700"></div>
-            </div>
-            <ProjectCarouselSection
-              screens={screens}
-              currentIndex={currentIndex}
-              slideDirection={slideDirection}
-              style={style}
-              onNext={handleNext}
-              onPrev={handlePrev}
-              onSelectIndex={goToIndex}
-            />
-            <ProjectDetailsSection
-              project={projectData}
-              openFeatureIndex={openFeatureIndex}
-              setOpenFeatureIndex={setOpenFeatureIndex}
-            />
+            <ProjectGallery project={projectData} style={style} />
+            <ProjectEngineeringNote project={projectData} />
+            <ProjectDetailsSection project={projectData} />
+            {nextProject && <NextProjectTeaser project={nextProject} />}
           </>
         ) : (
           <section className="min-h-[60vh] flex items-center justify-center px-6">
             <div className="text-center space-y-4">
               <h1 className="text-heading-1">404: Project Not Found</h1>
-              <Link
+              <ViewTransitionLink
                 to={ROUTES.HOME}
                 state={{ scrollTo: "projects" }}
-                className="text-blue-500 hover:underline"
+                className="text-volt-ink dark:text-volt hover:underline"
               >
                 Back to Projects
-              </Link>
+              </ViewTransitionLink>
             </div>
           </section>
         )}
-      </main>
+      </div>
     </MainLayout>
   );
 };

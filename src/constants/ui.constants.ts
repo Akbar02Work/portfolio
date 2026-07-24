@@ -1,2 +1,1 @@
-export const CAROUSEL_AUTO_SCROLL_INTERVAL_MS = 8000;
 export const SCROLL_SPY_OFFSET_PX = 120;

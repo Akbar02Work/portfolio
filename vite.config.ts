@@ -4,6 +4,38 @@ import { visualizer } from "rollup-plugin-visualizer";
 import path from "path";
 import { execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
+import { projectsCatalog } from "./src/data/projectCatalog";
+import { prerenderRoutes, type PrerenderRoute } from "./scripts/prerender";
+
+const SITE_URL = "https://www.akbar02work.xyz";
+const HOME_TITLE = "Akbar — Android & AI Engineer";
+const HOME_DESCRIPTION =
+  "Android apps built with Kotlin and Jetpack Compose, with practical AI integrations.";
+const PUBLIC_PROJECT_SLUGS = ["voicenotes"] as const;
+
+const projectRoutes = PUBLIC_PROJECT_SLUGS.map((slug): PrerenderRoute => {
+  const project = projectsCatalog.find((candidate) => candidate.slug === slug);
+  if (!project) {
+    throw new Error(`Missing project data for prerender route: ${slug}`);
+  }
+
+  return {
+    path: `/projects/${slug}`,
+    title: `${project.title} | Akbar Azizov`,
+    description: project.description,
+    image: project.coverImage || "/og-image.png",
+  };
+});
+
+const publicRoutes: PrerenderRoute[] = [
+  {
+    path: "/",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    image: "/og-image.png",
+  },
+  ...projectRoutes,
+];
 
 const getPackageVersion = () => {
   try {
@@ -32,11 +64,11 @@ const getGitCommitSha = () => {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const base = env.VITE_BASE_URL ? env.VITE_BASE_URL.replace(/\/?$/, "/") : "/";
-  const devHost = env.VITE_DEV_HOST || "127.0.0.1";
+  const devHost = env.VITE_DEV_HOST || true;
   const isProd = mode === "production";
   const sourcemap = !isProd || env.VITE_SOURCEMAP === "true";
   const shouldAnalyze = process.env.ANALYZE === "true";
-  const devPort = Number(env.VITE_DEV_PORT) || 8080;
+  const devPort = Number(env.VITE_DEV_PORT) || 5173;
   const appVersion = getPackageVersion();
   const gitCommitSha = getGitCommitSha();
 
@@ -45,12 +77,14 @@ export default defineConfig(({ mode }) => {
     server: {
       host: devHost,
       port: devPort,
+      strictPort: true,
       hmr: {
         overlay: false,
       },
     },
     plugins: [
       react(),
+      prerenderRoutes({ siteUrl: SITE_URL, routes: publicRoutes }),
       ...(shouldAnalyze
         ? [
             visualizer({

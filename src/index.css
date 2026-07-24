@@ -149,6 +149,16 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  section[id],
+  footer[id] {
+    scroll-margin-top: 6rem;
+  }
+
+  .opacity-0.translate-y-6 section[id],
+  .opacity-0.translate-y-6 footer[id] {
+    scroll-margin-top: 7.5rem;
+  }
+
   /* MONO/VOLT grain — film texture over flat fills (pointer-events none) */
   body::after {
     content: "";
@@ -197,44 +207,6 @@
 }
 
 @layer utilities {
-
-  /* WebKit scrollbar styling for better appearance on Safari/Mac */
-  .scrollbar-hide {
-    scrollbar-width: none;
-    /* Firefox */
-    -ms-overflow-style: none;
-    /* IE/Edge */
-  }
-
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-    /* Chrome, Safari, Opera */
-  }
-
-  /* Optional: Custom scrollbar styling */
-  .scrollbar-custom::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  .scrollbar-custom::-webkit-scrollbar-track {
-    @apply bg-gray-100;
-  }
-
-  .scrollbar-custom::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 rounded-full;
-  }
-
-  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-400;
-  }
-
-  .line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
 
   /* Hero section mesh gradient — MONO/VOLT: neutral haze + volt tint near the portrait */
   .hero-gradient {
@@ -296,34 +268,28 @@
     animation: hero-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
-  /* Hand-drawn stroke draws itself under "Developer" */
+  /* Hand-drawn stroke under "Developer".
+     Round linecaps leave a ghost dot at dashoffset=1 — keep opacity 0 until draw has length. */
   .hero-stroke-path {
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
-    animation: hero-draw 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
+    opacity: 0;
+    animation: hero-draw 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.85s both;
   }
 
   @keyframes hero-draw {
-    to {
+    0% {
+      opacity: 0;
+      stroke-dashoffset: 1;
+    }
+    8% {
+      opacity: 1;
+      stroke-dashoffset: 0.92;
+    }
+    100% {
+      opacity: 1;
       stroke-dashoffset: 0;
     }
-  }
-
-  /* Status pill — soft volt ping */
-  @keyframes status-ping {
-    0% {
-      transform: scale(1);
-      opacity: 0.9;
-    }
-    75%,
-    100% {
-      transform: scale(2.6);
-      opacity: 0;
-    }
-  }
-
-  .status-ping {
-    animation: status-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
   }
 
   /* Tech marquee — seamless infinite ticker */
@@ -350,105 +316,13 @@
   @media (prefers-reduced-motion: reduce) {
     .hero-reveal,
     .hero-stroke-path,
-    .status-ping,
     .marquee-track {
       animation: none;
     }
     .hero-stroke-path {
-      stroke-dashoffset: 0;
+      opacity: 1 !important;
+      stroke-dashoffset: 0 !important;
     }
-  }
-
-  /* Premium carousel animations - no blur for GPU performance */
-  @keyframes slide-left {
-    from {
-      opacity: 0;
-      transform: translateX(60px) scale(0.97);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateX(0) scale(1);
-    }
-  }
-
-  @keyframes slide-right {
-    from {
-      opacity: 0;
-      transform: translateX(-60px) scale(0.97);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateX(0) scale(1);
-    }
-  }
-
-  .animate-slide-left {
-    animation: slide-left 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .animate-slide-right {
-    animation: slide-right 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  /* Accessibility: respect reduced motion preference */
-  @media (prefers-reduced-motion: reduce) {
-
-    .animate-slide-left,
-    .animate-slide-right {
-      animation: none;
-    }
-  }
-
-  /* Gentle drift animation for decorative tech icons */
-  @keyframes about-icon-drift {
-    0% {
-      transform: translate(0, 0) rotate(0deg);
-    }
-
-    33% {
-      transform: translate(4px, -10px) rotate(3deg);
-    }
-
-    66% {
-      transform: translate(-4px, -6px) rotate(-2deg);
-    }
-
-    100% {
-      transform: translate(0, 0) rotate(0deg);
-    }
-  }
-
-  .about-float-icon {
-    animation: about-icon-drift 6s ease-in-out infinite;
-  }
-
-  .about-float-icon-slow {
-    animation: about-icon-drift 8s ease-in-out infinite;
-    animation-delay: -2s;
-  }
-
-  .about-float-icon-fast {
-    animation: about-icon-drift 5s ease-in-out infinite;
-    animation-delay: -4s;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-
-    .about-float-icon,
-    .about-float-icon-slow,
-    .about-float-icon-fast {
-      animation: none;
-    }
-  }
-
-  .invert-hover {
-    @apply transition-all duration-300 ease-in-out;
-  }
-
-  .invert-hover:hover {
-    @apply bg-foreground text-background;
   }
 
   @media (hover: none),
@@ -648,4 +522,60 @@
     }
   }
 
+}
+/* MONO/VOLT: slim editorial scrollbar */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(212 212 212) transparent;
+}
+
+html.dark {
+  scrollbar-color: rgb(64 64 64) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(212 212 212);
+  border-radius: 999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgb(64 64 64);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #65a30d;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: #bfff3c;
+}
+
+/* Keep locked project-detail containers aligned with the approved 86rem grid. */
+.max-w-7xl {
+  max-width: 86rem;
+}
+
+/* ── Page curtain transition (home ↔ case) ───────────────────────────── */
+.page-transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  background: hsl(var(--background));
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition-overlay {
+    display: none;
+  }
 }

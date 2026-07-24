@@ -1,4 +1,4 @@
-export type ProjectMediaType = "phone" | "terminal";
+export type ProjectMediaType = "phone";
 
 export interface ProjectMetric {
   value: string;
@@ -24,13 +24,11 @@ export interface ProjectData {
   }>;
   overview: string;
   challenge: string;
-  results: string | string[];
   stackAndArchitecture: {
     stack: string[];
-    architecture: string;
   };
   keyFeatures: string[];
-  roadmap: string;
+  engineeringNote: string;
 }
 
 type CatalogProject = ProjectData & {
@@ -39,18 +37,15 @@ type CatalogProject = ProjectData & {
   coverImage: string;
 };
 
-type CreateProjectInput = Omit<ProjectData, "results" | "roadmap"> & {
-  results?: ProjectData["results"];
-  roadmap?: ProjectData["roadmap"];
+type CreateProjectInput = Omit<ProjectData, "engineeringNote"> & {
+  engineeringNote?: ProjectData["engineeringNote"];
 };
 
-const DEFAULT_RESULTS = "Performance tests coming soon";
-const DEFAULT_ROADMAP = "Future plans coming soon";
+const DEFAULT_ENGINEERING_NOTE = "";
 
 export const createProject = (project: CreateProjectInput): ProjectData => ({
   ...project,
-  results: project.results ?? DEFAULT_RESULTS,
-  roadmap: project.roadmap ?? DEFAULT_ROADMAP,
+  engineeringNote: project.engineeringNote ?? DEFAULT_ENGINEERING_NOTE,
 });
 
 const toProjectSlug = (title: string): string =>
@@ -68,21 +63,29 @@ const projectDefinitions = [
     role: "Product design & Android development — solo",
     year: 2025,
     metrics: [
-      { value: "100%", label: "offline-first storage" },
+      { value: "Room", label: "local note storage" },
       { value: "1-tap", label: "recording flow" },
       { value: "Gemini", label: "AI summarization" },
     ],
     media: {
       type: "phone",
-      alt: "VoiceNotes recording screen with waveform",
+      alt: "VoiceNotes empty notes list with record button",
     },
     links: {
       github: "https://github.com/Akbar02Work/VoiceNotes",
     },
     gallery: [
       {
-        imageUrl: "/projects/voicenotes/placeholder.png",
-        caption: "Recording screen with real-time waveform visualization and quick actions.",
+        imageUrl: "/projects/voicenotes/screen-01.png",
+        caption: "Notes list — empty state with one-tap record FAB.",
+      },
+      {
+        imageUrl: "/projects/voicenotes/screen-02.png",
+        caption: "API key setup — choose Gemini or OpenAI and start.",
+      },
+      {
+        imageUrl: "/projects/voicenotes/screen-03.png",
+        caption: "Settings — AI provider, keys, and language.",
       },
     ],
     overview:
@@ -91,53 +94,17 @@ const projectDefinitions = [
       "Classic voice memo apps store raw audio without structure, making later retrieval expensive. The challenge was to keep capture friction low while producing useful, searchable note artifacts.",
     stackAndArchitecture: {
       stack: ["Kotlin", "Jetpack Compose", "Gemini API", "Room", "MVVM", "Clean Arch"],
-      architecture:
-        "AI-powered voice recorder that turns chaotic audio into structured notes. Runs offline",
     },
     keyFeatures: [
       "One-tap voice recording with waveform feedback",
       "AI-powered summarization using Google Gemini API",
+      "Structured notes with title, summary, and key points",
       "Offline-first note storage using Room",
+      "Searchable notes from chaotic audio captures",
+      "Capture now, summarize when the network returns",
     ],
-  }),
-  createProject({
-    title: "SecBench-25",
-    description:
-      "Benchmark framework to evaluate LLM jailbreak resistance and defense-layer effectiveness.",
-    role: "Research & framework development — solo",
-    year: 2025,
-    metrics: [
-      { value: "T.R.I.A.D.", label: "defense layers evaluated" },
-      { value: "A/B", label: "baseline vs protected runs" },
-      { value: "100%", label: "reproducible reports" },
-    ],
-    media: {
-      type: "terminal",
-      alt: "SecBench-25 benchmark results dashboard",
-    },
-    links: {
-      github: "https://github.com/Akbar02Work/secbench-25",
-    },
-    gallery: [
-      {
-        imageUrl: "/projects/secbench-25/placeholder.png",
-        caption: "Benchmark dashboard with attack outcomes and defense effectiveness metrics.",
-      },
-    ],
-    overview:
-      "SecBench-25 provides repeatable security evaluation workflows for LLM systems. It compares baseline and protected configurations under adversarial prompt suites.",
-    challenge:
-      "Teams need evidence-based security validation before shipping LLM features. The challenge was creating deterministic benchmarking that measures attack success and defense impact under consistent conditions.",
-    stackAndArchitecture: {
-      stack: ["Python", "LangChain", "OpenAI API", "Pytest"],
-      architecture:
-        "Pipeline-oriented benchmark architecture with attack modules, defense middleware, and metric aggregation for reproducible experiment runs.",
-    },
-    keyFeatures: [
-      "Curated jailbreak attack prompt library",
-      "Layered T.R.I.A.D. defense evaluation",
-      "Comparative benchmark reports with pass/fail evidence",
-    ],
+    engineeringNote:
+      "On-device audio is transcribed and sent to Gemini for summarization. The raw LLM response is parsed into a structured note — title, summary, key points — before anything is persisted to Room, so the app never stores unstructured model output.",
   }),
 ] as const;
 

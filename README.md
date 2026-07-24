@@ -1,84 +1,54 @@
-# Personal Engineering Portfolio
+# Akbar Azizov — Portfolio
 
-![Project Status](https://img.shields.io/badge/Status-Live-success)
-![Performance](https://img.shields.io/badge/Lighthouse-100%2F100-success)
-![Stack](https://img.shields.io/badge/Tech-React%20%7C%20TypeScript%20%7C%20Vite-blue)
+Source for [akbar02work.xyz](https://www.akbar02work.xyz), a static portfolio for
+Android and AI engineering work.
 
-## About The Project
+## Stack
 
-This repository houses the source code for my personal portfolio website.
-As a **Mobile-First Developer** (specializing in Android/Kotlin), I approached this web project with the same engineering rigor I apply to mobile apps: focusing on performance, smooth animations, and clean architecture.
+- React 18, TypeScript, Vite
+- Tailwind CSS
+- React Router
+- Vitest and Playwright
+- Vercel static hosting
 
-**Live Demo:** https://www.akbar02work.xyz
+## Project structure
 
----
+- `src/components` — layout, sections, project presentation, and shared UI
+- `src/data` — project catalog and derived view models
+- `src/hooks` — navigation, theme, and scroll behavior
+- `src/pages` — home, project detail, Easter, and client-side 404 pages
+- `public` — static fonts, icons, social image, CV, and safe public media
+- `scripts` — bundle checks, image optimization, route prerendering, and cycle checks
 
-## Tech Stack & Methodology
-
-This project was built using a **AI-Assisted Development** workflow to maximize efficiency while maintaining strict architectural control.
-
-* **Core:** React 18, TypeScript, Vite
-* **Styling:** Tailwind CSS (Mobile-first responsive design)
-* **Architecture:** Feature-sliced folder structure
-* **Tooling:** TypeScript, ESLint, Vitest, Playwright
-
-> **Transparency Note:**
-> This project serves as a showcase of my ability to orchestrate modern development tools.
-> While the core logic and architecture were validated manually, I utilized AI assistants (LLMs) to accelerate boilerplate generation, CSS styling, and accessibility (a11y) compliance.
-> **My role:** Architect, Code Reviewer, & Product Owner.
-
----
-
-## Key Engineering Features
-
-Even though this is a "simple" portfolio, it implements production-grade patterns:
-
-* **Custom Hooks:**
-    * `useCarouselController` — Logic for the project gallery (Pause on hover/visibility change).
-    * `useSwipe` — Touch-gesture support for mobile experience (mimicking native Android feel).
-    * `useTheme` — System-preference aware dark/light mode without FOUC (Flash of Unstyled Content).
-* **Performance:**
-    * Lazy loading for heavy assets and routes.
-    * IntersectionObserver for performant scroll-spy navigation.
-    * No heavy UI libraries (like MUI/AntD) — only clean Tailwind.
-* **Architecture:**
-    * Strict separation of concerns (Logic in Hooks, UI in Components, Data in Constants).
-    * Robust error handling (Error Boundaries, LocalStorage fallback strategies).
-
----
-
-## Why this matters for Mobile Dev?
-
-I believe that specific platform knowledge (Android) is crucial, but general **Software Engineering principles** are universal.
-This project demonstrates my ability to:
-1.  Structure complex data flow.
-2.  Implement smooth, 60fps animations.
-3.  Deliver a finished product (CI/CD via Vercel).
-
----
-
-## Getting Started
-
-To run this project locally:
+## Local development
 
 ```bash
-# 1. Clone the repo
-git clone [https://github.com/your-username/your-repo.git](https://github.com/your-username/your-repo.git)
-
-# 2. Install dependencies
 npm install
-
-# 3. Start development server
 npm run dev
-
 ```
 
----
+The optional Creative portfolio link is enabled in production only when
+`VITE_CREATIVE_URL` is configured.
 
-## Contact
+## Quality gates
 
-**Akbar** — Android Engineer
+```bash
+npm run ci
+npm run ci:full
+```
 
-* [LinkedIn](https://www.linkedin.com/in/akbar02work)
-* [Telegram](https://t.me/Akbar02Work)
-* [Email](mailto:akbar02work@gmail.com)
+`ci` runs linting, cycle detection, TypeScript, unit tests, production build, and
+the initial-payload budget. `ci:full` additionally runs Playwright.
+
+## Content safety
+
+Only deliberately public, reviewed media belongs in `public/`. Product screenshots
+must not contain personal conversations, contact data, credentials, or unrelated
+applications. Keep claims measurable and avoid publishing unverified reliability
+percentages.
+
+## AI-assisted development
+
+AI assistants were used for implementation and review. Architecture, product
+decisions, source selection, and final validation remain the repository owner's
+responsibility.

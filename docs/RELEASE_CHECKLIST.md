@@ -14,7 +14,7 @@ Use this checklist before production deployment.
 
 ## 2. Performance Gates
 
-- [ ] Main JS bundle is under 150 KB budget.
+- [ ] Initial JavaScript and CSS payload is under the 150 KB gzip budget.
 - [ ] No unexpected increase in `dist/assets/*.js`.
 - [ ] Lighthouse Performance score is greater than 90 on mobile profile.
 - [ ] Scroll and animation interactions remain smooth on low-end devices.

@@ -25,7 +25,11 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/projects/voicenotes",
+      "destination": "/projects/voicenotes/index.html"
+    },
+    {
+      "source": "/easter",
       "destination": "/index.html"
     }
   ]

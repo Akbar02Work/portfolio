@@ -6,6 +6,12 @@ interface UseScrollAnimationOptions {
   triggerOnce?: boolean;
 }
 
+const getBottomRootMarginPx = (rootMargin: string) => {
+  const parts = rootMargin.trim().split(/\s+/);
+  const bottomValue = parts.length >= 3 ? parts[2] : parts[0];
+  return bottomValue?.endsWith("px") ? Number.parseFloat(bottomValue) || 0 : 0;
+};
+
 export function useScrollAnimation<T extends HTMLElement = HTMLDivElement>(
   options: UseScrollAnimationOptions = {}
 ) {
@@ -17,6 +23,7 @@ export function useScrollAnimation<T extends HTMLElement = HTMLDivElement>(
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const [reduceMotion, setReduceMotion] = useState(prefersReducedMotion);
   const [isVisible, setIsVisible] = useState(prefersReducedMotion);
+  const [skipTransition, setSkipTransition] = useState(prefersReducedMotion);
 
   useEffect(() => {
     if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
@@ -28,6 +35,7 @@ export function useScrollAnimation<T extends HTMLElement = HTMLDivElement>(
       setReduceMotion(mediaQuery.matches);
       if (mediaQuery.matches) {
         setIsVisible(true);
+        setSkipTransition(true);
       }
     };
 
@@ -58,15 +66,41 @@ export function useScrollAnimation<T extends HTMLElement = HTMLDivElement>(
       return;
     }
 
-    const observer = new IntersectionObserver(
+    let observer: IntersectionObserver | null = null;
+    let revealIfReached: () => void = () => undefined;
+    let previousScrollY = window.scrollY;
+    let hasHandledObserverEntry = false;
+    const reveal = (immediately = false) => {
+      if (immediately) {
+        setSkipTransition(true);
+      }
+      setIsVisible(true);
+      if (triggerOnce) {
+        observer?.unobserve(element);
+        window.removeEventListener("scroll", revealIfReached);
+      }
+    };
+    revealIfReached = () => {
+      const bottomMarginPx = getBottomRootMarginPx(rootMargin);
+      const elementTop = element.getBoundingClientRect().top;
+      const currentScrollY = window.scrollY;
+      const rapidJump = Math.abs(currentScrollY - previousScrollY) >= window.innerHeight * 0.75;
+      if (elementTop <= window.innerHeight + bottomMarginPx) {
+        reveal(rapidJump || elementTop < 0);
+      }
+      previousScrollY = currentScrollY;
+    };
+
+    observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
         if (!entry) return;
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          if (triggerOnce) {
-            observer.unobserve(element);
-          }
+        const hasPassedViewport = entry.boundingClientRect.top < 0;
+        const restoredDeepPosition =
+          !hasHandledObserverEntry && window.scrollY >= window.innerHeight;
+        hasHandledObserverEntry = true;
+        if (entry.isIntersecting || hasPassedViewport) {
+          reveal(hasPassedViewport || restoredDeepPosition);
         } else if (!triggerOnce) {
           setIsVisible(false);
         }
@@ -75,9 +109,13 @@ export function useScrollAnimation<T extends HTMLElement = HTMLDivElement>(
     );
 
     observer.observe(element);
+    window.addEventListener("scroll", revealIfReached, { passive: true });
 
-    return () => observer.disconnect();
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("scroll", revealIfReached);
+    };
   }, [reduceMotion, threshold, rootMargin, triggerOnce]);
 
-  return { ref, isVisible, reduceMotion };
+  return { ref, isVisible, reduceMotion, skipTransition };
 }

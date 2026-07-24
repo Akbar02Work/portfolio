@@ -1,49 +1,78 @@
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { ANIMATION_DELAYS } from "@/constants/animation.constants";
-import { AndroidIcon, KotlinIcon, JetpackComposeIcon, GeminiIcon, OpenAIIcon } from "@/components/icons/brand";
+import { projectsSummary } from "@/data/projectsSummary";
+import { Smartphone, Sparkles, WifiOff } from "lucide-react";
 
-const floatingIcons = [
-    // Android — upper-left, near "About me" title level
-    { Icon: AndroidIcon, animClass: "about-float-icon", color: "#3DDC84", style: { top: "14%", left: "17%" }, size: 96 },
-    // Kotlin — upper-right, slightly above title
-    { Icon: KotlinIcon, animClass: "about-float-icon-slow", color: "#7F52FF", style: { top: "10%", right: "24%" }, size: 88 },
-    // OpenAI — right edge, vertically centered
-    { Icon: OpenAIIcon, animClass: "about-float-icon-fast", color: "currentColor", style: { top: "50%", right: "12%" }, size: 90 },
-    // Gemini — bottom-left corner
-    { Icon: GeminiIcon, animClass: "about-float-icon", color: "#8E75B2", style: { bottom: "10%", left: "8%" }, size: 84 },
-    // Jetpack Compose — bottom-right corner
-    { Icon: JetpackComposeIcon, animClass: "about-float-icon-slow", color: "#4285F4", style: { bottom: "8%", right: "6%" }, size: 92 },
+const pillars = [
+    { Icon: Smartphone, label: "Android" },
+    { Icon: Sparkles, label: "AI integration" },
+    { Icon: WifiOff, label: "Offline-first" },
+];
+
+const shippedCount = projectsSummary.length;
+
+const stats = [
+    { value: "1 yr 8 mo", label: "experience" },
+    {
+        value: String(shippedCount),
+        label: shippedCount === 1 ? "shipped project" : "shipped projects",
+    },
+    { value: "UTC+5", label: "Tashkent, remote" },
 ];
 
 export const About = () => {
     return (
         <AnimatedSection delay={ANIMATION_DELAYS.ABOUT_SECTION}>
-            <section id="about" className="py-32 bg-background relative overflow-hidden scroll-mt-16">
-                {floatingIcons.map(({ Icon, animClass, color, style, size }) => (
-                    <div
-                        key={animClass + size}
-                        className={`absolute pointer-events-none select-none ${animClass} scale-50 md:scale-100`}
-                        style={{ ...style, color, opacity: 0.18 }}
-                        aria-hidden="true"
-                    >
-                        <Icon size={size} />
-                    </div>
-                ))}
+            <section id="about" className="py-16 md:py-20 bg-background">
+                <div className="max-w-[86rem] mx-auto px-6 sm:px-8 lg:px-12">
+                    {/* Section header — editorial numbering */}
+                    <header className="mb-10 md:mb-14">
+                        <p className="font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400 mb-4">
+                            02 / About
+                        </p>
+                        <h2 className="text-heading-1 text-gray-900 dark:text-white">About me</h2>
+                    </header>
 
-                <div className="max-w-4xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
-                    <div className="space-y-12">
-                        <h2 className="text-heading-1 text-center text-gray-900 dark:text-white">About me</h2>
+                    <div className="border-t border-neutral-200 dark:border-neutral-800 pt-12 md:pt-16 grid md:grid-cols-2 gap-12 md:gap-14">
+                        {/* Bio */}
+                        <div className="space-y-6 text-body-lg md:text-xl leading-[1.7] font-light text-gray-700 dark:text-slate-300 max-w-[65ch]">
+                            <p>
+                                I build production-ready Android apps powered by AI — offline-first architecture, clean code, and structured LLM outputs that turn raw models into real user features.
+                            </p>
+                            <p>
+                                Voice-to-text, intelligent summaries, structured outputs from raw LLM responses. My stack is Kotlin, Jetpack Compose, and Clean Architecture, paired with practical LLM integration so everything works reliably even without a connection.
+                            </p>
 
-                        <div className="max-w-[65ch] mx-auto text-left">
-                            <div className="space-y-6 text-body-lg font-light text-gray-700 dark:text-slate-300">
-                                <p>
-                                    I build Android apps where AI solves real user problems. Voice-to-text, intelligent summaries, structured outputs from raw LLM responses.
-                                </p>
-                                <p>
-                                    My stack is Kotlin, Jetpack Compose, and Clean Architecture. I combine it with practical LLM integration and offline-first design so everything works reliably, even without a connection.
-                                </p>
-                            </div>
+                            {/* Pillars */}
+                            <ul className="flex flex-wrap gap-x-10 gap-y-6 pt-4 list-none">
+                                {pillars.map(({ Icon, label }) => (
+                                    <li key={label} className="flex items-center gap-3">
+                                        <Icon className="w-6 h-6 text-neutral-500 dark:text-neutral-400" strokeWidth={1.5} aria-hidden="true" />
+                                        <span className="font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400">
+                                            {label}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
+
+                        {/* Stats */}
+                        <dl className="grid content-start gap-0 border-t border-neutral-200 dark:border-neutral-800 md:border-t-0 md:border-l md:pl-14">
+                            {stats.map((stat) => (
+                                <div
+                                    key={stat.label}
+                                    className="py-6 border-b border-neutral-200 dark:border-neutral-800 last:border-b-0 md:first:pt-0"
+                                >
+                                    <dt className="sr-only">{stat.label}</dt>
+                                    <dd className="text-heading-2 font-semibold text-gray-900 dark:text-white">
+                                        {stat.value}
+                                    </dd>
+                                    <dd className="font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400 mt-2">
+                                        {stat.label}
+                                    </dd>
+                                </div>
+                            ))}
+                        </dl>
                     </div>
                 </div>
             </section>

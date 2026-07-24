@@ -1,6 +1,9 @@
 import { projectsCatalog } from "./projectCatalog";
 import type { ProjectMediaType, ProjectMetric } from "./projectCatalog";
 
+const toWebpPath = (imagePath: string): string =>
+  imagePath.replace(/\.(?:png|jpe?g)$/i, ".webp");
+
 export interface ProjectFeature {
   title: string;
   description?: string;
@@ -34,9 +37,7 @@ export interface Project {
   links: {
     github: string;
   };
-  results: string | string[];
-  roadmap: string;
-  architecture: string;
+  engineeringNote: string;
 }
 
 export const projects: Project[] = projectsCatalog.map((project) => ({
@@ -59,12 +60,10 @@ export const projects: Project[] = projectsCatalog.map((project) => ({
     id: `${project.slug}-${index + 1}`,
     title: screen.caption,
     description: "",
-    image: screen.imageUrl,
+    image: toWebpPath(screen.imageUrl),
   })),
   links: {
     github: project.links.github,
   },
-  results: project.results,
-  roadmap: project.roadmap,
-  architecture: project.stackAndArchitecture.architecture,
+  engineeringNote: project.engineeringNote,
 }));
