@@ -3,6 +3,11 @@
 Source for [akbar02work.xyz](https://www.akbar02work.xyz), a static portfolio for
 Android and AI engineering work.
 
+The repository contains both portfolio experiences:
+
+- The Business site at the repository root.
+- The Creative site in `creative/`, published at `/creative/`.
+
 ## Stack
 
 - React 18, TypeScript, Vite
@@ -24,11 +29,12 @@ Android and AI engineering work.
 
 ```bash
 npm install
+npm --prefix creative install
 npm run dev
 ```
 
-The optional Creative portfolio link is enabled in production only when
-`VITE_CREATIVE_URL` is configured.
+Run both sites locally with `npm run dev:pair`. To rebuild the Creative site
+embedded at `/creative/`, run `npm run embed:creative`.
 
 ## Quality gates
 

@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:pair": "node ../dev-portfolios.mjs",
-    "dev:pair:stop": "node ../dev-portfolios.mjs --stop",
+    "dev:pair": "node scripts/dev-portfolios.mjs",
+    "dev:pair:stop": "node scripts/dev-portfolios.mjs --stop",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",

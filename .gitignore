@@ -13,6 +13,7 @@ dist-ssr
 *.local
 playwright-report
 test-results
+.dev-portfolios.pid
 
 # Editor directories and files
 .vscode/*

@@ -1,6 +1,8 @@
 # Akbar — Signal Lab
 
-Experimental wow-portfolio. **Separate from the main site** — nothing here touches `/portfolio`.
+Experimental wow-portfolio maintained as the `creative/` app inside the main
+portfolio repository. Its source stays isolated from the Business app while both
+ship from one clone.
 
 ## Why this exists
 
