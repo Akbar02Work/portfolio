@@ -1,0 +1,2 @@
+Creative (portfolio-wow) embedded with VITE_BASE_URL=/creative/
+Rebuild: npm run embed:creative

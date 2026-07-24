@@ -25,6 +25,14 @@
   ],
   "rewrites": [
     {
+      "source": "/creative",
+      "destination": "/creative/index.html"
+    },
+    {
+      "source": "/creative/",
+      "destination": "/creative/index.html"
+    },
+    {
       "source": "/old",
       "destination": "/old/index.html"
     },

@@ -22,8 +22,13 @@ const collectRasterImages = async (directory: string): Promise<string[]> => {
   for (const entry of entries) {
     const absolutePath = path.join(directory, entry.name);
     if (entry.isDirectory()) {
-      // Skip frozen /old archive — rebuilt via `npm run archive:old`
-      if (entry.name === "old" && path.resolve(directory) === publicDirectory) continue;
+      // Skip frozen archives — rebuilt via dedicated scripts
+      if (
+        (entry.name === "old" || entry.name === "creative") &&
+        path.resolve(directory) === publicDirectory
+      ) {
+        continue;
+      }
       images.push(...await collectRasterImages(absolutePath));
       continue;
     }
