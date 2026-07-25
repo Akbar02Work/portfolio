@@ -2,7 +2,14 @@
 
 [![CI](https://github.com/Akbar02Work/portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Akbar02Work/portfolio/actions/workflows/ci.yml)
 
-[![Akbar Azizov portfolio](public/og-image.png)](https://www.akbar02work.xyz)
+<p align="center">
+  <a href="https://www.akbar02work.xyz">
+    <img src="public/og-image.png" alt="Business portfolio preview" width="49%" />
+  </a>
+  <a href="https://www.akbar02work.xyz/creative/">
+    <img src="public/creative/og-image.png" alt="Creative portfolio preview" width="49%" />
+  </a>
+</p>
 
 **One portfolio, two ways to read the same engineer.**
 
