@@ -4,6 +4,11 @@ import "@testing-library/jest-dom";
 // Mock HTMLCanvasElement (Restored from original)
 Object.defineProperty(HTMLCanvasElement.prototype, "getContext", {
     value: vi.fn(() => ({
+        beginPath: vi.fn(),
+        moveTo: vi.fn(),
+        arcTo: vi.fn(),
+        closePath: vi.fn(),
+        fill: vi.fn(),
         clearRect: vi.fn(),
         fillText: vi.fn(),
         font: "",
