@@ -1,0 +1,13 @@
+{
+  "source": "https://github.com/jonnyjackson26/device-frames-media (Pixel 9 Pro Obsidian)",
+  "frameSize": {
+    "width": 1620,
+    "height": 3136
+  },
+  "screenInset": {
+    "left": 0.1049,
+    "top": 0.0453,
+    "width": 0.7901,
+    "height": 0.9107
+  }
+}

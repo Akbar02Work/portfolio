@@ -5,14 +5,15 @@ type ProjectDetailsSectionProps = {
 };
 
 const STACK_ROLES: Record<string, string> = {
-    Kotlin: "language",
-    "Jetpack Compose": "ui",
-    "Gemini API": "ai",
-    Room: "storage",
-    MVVM: "pattern",
-    "Clean Arch": "architecture",
-    Hilt: "di",
-    Coroutines: "async",
+  Kotlin: "language",
+  "Jetpack Compose": "ui",
+  "Gemini API": "ai",
+  "OpenAI API": "ai",
+  "Groq API": "ai",
+  "sherpa-onnx": "on-device asr",
+  Room: "storage",
+  WorkManager: "model delivery",
+  Hilt: "di",
 };
 
 const stackRole = (tech: string) => STACK_ROLES[tech] ?? "module";

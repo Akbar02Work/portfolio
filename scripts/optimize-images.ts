@@ -11,6 +11,7 @@ const excludedFileNames = new Set([
   "favicon-16x16.png",
   "favicon-32x32.png",
   "og-image.png",
+  "android-phone-frame.png",
 ]);
 
 const formatBytes = (bytes: number): string => `${(bytes / 1024).toFixed(1)} KB`;

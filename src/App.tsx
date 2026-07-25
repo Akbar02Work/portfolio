@@ -8,12 +8,15 @@ import { PageTransitionProvider } from "@/hooks/usePageTransition";
 import { ROUTES } from "@/constants/routes";
 import Index from "./pages/Index";
 import ProjectDetail from "./pages/ProjectDetail";
+import { useDynamicFavicon } from "./hooks/useDynamicFavicon";
 import { ThemeProvider } from "./hooks/useTheme";
 
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Easter = lazy(() => import("./pages/Easter"));
 
 const App = () => {
+  useDynamicFavicon();
+
   return (
     <ThemeProvider>
       <HelmetProvider>

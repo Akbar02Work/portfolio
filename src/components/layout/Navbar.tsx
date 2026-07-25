@@ -11,6 +11,7 @@ import { ROUTES } from "@/constants/routes";
 import { SCROLL_SPY_OFFSET_PX } from "@/constants/ui.constants";
 import { projectsSummary } from "@/data/projectsSummary";
 import { useActiveSection } from "@/hooks/useActiveSection";
+import { useBlink } from "@/hooks/useBlink";
 import { useEasterLogo } from "@/hooks/useEasterLogo";
 import { useProjectsMenu } from "@/hooks/useProjectsMenu";
 
@@ -19,6 +20,7 @@ type NavbarProps = {
 };
 
 export const Navbar = ({ variant = "home" }: NavbarProps) => {
+  const isUnderscoreVisible = useBlink();
   const isHome = variant === "home";
   const location = useLocation();
   const navigate = useNavigate();
@@ -94,7 +96,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
           >
             <span className="self-center font-mono text-lg font-bold tracking-wider whitespace-nowrap uppercase text-gray-900 dark:text-white">
               &lt;Aka
-              <span className="motion-safe:animate-pulse">_</span>
+              <span style={{ opacity: isUnderscoreVisible ? 1 : 0 }}>_</span>
               /Portfolio/&gt;
             </span>
           </Link>
@@ -110,6 +112,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
             activeSection={activeSection}
             handleLogoClick={handleLogoClick}
             handleNavItemClick={handleNavItemClick}
+            isUnderscoreVisible={isUnderscoreVisible}
             mobileMenuOpen={mobileMenuOpen}
             setMobileMenuOpen={setMobileMenuOpen}
             mobileProjectsOpen={mobileProjectsOpen}

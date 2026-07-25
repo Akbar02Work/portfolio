@@ -60,9 +60,9 @@ at the seams:
   and Playwright browser tests run as one CI contract.
 
 The current featured case is
-[VoiceNotes](https://www.akbar02work.xyz/projects/voicenotes): an offline-first
-Android voice-notes app that turns recordings into structured, searchable notes
-with Gemini or OpenAI summarization.
+[VoiceNotes](https://www.akbar02work.xyz/projects/voicenotes): a native Android
+voice-to-notes system that turns short recordings into searchable notes through
+cloud providers or a verified on-device Russian transcription path.
 
 ## Human direction, AI-assisted execution
 

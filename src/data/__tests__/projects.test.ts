@@ -77,6 +77,9 @@ describe("project data model", () => {
       "/projects/voicenotes/screen-01.webp",
       "/projects/voicenotes/screen-02.webp",
       "/projects/voicenotes/screen-03.webp",
+      "/projects/voicenotes/screen-04.webp",
+      "/projects/voicenotes/screen-05.webp",
+      "/projects/voicenotes/screen-06.webp",
     ]);
 
     const summary = projectsSummary.find((project) => project.slug === "voicenotes");

@@ -4,10 +4,10 @@ export const PROJECTS = [
     index: "01",
     name: "VoiceNotes",
     glyph: "VN",
-    year: "2025",
-    role: "Android · AI",
-    desc: "Voice capture that becomes structured, searchable notes — Gemini summarization with offline-first Room storage.",
-    tags: ["Kotlin", "Compose", "Gemini", "Room", "Clean Arch"],
+    year: "2026",
+    role: "Android · AI · Offline",
+    desc: "A native Android voice-to-notes system — cloud providers when useful, verified on-device Russian transcription when privacy matters.",
+    tags: ["Kotlin", "Compose", "Gemini", "Groq", "sherpa-onnx"],
     href: "https://github.com/Akbar02Work/VoiceNotes",
   },
   {
@@ -22,6 +22,7 @@ export const PROJECTS = [
     href: "#top",
   },
 ] as const;
+
 
 export const STACK = [
   "Kotlin",
@@ -43,4 +44,3 @@ export const SECTIONS = [
   { id: "about", label: "03", name: "About" },
   { id: "contact", label: "04", name: "Contact" },
 ] as const;
-

@@ -59,17 +59,17 @@ const projectDefinitions = [
   createProject({
     title: "VoiceNotes",
     description:
-      "Android app for voice notes with AI summarization and reliable offline storage.",
-    role: "Product design & Android development — solo",
-    year: 2025,
+      "Native Android voice notes that turn short recordings into searchable notes — cloud AI when useful, private on-device transcription when it matters.",
+    role: "Product design & Android engineering — solo build",
+    year: 2026,
     metrics: [
-      { value: "Room", label: "local note storage" },
-      { value: "1-tap", label: "recording flow" },
-      { value: "Gemini", label: "AI summarization" },
+      { value: "4 modes", label: "cloud + local processing" },
+      { value: "BYOK", label: "encrypted on-device keys" },
+      { value: "Room", label: "persistent notes + audio" },
     ],
     media: {
       type: "phone",
-      alt: "VoiceNotes empty notes list with record button",
+      alt: "VoiceNotes notes list with generated titles, summaries, and one-tap recording",
     },
     links: {
       github: "https://github.com/Akbar02Work/VoiceNotes",
@@ -77,34 +77,57 @@ const projectDefinitions = [
     gallery: [
       {
         imageUrl: "/projects/voicenotes/screen-01.png",
-        caption: "Notes list — empty state with one-tap record FAB.",
+        caption: "Notes list — structured AI summaries with one-tap record FAB.",
       },
       {
         imageUrl: "/projects/voicenotes/screen-02.png",
-        caption: "API key setup — choose Gemini or OpenAI and start.",
+        caption: "Processing — live status while a new recording is summarized.",
       },
       {
         imageUrl: "/projects/voicenotes/screen-03.png",
-        caption: "Settings — AI provider, keys, and language.",
+        caption: "Note detail — playback, summary, and full transcription.",
+      },
+      {
+        imageUrl: "/projects/voicenotes/screen-04.png",
+        caption: "Cloud setup — choose Gemini, OpenAI, or Groq while keeping the provider key on-device.",
+      },
+      {
+        imageUrl: "/projects/voicenotes/screen-05.png",
+        caption: "Model selection — discover separate transcription and summary models for the active provider.",
+      },
+      {
+        imageUrl: "/projects/voicenotes/screen-06.png",
+        caption: "Settings — provider, model catalog, theme, language, and offline model controls.",
       },
     ],
     overview:
-      "VoiceNotes captures spoken ideas and turns them into structured, searchable notes. It combines local persistence with AI summarization to reduce review time and improve note retrieval.",
+      "VoiceNotes turns a short recording into a durable note: playable audio, transcription, generated title, and summary, all kept in a searchable Room-backed library. Cloud processing uses the provider selected by the user; the on-device path keeps Russian transcription on the phone after its model is installed.",
     challenge:
-      "Classic voice memo apps store raw audio without structure, making later retrieval expensive. The challenge was to keep capture friction low while producing useful, searchable note artifacts.",
+      "The product challenge was not simply calling an AI API. It was designing one reliable flow across recording, processing, failure, retry, provider and model selection, and offline inference—without making privacy or network availability an afterthought.",
     stackAndArchitecture: {
-      stack: ["Kotlin", "Jetpack Compose", "Gemini API", "Room", "MVVM", "Clean Arch"],
+      stack: [
+        "Kotlin",
+        "Jetpack Compose",
+        "sherpa-onnx",
+        "Gemini API",
+        "OpenAI API",
+        "Groq API",
+        "Room",
+        "WorkManager",
+        "Hilt",
+      ],
     },
     keyFeatures: [
-      "One-tap voice recording with waveform feedback",
-      "AI-powered summarization using Google Gemini API",
-      "Structured notes with title, summary, and key points",
-      "Offline-first note storage using Room",
-      "Searchable notes from chaotic audio captures",
-      "Capture now, summarize when the network returns",
+      "One-tap AAC recording with visible recording, processing, draft, failure, and retry states",
+      "Cloud processing through Gemini, OpenAI, or Groq with separate transcription and summary models",
+      "Checksum-verified on-device Russian transcription with sherpa-onnx Zipformer models",
+      "Resumable model downloads with size checks, SHA-256 verification, and atomic activation",
+      "Room-backed notes with pinned items, searchable summaries, and playable original audio",
+      "API keys stored in encrypted preferences and excluded from backup",
+      "English and Russian localization with Material 3 dynamic theming",
     ],
     engineeringNote:
-      "On-device audio is transcribed and sent to Gemini for summarization. The raw LLM response is parsed into a structured note — title, summary, key points — before anything is persisted to Room, so the app never stores unstructured model output.",
+      "The processing router keeps cloud providers and local sherpa-onnx inference as separate strategies behind one structured note pipeline. Cloud mode validates the user's key and discovers transcription and summary models; local mode activates only checksum-verified model files. Room persists the note while the original recording stays in the app-private files directory.",
   }),
 ] as const;
 

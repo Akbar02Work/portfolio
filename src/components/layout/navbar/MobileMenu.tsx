@@ -25,6 +25,7 @@ type MobileMenuProps = {
   activeSection: NavLinkId | "";
   handleLogoClick: MouseEventHandler<HTMLAnchorElement>;
   handleNavItemClick: (sectionId: NavLinkId) => void;
+  isUnderscoreVisible: boolean;
   mobileMenuOpen: boolean;
   setMobileMenuOpen: Dispatch<SetStateAction<boolean>>;
   mobileProjectsOpen: boolean;
@@ -38,6 +39,7 @@ export const MobileMenu = ({
   activeSection,
   handleLogoClick,
   handleNavItemClick,
+  isUnderscoreVisible,
   mobileMenuOpen,
   setMobileMenuOpen,
   mobileProjectsOpen,
@@ -83,7 +85,7 @@ export const MobileMenu = ({
           >
             <span className="font-mono text-[clamp(1rem,2.5vh,1.5rem)] font-bold tracking-wider whitespace-nowrap uppercase text-gray-900 dark:text-white">
               &lt;Aka
-              <span className="motion-safe:animate-pulse">_</span>
+              <span style={{ opacity: isUnderscoreVisible ? 1 : 0 }}>_</span>
               /Portfolio/&gt;
             </span>
           </Link>
