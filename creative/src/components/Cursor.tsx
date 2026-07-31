@@ -13,9 +13,6 @@ export function Cursor() {
   const ring = useRef({ x: -100, y: -100 });
 
   useEffect(() => {
-    const coarse = window.matchMedia("(hover: none), (pointer: coarse)").matches;
-    if (coarse) return;
-
     const root = rootRef.current;
     const dotEl = dotRef.current;
     const ringEl = ringRef.current;

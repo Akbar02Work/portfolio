@@ -174,18 +174,17 @@ export function ShaderCanvas({ scrollRef }: Props) {
       return Math.max(0.22, 1 - Math.min(1, scroll * 1.15) * 0.78);
     };
 
-    const coarse = window.matchMedia("(pointer: coarse)").matches;
     const deviceMemory =
       (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8;
     const lowPower =
-      coarse || navigator.hardwareConcurrency <= 4 || deviceMemory <= 4;
+      navigator.hardwareConcurrency <= 4 || deviceMemory <= 4;
     const dprCap = lowPower ? 1 : 1.5;
     const trailScale = lowPower ? 0.35 : 0.55;
     const targetFrameMs = lowPower ? 1000 / 30 : 0;
 
     const resizeTrail = (cssW: number, cssH: number) => {
-      // Half-res trail for soft smoke + cheaper blur (lighter on touch devices)
-      const scale = Math.min(dpr, coarse ? 1 : 1.25) * trailScale;
+      // Half-res trail for soft smoke + cheaper blur on low-power hardware.
+      const scale = Math.min(dpr, 1.25) * trailScale;
       const w = Math.max(2, Math.floor(cssW * scale));
       const h = Math.max(2, Math.floor(cssH * scale));
       if (w === trailW && h === trailH && readFbo && writeFbo) return;

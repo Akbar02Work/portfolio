@@ -18,7 +18,6 @@ import {
 import { ROUTES, buildProjectUrl } from "@/constants/routes";
 import type { ProjectSummary } from "@/data/projectsSummary";
 import { ThemeMenu } from "./ThemeMenu";
-import { VersionSwitch } from "./VersionSwitch";
 import { navLinks, type NavLinkId } from "./navigation";
 
 type MobileMenuProps = {
@@ -178,10 +177,9 @@ export const MobileMenu = ({
           })}
         </nav>
 
-        {/* ── Bottom: Version + Theme ── */}
+        {/* ── Bottom: Theme ── */}
         <div className="px-6 pb-[clamp(1rem,4vh,2rem)] pt-[clamp(0.5rem,2vh,1.5rem)]">
-          <div className="flex items-center justify-between gap-3">
-            <VersionSwitch />
+          <div className="flex items-center justify-end gap-3">
             <ThemeMenu direction="up" />
           </div>
         </div>

@@ -107,7 +107,7 @@ export const DesktopNav = ({
 
     {/* Right utilities */}
     <div className="relative z-20 hidden md:flex items-center gap-3 ml-auto">
-      <VersionSwitch />
+      <VersionSwitch className="hidden min-[901px]:inline-flex" />
       <ThemeMenu />
     </div>
   </>

@@ -17,6 +17,8 @@
 evidence. [Creative](https://www.akbar02work.xyz/creative/) is the expressive
 version: motion, atmosphere, and personality. They are intentionally different
 interfaces, but they ship from one repository and one release pipeline.
+Creative is intentionally a desktop-only experience: below 901 px it shows an
+access gate and keeps its desktop interactions out of the mobile runtime.
 
 ## Why two versions?
 
@@ -45,7 +47,7 @@ at the seams:
   into summaries, detail pages, metrics, galleries, and navigation without
   duplicating editorial content.
 - **Motion with an exit path.** WebGL, scroll choreography, view transitions, and
-  responsive interaction add character while reduced-motion behavior, keyboard
+  desktop interaction add character while reduced-motion behavior, keyboard
   navigation, semantic markup, and a conventional Business version keep the site
   usable.
 - **Static hosting without static UX.** Client-side routes, direct project URLs,

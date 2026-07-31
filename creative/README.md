@@ -4,6 +4,9 @@ Experimental wow-portfolio maintained as the `creative/` app inside the main
 portfolio repository. Its source stays isolated from the Business app while both
 ship from one clone.
 
+Creative is desktop-only. On viewports below 901 px, the app shows an access gate
+instead of mounting the desktop experience, effects, or navigation.
+
 ## Why this exists
 
 A cinematic craft prototype inspired by:

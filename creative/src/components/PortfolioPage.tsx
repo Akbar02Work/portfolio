@@ -5,16 +5,13 @@ import { getBusinessUrl } from "../siteConfig";
 import { PROJECTS, STACK } from "../siteData";
 import { Corners } from "./Corners";
 import { FitWidthText } from "./FitWidthText";
-import { MobileIndex } from "./MobileIndex";
 import { VersionSwitch } from "./VersionSwitch";
 
 type Props = {
   ready: boolean;
   reveal: boolean;
   emailCopied: boolean;
-  showMobileIndex: boolean;
   onCopyEmail: (event: MouseEvent<HTMLAnchorElement>) => void;
-  onJump: (id: string) => void;
   onNavClick: (event: MouseEvent<HTMLAnchorElement>, id: string) => void;
 };
 
@@ -22,9 +19,7 @@ export function PortfolioPage({
   ready,
   reveal,
   emailCopied,
-  showMobileIndex,
   onCopyEmail,
-  onJump,
   onNavClick,
 }: Props) {
   const clock = useTashkentClock();
@@ -75,7 +70,6 @@ export function PortfolioPage({
           </a>
         </nav>
         <div className="nav__end">
-          {showMobileIndex && <MobileIndex onJump={onJump} />}
           <VersionSwitch businessUrl={businessUrl} />
         </div>
       </header>
@@ -179,9 +173,6 @@ export function PortfolioPage({
             <p className="eyebrow works__hint works__hint--desktop">
               <span className="works__hint-count">02</span> cases · scroll to travel →
             </p>
-            <p className="eyebrow works__hint works__hint--mobile">
-              <span className="works__hint-count">02</span> cases · scroll
-            </p>
           </div>
 
           <div className="works__pin">
@@ -272,18 +263,18 @@ export function PortfolioPage({
                   <source
                     type="image/avif"
                     srcSet={`${withBase("avatar-320.avif")} 320w, ${withBase("avatar-480.avif")} 480w, ${withBase("avatar.avif")} 586w`}
-                    sizes="(min-width: 860px) 380px, 70vw"
+                    sizes="380px"
                   />
                   <source
                     type="image/webp"
                     srcSet={`${withBase("avatar-320.webp")} 320w, ${withBase("avatar-480.webp")} 480w, ${withBase("avatar.webp")} 586w`}
-                    sizes="(min-width: 860px) 380px, 70vw"
+                    sizes="380px"
                   />
                   <img
                     className="about__portrait-img"
                     src={withBase("avatar.png")}
                     srcSet={`${withBase("avatar-320.png")} 320w, ${withBase("avatar-480.png")} 480w, ${withBase("avatar.png")} 586w`}
-                    sizes="(min-width: 860px) 380px, 70vw"
+                    sizes="380px"
                     width={586}
                     height={934}
                     alt="Akbar Azizov"
@@ -382,10 +373,7 @@ export function PortfolioPage({
             {emailCopied ? "Email address copied to clipboard" : ""}
           </span>
           <p className="contact__email-hint" data-reveal>
-            <span className="contact__email-hint--desk">
-              Click to copy · ⌘/Ctrl+click to open mail
-            </span>
-            <span className="contact__email-hint--touch">Tap to copy</span>
+            Click to copy · ⌘/Ctrl+click to open mail
           </p>
           <div className="contact__row" data-reveal>
             <div className="contact__socials">
@@ -432,4 +420,3 @@ export function PortfolioPage({
     </div>
   );
 }
-

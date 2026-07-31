@@ -5,39 +5,60 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import { Cursor } from "./components/Cursor";
-import { GyroParallax } from "./components/GyroParallax";
 import { PortfolioPage } from "./components/PortfolioPage";
 import { Preloader } from "./components/Preloader";
 import { ScrollNav } from "./components/ScrollNav";
 import { ShaderCanvas } from "./components/ShaderCanvas";
+import { getBusinessUrl } from "./siteConfig";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function App() {
+const DESKTOP_MEDIA_QUERY = "(min-width: 901px)";
+
+function useDesktopViewport() {
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window === "undefined" || window.matchMedia(DESKTOP_MEDIA_QUERY).matches,
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(DESKTOP_MEDIA_QUERY);
+    const sync = () => setIsDesktop(mediaQuery.matches);
+    sync();
+    mediaQuery.addEventListener("change", sync);
+    return () => mediaQuery.removeEventListener("change", sync);
+  }, []);
+
+  return isDesktop;
+}
+
+function DesktopOnlyGate() {
+  useLayoutEffect(() => {
+    document.body.classList.remove("is-loading");
+    document.getElementById("boot-curtain")?.remove();
+  }, []);
+
+  return (
+    <main className="desktop-gate" aria-labelledby="desktop-gate-title">
+      <div className="desktop-gate__grid" aria-hidden="true" />
+      <p className="desktop-gate__eyebrow">00 / Access denied</p>
+      <h1 id="desktop-gate-title">Обломись.</h1>
+      <p className="desktop-gate__copy">
+        Creative открывается только с версии для ПК.
+      </p>
+      <a className="desktop-gate__link" href={getBusinessUrl()}>
+        Вернуться в Business <span aria-hidden="true">↗</span>
+      </a>
+    </main>
+  );
+}
+
+function DesktopExperience() {
   const [ready, setReady] = useState(false);
   const [reveal, setReveal] = useState(false);
   const [booting, setBooting] = useState(true);
   const [emailCopied, setEmailCopied] = useState(false);
-  const [showScrollNav, setShowScrollNav] = useState(false);
-  const [showMobileIndex, setShowMobileIndex] = useState(false);
   const scrollProgressRef = useRef(0);
   const lenisRef = useRef<Lenis | null>(null);
-
-  useEffect(() => {
-    const scrollNavMq = window.matchMedia("(min-width: 901px)");
-    const mobileIndexMq = window.matchMedia("(max-width: 720px)");
-    const sync = () => {
-      setShowScrollNav(scrollNavMq.matches);
-      setShowMobileIndex(mobileIndexMq.matches);
-    };
-    sync();
-    scrollNavMq.addEventListener("change", sync);
-    mobileIndexMq.addEventListener("change", sync);
-    return () => {
-      scrollNavMq.removeEventListener("change", sync);
-      mobileIndexMq.removeEventListener("change", sync);
-    };
-  }, []);
 
   const onPreloaderReady = useCallback(() => {
     flushSync(() => setReady(true));
@@ -85,16 +106,13 @@ export default function App() {
     const interactionCleanups: Array<() => void> = [];
     const responsive = gsap.matchMedia();
 
-    // Native scroll on mobile — no Lenis smoothing / magnetic feel
     responsive.add(
-      "(min-width: 860px) and (prefers-reduced-motion: no-preference)",
+      "(prefers-reduced-motion: no-preference)",
       () => {
         lenis = new Lenis({
           lerp: 0.075,
           wheelMultiplier: 0.9,
-          touchMultiplier: 1.15,
           smoothWheel: true,
-          syncTouch: false,
         });
         lenisRef.current = lenis;
         lenis.on("scroll", ScrollTrigger.update);
@@ -167,40 +185,21 @@ export default function App() {
         if (reduced) {
           gsap.set(manifestoWords, { opacity: 1 });
         } else {
-          responsive.add("(max-width: 859px)", () => {
-            gsap.fromTo(
-              manifestoWords,
-              { opacity: 0.15 },
-              {
-                opacity: 1,
-                stagger: 0.05,
-                duration: 0.7,
-                ease: "power2.out",
-                scrollTrigger: {
-                  trigger: ".manifesto",
-                  start: "top 80%",
-                  toggleActions: "play none none none",
-                },
+          gsap.fromTo(
+            manifestoWords,
+            { opacity: 0.15 },
+            {
+              opacity: 1,
+              stagger: 0.06,
+              ease: "none",
+              scrollTrigger: {
+                trigger: ".manifesto",
+                start: "top 75%",
+                end: "center 45%",
+                scrub: 0.4,
               },
-            );
-          });
-          responsive.add("(min-width: 860px)", () => {
-            gsap.fromTo(
-              manifestoWords,
-              { opacity: 0.15 },
-              {
-                opacity: 1,
-                stagger: 0.06,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: ".manifesto",
-                  start: "top 75%",
-                  end: "center 45%",
-                  scrub: 0.4,
-                },
-              },
-            );
-          });
+            },
+          );
         }
       }
 
@@ -309,7 +308,7 @@ export default function App() {
       }
 
       responsive.add(
-        "(min-width: 860px) and (prefers-reduced-motion: no-preference)",
+        "(prefers-reduced-motion: no-preference)",
         () => {
           const track = document.querySelector<HTMLElement>(".works__track");
           const pin = document.querySelector<HTMLElement>(".works__pin");
@@ -503,18 +502,20 @@ export default function App() {
       <div className="grain" aria-hidden="true" />
       <div className="vignette" aria-hidden="true" />
       <Cursor />
-      {ready && showScrollNav && <ScrollNav onJump={scrollToId} />}
-      {ready && !booting && <GyroParallax active={ready && !booting} />}
+      {ready && <ScrollNav onJump={scrollToId} />}
 
       <PortfolioPage
         ready={ready}
         reveal={reveal}
         emailCopied={emailCopied}
-        showMobileIndex={showMobileIndex}
         onCopyEmail={copyEmail}
-        onJump={scrollToId}
         onNavClick={onNavClick}
       />
     </>
   );
+}
+
+export default function App() {
+  const isDesktop = useDesktopViewport();
+  return isDesktop ? <DesktopExperience /> : <DesktopOnlyGate />;
 }
