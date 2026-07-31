@@ -31,7 +31,7 @@
     "ci": "npm run lint:creative && npm run build:creative && npm run ci:business && npm run check:creative-drift"
   },
   "dependencies": {
-    "@radix-ui/react-dialog": "^1.1.22",
+    "@radix-ui/react-dialog": "^1.1.23",
     "@sentry/react": "^10.68.0",
     "@vercel/speed-insights": "^1.3.1",
     "class-variance-authority": "^0.7.1",
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
-    "@playwright/test": "^1.61.1",
+    "@playwright/test": "^1.62.0",
     "@testing-library/jest-dom": "^6.6.0",
     "@testing-library/react": "^16.0.0",
     "@types/node": "^22.20.1",
@@ -59,7 +59,7 @@
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^15.15.0",
     "jsdom": "^20.0.3",
-    "postcss": "^8.5.23",
+    "postcss": "^8.5.24",
     "rollup-plugin-visualizer": "^6.0.11",
     "sharp": "^0.35.3",
     "tailwindcss": "^3.4.17",
