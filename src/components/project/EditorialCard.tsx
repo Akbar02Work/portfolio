@@ -1,7 +1,12 @@
 import { ArrowUpRight } from "lucide-react";
+import { useState } from "react";
 import type { CSSProperties } from "react";
 import type { ProjectStyle } from "@/constants/projectStyles";
-import type { ProjectSummary } from "@/data/projectsSummary";
+import {
+    resolveProjectSummaryPlatform,
+    type ProjectSummary,
+} from "@/data/projectsSummary";
+import type { ProjectPlatformId } from "@/data/projectCatalog";
 import { buildProjectUrl } from "@/constants/routes";
 import ProjectCardMedia from "@/components/project/ProjectCardMedia";
 import { ViewTransitionLink } from "@/hooks/usePageTransition";
@@ -15,7 +20,15 @@ interface EditorialCardProps {
 
 const EditorialCard = ({ project, index, reversed = false, style }: EditorialCardProps) => {
     const number = String(index + 1).padStart(2, "0");
-    const href = buildProjectUrl(project.slug);
+    const firstPlatform = project.platformPreviews[0];
+    const [activePlatform, setActivePlatform] = useState<ProjectPlatformId>(
+        firstPlatform?.id ?? "android"
+    );
+    const activeProject = resolveProjectSummaryPlatform(project, activePlatform);
+    const href = buildProjectUrl(
+        project.slug,
+        firstPlatform ? activePlatform : undefined
+    );
 
     return (
         <article
@@ -28,7 +41,7 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
                     <div className="flex items-center gap-4">
                         <span className="font-mono text-base text-[var(--project-accent)]">{number}</span>
                         <span className="h-px flex-1 bg-neutral-200 dark:bg-neutral-800" aria-hidden="true" />
-                        <span className="font-mono text-sm text-neutral-500 dark:text-neutral-400">{project.year}</span>
+                        <span className="font-mono text-sm text-neutral-500 dark:text-neutral-400">{activeProject.year}</span>
                     </div>
 
                     <h3 className="text-[clamp(1.75rem,2.4vw+0.75rem,2.75rem)] leading-[1.15] tracking-[-0.02em] font-bold text-gray-900 dark:text-white">
@@ -46,11 +59,11 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
                     </h3>
 
                     <p className="text-body-lg md:text-[1.375rem] leading-[1.75] text-gray-600 dark:text-slate-300 max-w-xl">
-                        {project.summary}
+                        {activeProject.summary}
                     </p>
 
                     <dl className="grid grid-cols-3 gap-5 border-t border-neutral-200 dark:border-neutral-800 pt-7 mt-1">
-                        {project.metrics.map((metric) => (
+                        {activeProject.metrics.map((metric) => (
                             <div key={metric.label}>
                                 <dt className="sr-only">{metric.label}</dt>
                                 <dd className="text-xl md:text-[1.375rem] font-semibold leading-snug tracking-[-0.01em] text-gray-900 dark:text-white">
@@ -64,7 +77,7 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
                     </dl>
 
                     <p className="font-mono text-sm text-neutral-500 dark:text-neutral-400">
-                        {project.technologies.join(" · ")}
+                        {activeProject.technologies.join(" · ")}
                     </p>
 
                     <ViewTransitionLink
@@ -82,7 +95,13 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
 
                 {/* Media block */}
                 <div className={`relative md:col-span-6 ${reversed ? "md:order-1" : ""}`}>
-                    <ProjectCardMedia project={project} style={style} href={href} />
+                    <ProjectCardMedia
+                        project={project}
+                        style={style}
+                        href={href}
+                        activePlatform={activePlatform}
+                        onPlatformChange={setActivePlatform}
+                    />
                 </div>
             </div>
         </article>

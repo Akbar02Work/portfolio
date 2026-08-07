@@ -1,4 +1,3 @@
-import { useState } from "react";
 import ProjectMediaFrame from "@/components/project/ProjectMediaFrame";
 import { ProjectPlatformTabs } from "@/components/project/ProjectPlatformTabs";
 import type { ProjectStyle } from "@/constants/projectStyles";
@@ -10,6 +9,8 @@ type ProjectCardMediaProps = {
   project: ProjectSummary;
   style: ProjectStyle;
   href: string;
+  activePlatform: ProjectPlatformId;
+  onPlatformChange: (platform: ProjectPlatformId) => void;
 };
 
 const mediaLinkClass =
@@ -19,11 +20,10 @@ const ProjectCardMedia = ({
   project,
   style,
   href,
+  activePlatform,
+  onPlatformChange,
 }: ProjectCardMediaProps) => {
   const firstPlatform = project.platformPreviews[0];
-  const [activePlatform, setActivePlatform] = useState<ProjectPlatformId>(
-    firstPlatform?.id ?? "android"
-  );
 
   if (!firstPlatform) {
     return (
@@ -50,7 +50,7 @@ const ProjectCardMedia = ({
       <ProjectPlatformTabs
         platforms={project.platforms}
         activePlatform={activePreview.id}
-        onSelect={setActivePlatform}
+        onSelect={onPlatformChange}
         label={`Choose ${project.title} platform`}
         className="justify-center md:justify-start"
       />

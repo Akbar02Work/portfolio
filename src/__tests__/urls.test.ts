@@ -1,5 +1,15 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { withBase, toAbsoluteUrl } from "../lib/urls";
+import { buildProjectUrl } from "@/constants/routes";
+
+describe("buildProjectUrl", () => {
+    it("adds a selected platform without changing single-surface project URLs", () => {
+        expect(buildProjectUrl("lumingo", "web")).toBe(
+            "/projects/lumingo?platform=web"
+        );
+        expect(buildProjectUrl("voicenotes")).toBe("/projects/voicenotes");
+    });
+});
 
 describe("withBase", () => {
     it("returns absolute URLs unchanged", () => {

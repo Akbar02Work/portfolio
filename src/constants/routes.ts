@@ -6,5 +6,9 @@ export const ROUTES = {
 
 export const PROJECT_DETAIL_PREFIX = "/projects/";
 
-export const buildProjectUrl = (slug: string) =>
-  `${PROJECT_DETAIL_PREFIX}${slug}`;
+export const buildProjectUrl = (slug: string, platform?: string) => {
+  const projectUrl = `${PROJECT_DETAIL_PREFIX}${slug}`;
+  return platform
+    ? `${projectUrl}?platform=${encodeURIComponent(platform)}`
+    : projectUrl;
+};
