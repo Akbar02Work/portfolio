@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800">
+  <rect width="1280" height="800" fill="#FFF7EF"/>
+  <text x="56" y="66" fill="#DE6828" font-family="Arial, sans-serif" font-size="28" font-weight="700">Lumingo</text>
+  <text x="1220" y="64" fill="#756A62" font-family="Arial, sans-serif" font-size="15" text-anchor="end">Goal setup · Step 2 of 4</text>
+  <rect x="56" y="100" width="1168" height="6" rx="3" fill="#EDDACE"/>
+  <rect x="56" y="100" width="584" height="6" rx="3" fill="#DE6828"/>
+  <text x="148" y="202" fill="#756A62" font-family="Arial, sans-serif" font-size="15">YOUR REALITY</text>
+  <text x="148" y="254" fill="#1D1A17" font-family="Arial, sans-serif" font-size="48" font-weight="700">How much time can you</text>
+  <text x="148" y="310" fill="#1D1A17" font-family="Arial, sans-serif" font-size="48" font-weight="700">realistically invest?</text>
+  <text x="148" y="354" fill="#756A62" font-family="Arial, sans-serif" font-size="20">A smaller honest plan beats an ambitious abandoned one.</text>
+  <rect x="148" y="414" width="216" height="136" rx="24" fill="#FFFFFF" stroke="#E8D3C5"/>
+  <text x="256" y="458" fill="#1D1A17" font-family="Arial, sans-serif" font-size="38" font-weight="700" text-anchor="middle">5 min</text>
+  <text x="256" y="492" fill="#756A62" font-family="Arial, sans-serif" font-size="15" text-anchor="middle">light daily rhythm</text>
+  <rect x="388" y="414" width="216" height="136" rx="24" fill="#FFFFFF" stroke="#DE6828" stroke-width="3"/>
+  <text x="496" y="458" fill="#DE6828" font-family="Arial, sans-serif" font-size="38" font-weight="700" text-anchor="middle">15 min</text>
+  <text x="496" y="492" fill="#756A62" font-family="Arial, sans-serif" font-size="15" text-anchor="middle">steady progress</text>
+  <rect x="628" y="414" width="216" height="136" rx="24" fill="#FFFFFF" stroke="#E8D3C5"/>
+  <text x="736" y="458" fill="#1D1A17" font-family="Arial, sans-serif" font-size="38" font-weight="700" text-anchor="middle">30 min</text>
+  <text x="736" y="492" fill="#756A62" font-family="Arial, sans-serif" font-size="15" text-anchor="middle">deeper sessions</text>
+  <rect x="868" y="414" width="216" height="136" rx="24" fill="#FFFFFF" stroke="#E8D3C5"/>
+  <text x="976" y="458" fill="#1D1A17" font-family="Arial, sans-serif" font-size="38" font-weight="700" text-anchor="middle">Custom</text>
+  <text x="976" y="492" fill="#756A62" font-family="Arial, sans-serif" font-size="15" text-anchor="middle">set your own pace</text>
+  <rect x="148" y="620" width="164" height="54" rx="27" fill="#FFFFFF" stroke="#E8D3C5"/>
+  <text x="230" y="654" fill="#5D4438" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle">← Back</text>
+  <rect x="920" y="620" width="164" height="54" rx="27" fill="#DE6828"/>
+  <text x="1002" y="654" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle">Continue →</text>
+</svg>

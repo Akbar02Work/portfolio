@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800">
+  <rect width="1280" height="800" fill="#FFF7EF"/>
+  <rect width="250" height="800" fill="#FFFFFF"/>
+  <text x="38" y="62" fill="#DE6828" font-family="Arial, sans-serif" font-size="28" font-weight="700">Lumingo</text>
+  <rect x="24" y="108" width="202" height="46" rx="14" fill="#FFF0E5"/>
+  <text x="52" y="137" fill="#C9541E" font-family="Arial, sans-serif" font-size="14" font-weight="700">Goals</text>
+  <text x="52" y="202" fill="#756A62" font-family="Arial, sans-serif" font-size="14">Today</text>
+  <text x="52" y="250" fill="#756A62" font-family="Arial, sans-serif" font-size="14">Lumi</text>
+  <text x="52" y="298" fill="#756A62" font-family="Arial, sans-serif" font-size="14">Progress</text>
+  <text x="52" y="346" fill="#756A62" font-family="Arial, sans-serif" font-size="14">Settings</text>
+  <text x="296" y="72" fill="#756A62" font-family="Arial, sans-serif" font-size="14">BUSINESS ENGLISH · B1 → B2</text>
+  <text x="296" y="120" fill="#1D1A17" font-family="Arial, sans-serif" font-size="42" font-weight="700">Your learning path</text>
+  <rect x="296" y="160" width="920" height="124" rx="24" fill="#244584"/>
+  <text x="326" y="198" fill="#CAD8FF" font-family="Arial, sans-serif" font-size="13">WEEK 3 · STRUCTURED SPEAKING</text>
+  <text x="326" y="238" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="26" font-weight="700">You are on pace. Keep today's session small and focused.</text>
+  <rect x="1016" y="194" width="162" height="52" rx="26" fill="#DE6828"/>
+  <text x="1097" y="227" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">Continue today</text>
+  <text x="296" y="344" fill="#1D1A17" font-family="Arial, sans-serif" font-size="24" font-weight="700">This week</text>
+  <rect x="296" y="378" width="166" height="236" rx="20" fill="#FFFFFF" stroke="#E8D3C5"/>
+  <text x="318" y="412" fill="#756A62" font-family="Arial, sans-serif" font-size="12">MON · DONE</text>
+  <circle cx="379" cy="486" r="34" fill="#FFF0E5"/>
+  <path d="M362 486l11 11 23-28" fill="none" stroke="#DE6828" stroke-width="6"/>
+  <text x="379" y="560" fill="#1D1A17" font-family="Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">Frameworks</text>
+  <rect x="478" y="378" width="166" height="236" rx="20" fill="#FFFFFF" stroke="#E8D3C5"/>
+  <text x="500" y="412" fill="#756A62" font-family="Arial, sans-serif" font-size="12">TUE · DONE</text>
+  <circle cx="561" cy="486" r="34" fill="#FFF0E5"/>
+  <path d="M544 486l11 11 23-28" fill="none" stroke="#DE6828" stroke-width="6"/>
+  <text x="561" y="560" fill="#1D1A17" font-family="Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">Transitions</text>
+  <rect x="660" y="378" width="198" height="236" rx="20" fill="#FFF7EF" stroke="#244584" stroke-width="3"/>
+  <text x="684" y="412" fill="#244584" font-family="Arial, sans-serif" font-size="12" font-weight="700">TODAY · 12 MIN</text>
+  <circle cx="759" cy="486" r="38" fill="#244584"/>
+  <path d="M750 470l28 16-28 16z" fill="#FFFFFF"/>
+  <text x="759" y="560" fill="#1D1A17" font-family="Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">Build your answer</text>
+  <rect x="874" y="378" width="166" height="236" rx="20" fill="#FFFFFF" stroke="#E8D3C5"/>
+  <text x="896" y="412" fill="#756A62" font-family="Arial, sans-serif" font-size="12">THU</text>
+  <circle cx="957" cy="486" r="34" fill="#F3E5DB"/>
+  <text x="957" y="495" fill="#756A62" font-family="Arial, sans-serif" font-size="24" text-anchor="middle">4</text>
+  <text x="957" y="560" fill="#1D1A17" font-family="Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">Timed response</text>
+  <rect x="1056" y="378" width="160" height="236" rx="20" fill="#FFFFFF" stroke="#E8D3C5"/>
+  <text x="1078" y="412" fill="#756A62" font-family="Arial, sans-serif" font-size="12">FRI</text>
+  <circle cx="1136" cy="486" r="34" fill="#F3E5DB"/>
+  <text x="1136" y="495" fill="#756A62" font-family="Arial, sans-serif" font-size="24" text-anchor="middle">5</text>
+  <text x="1136" y="560" fill="#1D1A17" font-family="Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">Weekly review</text>
+  <rect x="296" y="650" width="920" height="92" rx="20" fill="#FFFFFF" stroke="#E8D3C5"/>
+  <text x="326" y="686" fill="#756A62" font-family="Arial, sans-serif" font-size="12">NEXT ADAPTATION</text>
+  <text x="326" y="717" fill="#1D1A17" font-family="Arial, sans-serif" font-size="18" font-weight="700">Sunday · based on pace, confidence, and completed practice</text>
+</svg>

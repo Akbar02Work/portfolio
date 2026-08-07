@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="760" viewBox="0 0 360 760">
+  <rect width="360" height="760" fill="#FFF7EF"/>
+  <circle cx="326" cy="38" r="42" fill="#FFDCC6"/>
+  <text x="24" y="48" fill="#DE6828" font-family="Arial, sans-serif" font-size="22" font-weight="700">Lumingo</text>
+  <circle cx="320" cy="42" r="18" fill="#244584"/>
+  <text x="320" y="48" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">A</text>
+  <text x="24" y="104" fill="#1D1A17" font-family="Arial, sans-serif" font-size="28" font-weight="700">Good afternoon, Akbar</text>
+  <text x="24" y="132" fill="#756A62" font-family="Arial, sans-serif" font-size="14">One focused step is enough for today.</text>
+  <rect x="20" y="164" width="320" height="238" rx="24" fill="#FFFFFF" stroke="#F0DED1"/>
+  <rect x="36" y="184" width="126" height="28" rx="14" fill="#FFF0E5"/>
+  <text x="99" y="203" fill="#C9541E" font-family="Arial, sans-serif" font-size="11" font-weight="700" text-anchor="middle">ACTIVE GOAL</text>
+  <text x="36" y="248" fill="#1D1A17" font-family="Arial, sans-serif" font-size="24" font-weight="700">Business English</text>
+  <text x="36" y="274" fill="#756A62" font-family="Arial, sans-serif" font-size="14">B1 → B2 · 8 weeks</text>
+  <rect x="36" y="304" width="288" height="10" rx="5" fill="#F3E5DB"/>
+  <rect x="36" y="304" width="184" height="10" rx="5" fill="#DE6828"/>
+  <text x="36" y="342" fill="#756A62" font-family="Arial, sans-serif" font-size="12">WEEK 3 · DAY 4</text>
+  <text x="36" y="370" fill="#1D1A17" font-family="Arial, sans-serif" font-size="16" font-weight="700">Speaking with clearer structure</text>
+  <rect x="20" y="426" width="320" height="146" rx="24" fill="#244584"/>
+  <text x="40" y="466" fill="#CAD8FF" font-family="Arial, sans-serif" font-size="12">TODAY · 12 MIN</text>
+  <text x="40" y="502" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="21" font-weight="700">Build your answer</text>
+  <text x="40" y="529" fill="#DCE6FF" font-family="Arial, sans-serif" font-size="13">Practice one interview response</text>
+  <rect x="40" y="542" width="134" height="10" rx="5" fill="#DE6828"/>
+  <rect x="20" y="604" width="320" height="72" rx="22" fill="#FFFFFF" stroke="#F0DED1"/>
+  <circle cx="54" cy="640" r="18" fill="#FFF0E5"/>
+  <text x="84" y="635" fill="#1D1A17" font-family="Arial, sans-serif" font-size="14" font-weight="700">Ask Lumi</text>
+  <text x="84" y="655" fill="#756A62" font-family="Arial, sans-serif" font-size="12">Get help without leaving your goal</text>
+  <rect x="0" y="704" width="360" height="56" fill="#FFFFFF"/>
+  <text x="52" y="738" fill="#DE6828" font-family="Arial, sans-serif" font-size="11" font-weight="700" text-anchor="middle">GOALS</text>
+  <text x="142" y="738" fill="#948981" font-family="Arial, sans-serif" font-size="11" text-anchor="middle">LEARN</text>
+  <text x="232" y="738" fill="#948981" font-family="Arial, sans-serif" font-size="11" text-anchor="middle">LUMI</text>
+  <text x="312" y="738" fill="#948981" font-family="Arial, sans-serif" font-size="11" text-anchor="middle">YOU</text>
+</svg>

@@ -11,7 +11,7 @@ const SITE_URL = "https://www.akbar02work.xyz";
 const HOME_TITLE = "Akbar — Android & AI Engineer";
 const HOME_DESCRIPTION =
   "Android apps built with Kotlin and Jetpack Compose, with practical AI integrations.";
-const PUBLIC_PROJECT_SLUGS = ["voicenotes"] as const;
+const PUBLIC_PROJECT_SLUGS = ["voicenotes", "lumingo"] as const;
 
 const projectRoutes = PUBLIC_PROJECT_SLUGS.map((slug): PrerenderRoute => {
   const project = projectsCatalog.find((candidate) => candidate.slug === slug);

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800">
+  <rect width="1280" height="800" fill="#FFF7EF"/>
+  <circle cx="1090" cy="330" r="250" fill="#FFE6E7"/>
+  <text x="58" y="72" fill="#DE6828" font-family="Arial, sans-serif" font-size="32" font-weight="700">Lumingo</text>
+  <rect x="1050" y="36" width="172" height="52" rx="26" fill="#DE6828"/>
+  <text x="1136" y="69" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle">Build My Plan</text>
+  <text x="58" y="196" fill="#1D1A17" font-family="Arial, sans-serif" font-size="72" font-weight="700">Stop collecting lessons.</text>
+  <text x="58" y="278" fill="#1D1A17" font-family="Arial, sans-serif" font-size="72" font-weight="700">Start making</text>
+  <text x="58" y="360" fill="#DE6828" font-family="Arial, sans-serif" font-size="72" font-weight="700">real progress.</text>
+  <text x="62" y="424" fill="#675E57" font-family="Arial, sans-serif" font-size="23">A personal learning path that adapts to your goal,</text>
+  <text x="62" y="458" fill="#675E57" font-family="Arial, sans-serif" font-size="23">current level, and the time you actually have.</text>
+  <rect x="58" y="510" width="188" height="60" rx="30" fill="#DE6828"/>
+  <text x="152" y="548" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">Build My Plan →</text>
+  <rect x="266" y="510" width="202" height="60" rx="30" fill="#FFFFFF" stroke="#E8D3C5"/>
+  <text x="367" y="548" fill="#5D4438" font-family="Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">See How It Works</text>
+  <path d="M850 296l48-92 72 82M1132 296l-48-92-72 82" fill="#FFFFFF" stroke="#244584" stroke-width="12" stroke-linejoin="round"/>
+  <ellipse cx="990" cy="390" rx="176" ry="142" fill="#FFFFFF" stroke="#244584" stroke-width="12"/>
+  <circle cx="930" cy="370" r="22" fill="#244584"/>
+  <circle cx="1050" cy="370" r="22" fill="#244584"/>
+  <circle cx="924" cy="363" r="7" fill="#FFFFFF"/>
+  <circle cx="1044" cy="363" r="7" fill="#FFFFFF"/>
+  <ellipse cx="990" cy="412" rx="14" ry="10" fill="#DE6828"/>
+  <path d="M968 438q22 24 44 0" fill="none" stroke="#DE6828" stroke-width="7" stroke-linecap="round"/>
+  <rect x="58" y="680" width="250" height="36" rx="18" fill="#FFF0E5"/>
+  <text x="183" y="703" fill="#C9541E" font-family="Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle">FOCUSED PUBLIC BETA</text>
+</svg>

@@ -57,6 +57,10 @@
       "destination": "/projects/voicenotes/index.html"
     },
     {
+      "source": "/projects/lumingo",
+      "destination": "/projects/lumingo/index.html"
+    },
+    {
       "source": "/easter",
       "destination": "/index.html"
     }

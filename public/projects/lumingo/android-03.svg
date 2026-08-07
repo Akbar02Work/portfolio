@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="760" viewBox="0 0 360 760">
+  <rect width="360" height="760" fill="#FFF7EF"/>
+  <text x="24" y="48" fill="#1D1A17" font-family="Arial, sans-serif" font-size="26" font-weight="700">Lumi</text>
+  <rect x="265" y="25" width="72" height="30" rx="15" fill="#FFF0E5"/>
+  <text x="301" y="45" fill="#C9541E" font-family="Arial, sans-serif" font-size="10" font-weight="700" text-anchor="middle">GOAL MODE</text>
+  <circle cx="180" cy="118" r="48" fill="#FFFFFF" stroke="#244584" stroke-width="4"/>
+  <path d="M142 88l13-26 20 24M218 88l-13-26-20 24" fill="#FFFFFF" stroke="#244584" stroke-width="4" stroke-linejoin="round"/>
+  <circle cx="164" cy="112" r="5" fill="#244584"/>
+  <circle cx="196" cy="112" r="5" fill="#244584"/>
+  <path d="M172 130q8 8 16 0" fill="none" stroke="#DE6828" stroke-width="3" stroke-linecap="round"/>
+  <text x="180" y="190" fill="#756A62" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">Connected to Business English</text>
+  <rect x="22" y="222" width="264" height="92" rx="20" fill="#FFFFFF" stroke="#F0DED1"/>
+  <text x="42" y="250" fill="#756A62" font-family="Arial, sans-serif" font-size="11">YOU</text>
+  <text x="42" y="278" fill="#1D1A17" font-family="Arial, sans-serif" font-size="15">How do I make my interview</text>
+  <text x="42" y="299" fill="#1D1A17" font-family="Arial, sans-serif" font-size="15">answer sound less memorized?</text>
+  <rect x="72" y="334" width="266" height="166" rx="20" fill="#244584"/>
+  <text x="94" y="363" fill="#CAD8FF" font-family="Arial, sans-serif" font-size="11">LUMI</text>
+  <text x="94" y="393" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14">Keep the structure, but replace</text>
+  <text x="94" y="416" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14">the memorized sentences with</text>
+  <text x="94" y="439" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14">three personal anchor points.</text>
+  <rect x="94" y="458" width="150" height="24" rx="12" fill="#DE6828"/>
+  <text x="169" y="474" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="10" font-weight="700" text-anchor="middle">ADD TO TODAY'S PRACTICE</text>
+  <rect x="22" y="526" width="316" height="72" rx="20" fill="#FFFFFF" stroke="#F0DED1"/>
+  <text x="42" y="554" fill="#756A62" font-family="Arial, sans-serif" font-size="11">FOLLOW-UP</text>
+  <text x="42" y="580" fill="#1D1A17" font-family="Arial, sans-serif" font-size="14">Can we practice it together?</text>
+  <rect x="20" y="630" width="320" height="54" rx="27" fill="#FFFFFF" stroke="#CDB7A9"/>
+  <text x="42" y="663" fill="#948981" font-family="Arial, sans-serif" font-size="13">Ask Lumi about this goal…</text>
+  <circle cx="312" cy="657" r="19" fill="#DE6828"/>
+  <path d="M303 657h18M314 649l8 8-8 8" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+  <rect x="0" y="704" width="360" height="56" fill="#FFFFFF"/>
+  <text x="52" y="738" fill="#948981" font-family="Arial, sans-serif" font-size="11" text-anchor="middle">GOALS</text>
+  <text x="142" y="738" fill="#948981" font-family="Arial, sans-serif" font-size="11" text-anchor="middle">LEARN</text>
+  <text x="232" y="738" fill="#DE6828" font-family="Arial, sans-serif" font-size="11" font-weight="700" text-anchor="middle">LUMI</text>
+  <text x="312" y="738" fill="#948981" font-family="Arial, sans-serif" font-size="11" text-anchor="middle">YOU</text>
+</svg>

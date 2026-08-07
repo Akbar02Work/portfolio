@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="760" viewBox="0 0 360 760">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFF7EF"/>
+      <stop offset="1" stop-color="#FFE5E7"/>
+    </linearGradient>
+  </defs>
+  <rect width="360" height="760" fill="url(#bg)"/>
+  <circle cx="298" cy="102" r="112" fill="#FFD9C2" opacity=".65"/>
+  <circle cx="68" cy="660" r="126" fill="#DCE6FF" opacity=".75"/>
+  <text x="24" y="52" fill="#DE6828" font-family="Arial, sans-serif" font-size="22" font-weight="700">Lumingo</text>
+  <rect x="24" y="104" width="142" height="30" rx="15" fill="#244584"/>
+  <text x="95" y="124" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="10" font-weight="700" text-anchor="middle">IOS · IN DEVELOPMENT</text>
+  <text x="24" y="204" fill="#1D1A17" font-family="Arial, sans-serif" font-size="38" font-weight="700">The next</text>
+  <text x="24" y="248" fill="#1D1A17" font-family="Arial, sans-serif" font-size="38" font-weight="700">native client.</text>
+  <text x="24" y="298" fill="#675E57" font-family="Arial, sans-serif" font-size="15">One Lumingo product system.</text>
+  <text x="24" y="322" fill="#675E57" font-family="Arial, sans-serif" font-size="15">A platform-specific iOS experience.</text>
+  <rect x="24" y="376" width="312" height="86" rx="20" fill="#FFFFFF" opacity=".88" stroke="#E8D3C5"/>
+  <circle cx="58" cy="419" r="15" fill="#DE6828"/>
+  <path d="M51 419l5 5 10-13" fill="none" stroke="#FFFFFF" stroke-width="2.5"/>
+  <text x="88" y="414" fill="#1D1A17" font-family="Arial, sans-serif" font-size="14" font-weight="700">Product foundation</text>
+  <text x="88" y="438" fill="#756A62" font-family="Arial, sans-serif" font-size="12">Shared identity, goals, and learning state</text>
+  <rect x="24" y="478" width="312" height="86" rx="20" fill="#FFFFFF" opacity=".88" stroke="#E8D3C5"/>
+  <circle cx="58" cy="521" r="15" fill="#244584"/>
+  <circle cx="58" cy="521" r="5" fill="#FFFFFF"/>
+  <text x="88" y="516" fill="#1D1A17" font-family="Arial, sans-serif" font-size="14" font-weight="700">Native experience</text>
+  <text x="88" y="540" fill="#756A62" font-family="Arial, sans-serif" font-size="12">Interaction and release design in progress</text>
+  <rect x="24" y="594" width="312" height="8" rx="4" fill="#FFFFFF"/>
+  <rect x="24" y="594" width="126" height="8" rx="4" fill="#DE6828"/>
+  <text x="24" y="630" fill="#756A62" font-family="Arial, sans-serif" font-size="11">BUILDING AFTER ANDROID STABILIZATION</text>
+  <text x="24" y="700" fill="#244584" font-family="Arial, sans-serif" font-size="14" font-weight="700">Not a concept. The next release surface.</text>
+</svg>
