@@ -5,10 +5,10 @@ import {
   type ProjectData,
   type ProjectMediaType,
 } from "@/data/projectCatalog";
-import { projects } from "@/data/projects";
+import { projects, resolveProjectPlatform } from "@/data/projects";
 import { projectsSummary } from "@/data/projectsSummary";
 
-const validMediaTypes: ProjectMediaType[] = ["phone"];
+const validMediaTypes: ProjectMediaType[] = ["phone", "browser"];
 
 describe("project data model", () => {
   it("keeps exactly three metrics and a supported media type per project", () => {
@@ -84,5 +84,100 @@ describe("project data model", () => {
 
     const summary = projectsSummary.find((project) => project.slug === "voicenotes");
     expect(summary?.image).toBe("/projects/voicenotes/screen-01.webp");
+  });
+
+  it("models Lumingo as one product across Android, Web, and iOS", () => {
+    const lumingo = projects.find((project) => project.slug === "lumingo");
+
+    expect(lumingo).toBeDefined();
+    expect(
+      lumingo?.platforms.map(({ id, label, status, mediaType }) => ({
+        id,
+        label,
+        status,
+        mediaType,
+      }))
+    ).toEqual([
+        {
+          id: "android",
+          label: "Android",
+          status: "Release candidate",
+          mediaType: "phone",
+        },
+        {
+          id: "web",
+          label: "Web",
+          status: "Public beta",
+          mediaType: "browser",
+        },
+        {
+          id: "ios",
+          label: "iOS",
+          status: "In development",
+          mediaType: "phone",
+        },
+      ]);
+    expect(
+      lumingo?.screens.reduce<Record<string, number>>((counts, screen) => {
+        counts[screen.platform] = (counts[screen.platform] ?? 0) + 1;
+        return counts;
+      }, {})
+    ).toEqual({ android: 3, web: 3, ios: 1 });
+
+    const summary = projectsSummary.find((project) => project.slug === "lumingo");
+    expect(summary?.platforms.map((platform) => platform.id)).toEqual([
+      "android",
+      "web",
+      "ios",
+    ]);
+    expect(summary?.platformPreviews.map((preview) => preview.image)).toEqual([
+      "/projects/lumingo/android-01.svg",
+      "/projects/lumingo/web-01.svg",
+      "/projects/lumingo/ios-in-development.svg",
+    ]);
+  });
+
+  it("keeps Lumingo first and resolves complete platform-specific content", () => {
+    expect(projects.map((project) => project.slug)).toEqual([
+      "lumingo",
+      "voicenotes",
+    ]);
+
+    const lumingo = projects.find((project) => project.slug === "lumingo");
+    expect(lumingo).toBeDefined();
+    expect(lumingo?.links.github).toBeUndefined();
+
+    const android = resolveProjectPlatform(lumingo!, "android");
+    expect(android.technologies).toEqual([
+      "Kotlin",
+      "Jetpack Compose",
+      "Convex",
+      "Clerk",
+      "Ktor",
+      "Hilt",
+    ]);
+    expect(android.summary).toMatch(/native Android client/i);
+
+    const web = resolveProjectPlatform(lumingo!, "web");
+    expect(web.technologies).toEqual([
+      "TypeScript",
+      "Next.js",
+      "React",
+      "Convex",
+      "Clerk",
+      "OpenAI",
+      "Upstash",
+      "PostHog",
+    ]);
+    expect(web.summary).toMatch(/live web product/i);
+    expect(web.challenge).not.toBe(android.challenge);
+
+    const ios = resolveProjectPlatform(lumingo!, "ios");
+    expect(ios.technologies).toEqual([
+      "Swift · Planned",
+      "SwiftUI · Planned",
+    ]);
+    expect(ios.summary).toMatch(/in development/i);
+    expect(ios.engineeringNote).toMatch(/planned/i);
   });
 });
