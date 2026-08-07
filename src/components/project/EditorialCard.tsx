@@ -1,8 +1,9 @@
 import { ArrowUpRight } from "lucide-react";
+import type { CSSProperties } from "react";
 import type { ProjectStyle } from "@/constants/projectStyles";
 import type { ProjectSummary } from "@/data/projectsSummary";
 import { buildProjectUrl } from "@/constants/routes";
-import ProjectMediaFrame from "@/components/project/ProjectMediaFrame";
+import ProjectCardMedia from "@/components/project/ProjectCardMedia";
 import { ViewTransitionLink } from "@/hooks/usePageTransition";
 
 interface EditorialCardProps {
@@ -17,12 +18,15 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
     const href = buildProjectUrl(project.slug);
 
     return (
-        <article className="group/card flex min-h-0 flex-col justify-center border-b border-neutral-200 dark:border-neutral-800 py-12 md:min-h-[72svh] md:py-20 last:border-b-0">
+        <article
+            className="group/card flex min-h-0 flex-col justify-center border-b border-neutral-200 dark:border-neutral-800 py-12 md:min-h-[72svh] md:py-20 last:border-b-0"
+            style={{ "--project-accent": style.accentColor } as CSSProperties}
+        >
             <div className="grid md:grid-cols-12 gap-12 md:gap-16 items-center">
                 {/* Text block */}
                 <div className={`flex flex-col gap-6 md:gap-7 md:col-span-6 ${reversed ? "md:order-2" : ""}`}>
                     <div className="flex items-center gap-4">
-                        <span className="font-mono text-base text-volt-ink dark:text-volt">{number}</span>
+                        <span className="font-mono text-base text-[var(--project-accent)]">{number}</span>
                         <span className="h-px flex-1 bg-neutral-200 dark:bg-neutral-800" aria-hidden="true" />
                         <span className="font-mono text-sm text-neutral-500 dark:text-neutral-400">{project.year}</span>
                     </div>
@@ -30,7 +34,7 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
                     <h3 className="text-[clamp(1.75rem,2.4vw+0.75rem,2.75rem)] leading-[1.15] tracking-[-0.02em] font-bold text-gray-900 dark:text-white">
                         <ViewTransitionLink
                             to={href}
-                            className="inline-flex items-baseline gap-2 transition-colors hover:text-volt-ink dark:hover:text-volt group-hover/card:text-volt-ink dark:group-hover/card:text-volt"
+                            className="inline-flex items-baseline gap-2 transition-colors hover:text-[var(--project-accent)] group-hover/card:text-[var(--project-accent)]"
                         >
                             {project.title}
                             <ArrowUpRight
@@ -65,7 +69,7 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
 
                     <ViewTransitionLink
                         to={href}
-                        className="group/cta mt-1 inline-flex w-fit items-center gap-2 border-b border-volt-ink/40 dark:border-volt/40 pb-1.5 text-base font-medium text-volt-ink transition-colors hover:border-volt-ink dark:text-volt dark:hover:border-volt"
+                        className="group/cta mt-1 inline-flex w-fit items-center gap-2 border-b border-[var(--project-accent)] pb-1.5 text-base font-medium text-[var(--project-accent)] transition-opacity hover:opacity-75"
                     >
                         Open case study
                         <ArrowUpRight
@@ -77,17 +81,9 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
                 </div>
 
                 {/* Media block */}
-                <ViewTransitionLink
-                    to={href}
-                    className={`relative block md:col-span-6 ${reversed ? "md:order-1" : ""} rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-volt-ink dark:focus-visible:outline-volt`}
-                    aria-label={`Open ${project.title} case study`}
-                >
-                    <ProjectMediaFrame
-                        image={project.image}
-                        alt={project.media.alt}
-                        style={style}
-                    />
-                </ViewTransitionLink>
+                <div className={`relative md:col-span-6 ${reversed ? "md:order-1" : ""}`}>
+                    <ProjectCardMedia project={project} style={style} href={href} />
+                </div>
             </div>
         </article>
     );

@@ -24,7 +24,7 @@ export const ProjectHeader = ({ project }: ProjectHeaderProps) => {
                 <ViewTransitionLink
                     to={ROUTES.HOME}
                     state={{ scrollTo: "projects" }}
-                    className="group inline-flex items-center gap-2 justify-self-start pt-2 font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400 hover:text-volt-ink dark:hover:text-volt transition-colors"
+                    className="group inline-flex items-center gap-2 justify-self-start pt-2 font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400 hover:text-[var(--project-accent)] transition-colors"
                 >
                     <ArrowLeft className="w-4 h-4 shrink-0 transition-transform group-hover:-translate-x-1" strokeWidth={2} />
                     <span className="hidden sm:inline">Back to projects</span>
@@ -45,7 +45,7 @@ export const ProjectHeader = ({ project }: ProjectHeaderProps) => {
                         href={githubHref}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group inline-flex items-center gap-1.5 justify-self-end pt-2 font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400 hover:text-volt-ink dark:hover:text-volt transition-colors"
+                        className="group inline-flex items-center gap-1.5 justify-self-end pt-2 font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400 hover:text-[var(--project-accent)] transition-colors"
                     >
                         GitHub
                         <ArrowUpRight

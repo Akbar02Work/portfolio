@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import type { CSSProperties } from "react";
 import { Helmet } from "react-helmet-async";
 import { useParams } from "react-router-dom";
 import { MainLayout } from "@/components/layout/MainLayout";
@@ -75,7 +76,10 @@ const ProjectDetail = () => {
         <meta name="twitter:image" content={pageImage} />
       </Helmet>
 
-      <div data-project-detail>
+      <div
+        data-project-detail
+        style={{ "--project-accent": style.accentColor } as CSSProperties}
+      >
         {projectData ? (
           <>
             <ProjectHeader project={projectData} />

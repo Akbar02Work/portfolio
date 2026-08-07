@@ -3,6 +3,8 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import type { Project } from "@/data/projects";
 import type { ProjectStyle } from "@/constants/projectStyles";
 import ProjectMediaFrame from "@/components/project/ProjectMediaFrame";
+import { ProjectPlatformTabs } from "@/components/project/ProjectPlatformTabs";
+import type { ProjectPlatformId } from "@/data/projectCatalog";
 import { cn } from "@/lib/utils";
 
 interface ProjectGalleryProps {
@@ -16,7 +18,7 @@ const LOOP_COPIES = 3;
 /** Ease-out expo — soft landing after flicks */
 const easeOutExpo = (t: number) => (t >= 1 ? 1 : 1 - 2 ** (-10 * t));
 
-const ProjectGallery = ({ project, style }: ProjectGalleryProps) => {
+const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
     const scrollerRef = useRef<HTMLDivElement>(null);
     const isJumpingRef = useRef(false);
     const animatingToRef = useRef<number | null>(null);
@@ -28,12 +30,14 @@ const ProjectGallery = ({ project, style }: ProjectGalleryProps) => {
 
     const screens = project.screens;
     const total = screens.length;
-    const middleStart = total;
+    const loopCopies = total === 1 ? 1 : LOOP_COPIES;
+    const middleStart = total === 1 ? 0 : total;
+    const galleryMediaType = screens[0]?.mediaType ?? project.media.type;
 
     const loopedScreens =
         total === 0
             ? []
-            : Array.from({ length: total * LOOP_COPIES }, (_, index) => {
+            : Array.from({ length: total * loopCopies }, (_, index) => {
                   const realIndex = index % total;
                   const screen = screens[realIndex];
                   if (!screen) {
@@ -489,7 +493,7 @@ const ProjectGallery = ({ project, style }: ProjectGalleryProps) => {
             <section className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-16 md:pb-24">
                 <div className="border-t border-neutral-200 dark:border-neutral-800 pt-12 md:pt-16">
                     <div className="flex items-center gap-4 mb-6">
-                        <span className="inline-block h-px w-8 shrink-0 bg-volt-ink dark:bg-volt" aria-hidden="true" />
+                        <span className="inline-block h-px w-8 shrink-0 bg-[var(--project-accent)]" aria-hidden="true" />
                         <h2 className="text-heading-2 text-gray-900 dark:text-white">Screens</h2>
                     </div>
                     <p className="font-mono text-caption text-neutral-500 dark:text-neutral-400">
@@ -506,7 +510,7 @@ const ProjectGallery = ({ project, style }: ProjectGalleryProps) => {
                 <div className="border-t border-neutral-200 dark:border-neutral-800 pt-12 md:pt-16">
                 <div className="flex items-end justify-between gap-6 mb-8 md:mb-10">
                     <div className="flex items-center gap-4 min-w-0">
-                        <span className="inline-block h-px w-8 shrink-0 bg-volt-ink dark:bg-volt" aria-hidden="true" />
+                        <span className="inline-block h-px w-8 shrink-0 bg-[var(--project-accent)]" aria-hidden="true" />
                         <h2 className="text-heading-2 text-gray-900 dark:text-white">Screens</h2>
                     </div>
 
@@ -523,7 +527,7 @@ const ProjectGallery = ({ project, style }: ProjectGalleryProps) => {
                                 type="button"
                                 onClick={() => step(-1)}
                                 aria-label="Previous screen"
-                                className="inline-flex h-10 w-10 items-center justify-center border border-neutral-200 dark:border-neutral-800 text-gray-900 dark:text-white transition-colors hover:border-volt-ink dark:hover:border-volt"
+                                className="inline-flex h-10 w-10 items-center justify-center border border-neutral-200 dark:border-neutral-800 text-gray-900 dark:text-white transition-colors hover:border-[var(--project-accent)]"
                             >
                                 <ArrowLeft className="h-4 w-4" strokeWidth={1.75} />
                             </button>
@@ -531,7 +535,7 @@ const ProjectGallery = ({ project, style }: ProjectGalleryProps) => {
                                 type="button"
                                 onClick={() => step(1)}
                                 aria-label="Next screen"
-                                className="inline-flex h-10 w-10 items-center justify-center border border-neutral-200 dark:border-neutral-800 text-gray-900 dark:text-white transition-colors hover:border-volt-ink dark:hover:border-volt"
+                                className="inline-flex h-10 w-10 items-center justify-center border border-neutral-200 dark:border-neutral-800 text-gray-900 dark:text-white transition-colors hover:border-[var(--project-accent)]"
                             >
                                 <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
                             </button>
@@ -568,7 +572,10 @@ const ProjectGallery = ({ project, style }: ProjectGalleryProps) => {
                     }}
                     className="flex gap-7 md:gap-10 overflow-x-auto overscroll-x-contain py-4 outline-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                     style={{
-                        paddingInline: "max(1.5rem, calc(50% - 8rem))",
+                        paddingInline:
+                            galleryMediaType === "browser"
+                                ? "max(1.5rem, calc(50% - 24rem))"
+                                : "max(1.5rem, calc(50% - 8rem))",
                     }}
                 >
                     {loopedScreens.map((screen) => {
@@ -590,7 +597,10 @@ const ProjectGallery = ({ project, style }: ProjectGalleryProps) => {
                                     }
                                 }}
                                 className={cn(
-                                    "flex w-52 sm:w-56 md:w-64 shrink-0 cursor-pointer select-none flex-col gap-4 transition-opacity duration-300 ease-out",
+                                    "flex shrink-0 cursor-pointer select-none flex-col gap-4 transition-opacity duration-300 ease-out",
+                                    screen.mediaType === "browser"
+                                        ? "w-[82vw] max-w-3xl"
+                                        : "w-52 sm:w-56 md:w-64",
                                     isActive
                                         ? "z-[1] opacity-100"
                                         : "opacity-45 hover:opacity-70"
@@ -600,7 +610,7 @@ const ProjectGallery = ({ project, style }: ProjectGalleryProps) => {
                                     className={cn(
                                         "rounded-2xl transition-[box-shadow,ring] duration-300",
                                         isActive &&
-                                            "ring-1 ring-volt-ink/50 dark:ring-volt/50 shadow-[0_0_0_1px_rgba(0,0,0,0.03)]"
+                                            "ring-1 ring-[var(--project-accent)] shadow-[0_0_0_1px_rgba(0,0,0,0.03)]"
                                     )}
                                 >
                                     <ProjectMediaFrame
@@ -608,6 +618,7 @@ const ProjectGallery = ({ project, style }: ProjectGalleryProps) => {
                                         alt={screen.title || project.media.alt}
                                         style={style}
                                         phoneClassName="w-full"
+                                        mediaType={screen.mediaType}
                                         mockup={false}
                                         priority
                                     />
@@ -628,6 +639,53 @@ const ProjectGallery = ({ project, style }: ProjectGalleryProps) => {
                 </div>
             </div>
         </section>
+    );
+};
+
+const ProjectGallery = ({ project, style }: ProjectGalleryProps) => {
+    const firstPlatform = project.platforms[0];
+    const [activePlatform, setActivePlatform] = useState<ProjectPlatformId>(
+        firstPlatform?.id ?? "android"
+    );
+
+    if (!firstPlatform) {
+        return <ProjectScreenCarousel project={project} style={style} />;
+    }
+
+    const active =
+        project.platforms.find((platform) => platform.id === activePlatform) ??
+        firstPlatform;
+    const screens = project.screens.filter(
+        (screen) => screen.platform === active.id
+    );
+
+    return (
+        <>
+            <section className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-8">
+                <div className="flex flex-col gap-4 border-t border-neutral-200 pt-8 dark:border-neutral-800 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <p className="font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400">
+                            Product surfaces
+                        </p>
+                        <p className="mt-2 text-body-base text-gray-600 dark:text-slate-300">
+                            One product, inspected through each client.
+                        </p>
+                    </div>
+                    <ProjectPlatformTabs
+                        platforms={project.platforms}
+                        activePlatform={active.id}
+                        onSelect={setActivePlatform}
+                        label={`Choose ${project.title} gallery platform`}
+                    />
+                </div>
+            </section>
+
+            <ProjectScreenCarousel
+                key={active.id}
+                project={{ ...project, screens }}
+                style={style}
+            />
+        </>
     );
 };
 
