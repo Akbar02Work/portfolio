@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import type { CSSProperties } from "react";
 import { Helmet } from "react-helmet-async";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { MainLayout } from "@/components/layout/MainLayout";
 import ProjectGallery from "@/components/project/ProjectGallery";
 import NextProjectTeaser from "@/components/project/NextProjectTeaser";
@@ -10,7 +10,8 @@ import { ProjectEngineeringNote } from "@/components/project/ProjectEngineeringN
 import { ProjectHeader } from "@/components/project/ProjectHeader";
 import { ROUTES } from "@/constants/routes";
 import { fallbackProjectStyle, projectStylesBySlug } from "@/constants/projectStyles";
-import { projects } from "@/data/projects";
+import { projects, resolveProjectPlatform } from "@/data/projects";
+import type { ProjectPlatformId } from "@/data/projectCatalog";
 import { toAbsoluteUrl } from "@/lib/urls";
 import { ViewTransitionLink } from "@/hooks/usePageTransition";
 
@@ -20,8 +21,17 @@ const DEFAULT_DESCRIPTION =
 
 const ProjectDetail = () => {
   const { slug } = useParams<{ slug?: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const projectIndex = projects.findIndex((project) => project.slug === slug);
   const projectData = projectIndex >= 0 ? projects[projectIndex] : undefined;
+  const requestedPlatform = searchParams.get("platform");
+  const activePlatform =
+    projectData?.platforms.find(
+      (platform) => platform.id === requestedPlatform
+    )?.id ?? projectData?.platforms[0]?.id;
+  const projectView = projectData
+    ? resolveProjectPlatform(projectData, activePlatform)
+    : undefined;
   const nextProject =
     projectIndex >= 0 && projects.length > 1
       ? projects[(projectIndex + 1) % projects.length]
@@ -35,23 +45,28 @@ const ProjectDetail = () => {
     window.scrollTo(0, 0);
   }, [slug]);
 
-  const hasPlaceholderContent = projectData
-    ? /coming soon/i.test(projectData.title) || /coming soon/i.test(projectData.summary)
+  const hasPlaceholderContent = projectView
+    ? /coming soon/i.test(projectView.title) || /coming soon/i.test(projectView.summary)
     : false;
   const pageTitle =
-    projectData
+    projectView
       ? !hasPlaceholderContent
-        ? `${projectData.title} | Akbar Azizov`
+        ? `${projectView.title} | Akbar Azizov`
         : DEFAULT_TITLE
       : "Project not found | Akbar Azizov";
   const pageDescription =
-    projectData && !hasPlaceholderContent ? projectData.summary : DEFAULT_DESCRIPTION;
+    projectView && !hasPlaceholderContent ? projectView.summary : DEFAULT_DESCRIPTION;
   const pageUrl = typeof window !== "undefined" ? window.location.href : "";
   const pageImage = toAbsoluteUrl(
-    projectData && !hasPlaceholderContent && projectData.image
-      ? projectData.image
+    projectView && !hasPlaceholderContent && projectView.image
+      ? projectView.image
       : "/og-image.png"
   );
+  const selectPlatform = (platform: ProjectPlatformId) => {
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.set("platform", platform);
+    setSearchParams(nextParams);
+  };
 
   return (
     <MainLayout
@@ -80,12 +95,17 @@ const ProjectDetail = () => {
         data-project-detail
         style={{ "--project-accent": style.accentColor } as CSSProperties}
       >
-        {projectData ? (
+        {projectData && projectView ? (
           <>
-            <ProjectHeader project={projectData} />
-            <ProjectGallery project={projectData} style={style} />
-            <ProjectEngineeringNote project={projectData} />
-            <ProjectDetailsSection project={projectData} />
+            <ProjectHeader project={projectView} />
+            <ProjectGallery
+              project={projectData}
+              style={style}
+              activePlatform={activePlatform}
+              onPlatformChange={selectPlatform}
+            />
+            <ProjectEngineeringNote project={projectView} />
+            <ProjectDetailsSection project={projectView} />
             {nextProject && <NextProjectTeaser project={nextProject} />}
           </>
         ) : (

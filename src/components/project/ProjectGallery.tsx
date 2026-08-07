@@ -10,6 +10,8 @@ import { cn } from "@/lib/utils";
 interface ProjectGalleryProps {
     project: Project;
     style: ProjectStyle;
+    activePlatform?: ProjectPlatformId;
+    onPlatformChange?: (platform: ProjectPlatformId) => void;
 }
 
 /** Three copies: [A][B][C] — viewport stays in B; A/C are teleport buffers */
@@ -642,11 +644,18 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
     );
 };
 
-const ProjectGallery = ({ project, style }: ProjectGalleryProps) => {
+const ProjectGallery = ({
+    project,
+    style,
+    activePlatform: controlledPlatform,
+    onPlatformChange,
+}: ProjectGalleryProps) => {
     const firstPlatform = project.platforms[0];
-    const [activePlatform, setActivePlatform] = useState<ProjectPlatformId>(
+    const [internalPlatform, setInternalPlatform] = useState<ProjectPlatformId>(
         firstPlatform?.id ?? "android"
     );
+    const activePlatform = controlledPlatform ?? internalPlatform;
+    const selectPlatform = onPlatformChange ?? setInternalPlatform;
 
     if (!firstPlatform) {
         return <ProjectScreenCarousel project={project} style={style} />;
@@ -674,7 +683,7 @@ const ProjectGallery = ({ project, style }: ProjectGalleryProps) => {
                     <ProjectPlatformTabs
                         platforms={project.platforms}
                         activePlatform={active.id}
-                        onSelect={setActivePlatform}
+                        onSelect={selectPlatform}
                         label={`Choose ${project.title} gallery platform`}
                     />
                 </div>
