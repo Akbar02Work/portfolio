@@ -15,11 +15,11 @@ const NextProjectTeaser = ({ project }: NextProjectTeaserProps) => (
                     Next project
                 </p>
                 <div className="flex items-center justify-between gap-6">
-                    <span className="text-heading-1 font-semibold text-gray-900 dark:text-white group-hover:text-[var(--project-accent)] transition-colors duration-200">
+                    <span className="text-heading-1 font-semibold text-gray-900 transition-colors duration-200 group-hover:text-volt-ink dark:text-white dark:group-hover:text-volt">
                         {project.title}
                     </span>
                     <ArrowUpRight
-                        className="flex-none w-8 h-8 md:w-12 md:h-12 text-[var(--project-accent)] transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1"
+                        className="h-8 w-8 flex-none text-volt-ink transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1 dark:text-volt md:h-12 md:w-12"
                         strokeWidth={1.5}
                         aria-hidden="true"
                     />

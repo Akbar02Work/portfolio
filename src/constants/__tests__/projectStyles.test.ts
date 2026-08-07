@@ -2,8 +2,12 @@ import { describe, expect, it } from "vitest";
 import { projectStylesBySlug } from "@/constants/projectStyles";
 
 describe("project styles", () => {
-  it("keeps the exact brand accent assigned to each featured project", () => {
-    expect(projectStylesBySlug.lumingo?.accentColor).toBe("#E85D04");
-    expect(projectStylesBySlug.voicenotes?.accentColor).toBe("#2F6364");
+  it("uses one portfolio interaction accent for every project", () => {
+    expect(projectStylesBySlug.lumingo?.hoverBorder).toBe(
+      "hover:border-volt-ink dark:hover:border-volt"
+    );
+    expect(projectStylesBySlug.voicenotes?.hoverBorder).toBe(
+      projectStylesBySlug.lumingo?.hoverBorder
+    );
   });
 });

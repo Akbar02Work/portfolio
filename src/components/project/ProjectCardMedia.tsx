@@ -14,7 +14,7 @@ type ProjectCardMediaProps = {
 };
 
 const mediaLinkClass =
-  "relative block rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--project-accent)]";
+  "relative block rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-volt-ink dark:focus-visible:outline-volt";
 
 const ProjectCardMedia = ({
   project,

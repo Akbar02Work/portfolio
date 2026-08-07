@@ -21,7 +21,7 @@ const stackRole = (tech: string) => STACK_ROLES[tech] ?? "module";
 const SectionLabel = ({ children }: { children: string }) => (
     <div className="flex items-center gap-4 mb-6">
         <span
-            className="inline-block h-px w-8 shrink-0 bg-[var(--project-accent)]"
+            className="inline-block h-px w-8 shrink-0 bg-volt-ink dark:bg-volt"
             aria-hidden="true"
         />
         <h2 className="text-heading-2 text-gray-900 dark:text-white">{children}</h2>
@@ -53,7 +53,7 @@ export const ProjectDetailsSection = ({ project }: ProjectDetailsSectionProps) =
                 <ul className="list-none grid grid-cols-2 gap-x-8 gap-y-8 sm:gap-x-10 sm:gap-y-10">
                     {project.technologies.map((tech) => (
                         <li key={tech} className="flex flex-col items-start">
-                            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--project-accent)]">
+                            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-volt-ink dark:text-volt">
                                 {stackRole(tech)}
                             </span>
                             <span className="mt-3 text-[clamp(1rem,0.8vw+0.85rem,1.25rem)] leading-tight tracking-[-0.02em] font-semibold text-gray-900 dark:text-white min-h-[2.5em]">
@@ -70,7 +70,7 @@ export const ProjectDetailsSection = ({ project }: ProjectDetailsSectionProps) =
                     {project.features.map((feature) => (
                         <li key={feature.title} className="relative pb-6 last:pb-0">
                             <span
-                                className="absolute -left-6 top-2 h-2 w-2 rounded-full bg-[var(--project-accent)] ring-4 ring-background"
+                                className="absolute -left-6 top-2 h-2 w-2 rounded-full bg-volt-ink ring-4 ring-background dark:bg-volt"
                                 aria-hidden="true"
                             />
                             <p className="text-[clamp(1rem,0.8vw+0.85rem,1.2rem)] leading-snug tracking-[-0.015em] font-medium text-gray-900 dark:text-white">

@@ -495,7 +495,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
             <section className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-16 md:pb-24">
                 <div className="border-t border-neutral-200 dark:border-neutral-800 pt-12 md:pt-16">
                     <div className="flex items-center gap-4 mb-6">
-                        <span className="inline-block h-px w-8 shrink-0 bg-[var(--project-accent)]" aria-hidden="true" />
+                        <span className="inline-block h-px w-8 shrink-0 bg-volt-ink dark:bg-volt" aria-hidden="true" />
                         <h2 className="text-heading-2 text-gray-900 dark:text-white">Screens</h2>
                     </div>
                     <p className="font-mono text-caption text-neutral-500 dark:text-neutral-400">
@@ -512,7 +512,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                 <div className="border-t border-neutral-200 dark:border-neutral-800 pt-12 md:pt-16">
                 <div className="flex items-end justify-between gap-6 mb-8 md:mb-10">
                     <div className="flex items-center gap-4 min-w-0">
-                        <span className="inline-block h-px w-8 shrink-0 bg-[var(--project-accent)]" aria-hidden="true" />
+                        <span className="inline-block h-px w-8 shrink-0 bg-volt-ink dark:bg-volt" aria-hidden="true" />
                         <h2 className="text-heading-2 text-gray-900 dark:text-white">Screens</h2>
                     </div>
 
@@ -529,7 +529,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                                 type="button"
                                 onClick={() => step(-1)}
                                 aria-label="Previous screen"
-                                className="inline-flex h-10 w-10 items-center justify-center border border-neutral-200 dark:border-neutral-800 text-gray-900 dark:text-white transition-colors hover:border-[var(--project-accent)]"
+                                className="inline-flex h-10 w-10 items-center justify-center border border-neutral-200 text-gray-900 transition-colors hover:border-volt-ink dark:border-neutral-800 dark:text-white dark:hover:border-volt"
                             >
                                 <ArrowLeft className="h-4 w-4" strokeWidth={1.75} />
                             </button>
@@ -537,7 +537,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                                 type="button"
                                 onClick={() => step(1)}
                                 aria-label="Next screen"
-                                className="inline-flex h-10 w-10 items-center justify-center border border-neutral-200 dark:border-neutral-800 text-gray-900 dark:text-white transition-colors hover:border-[var(--project-accent)]"
+                                className="inline-flex h-10 w-10 items-center justify-center border border-neutral-200 text-gray-900 transition-colors hover:border-volt-ink dark:border-neutral-800 dark:text-white dark:hover:border-volt"
                             >
                                 <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
                             </button>
@@ -612,7 +612,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                                     className={cn(
                                         "rounded-2xl transition-[box-shadow,ring] duration-300",
                                         isActive &&
-                                            "ring-1 ring-[var(--project-accent)] shadow-[0_0_0_1px_rgba(0,0,0,0.03)]"
+                                            "ring-1 ring-volt-ink shadow-[0_0_0_1px_rgba(0,0,0,0.03)] dark:ring-volt"
                                     )}
                                 >
                                     <ProjectMediaFrame

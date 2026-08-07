@@ -15,15 +15,10 @@ must change the complete case-study narrative, not only the screenshot.
 
 ## Project Colors
 
-- Lumingo uses `#E85D04`.
-- VoiceNotes uses `#2F6364`.
-- Each project color is a reusable project token, not duplicated inline across
-  components.
-- The token controls project-specific active tabs, lines, links, focus rings,
-  hover borders, and case-study accents while preserving readable foreground
-  contrast.
-- Neutral global navigation and non-project sections keep the existing site
-  palette.
+- Project brand colors stay inside screenshots and media.
+- Portfolio navigation, controls, headings, and interaction states use the
+  shared site accent so every case remains part of one editorial system.
+- No project-specific color token is exposed to the portfolio UI.
 
 ## Positioning
 

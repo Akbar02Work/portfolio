@@ -1,6 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
 import { useState } from "react";
-import type { CSSProperties } from "react";
 import type { ProjectStyle } from "@/constants/projectStyles";
 import {
     resolveProjectSummaryPlatform,
@@ -31,15 +30,12 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
     );
 
     return (
-        <article
-            className="group/card flex min-h-0 flex-col justify-center border-b border-neutral-200 dark:border-neutral-800 py-12 md:min-h-[72svh] md:py-20 last:border-b-0"
-            style={{ "--project-accent": style.accentColor } as CSSProperties}
-        >
+        <article className="group/card flex min-h-0 flex-col justify-center border-b border-neutral-200 dark:border-neutral-800 py-12 md:min-h-[72svh] md:py-20 last:border-b-0">
             <div className="grid md:grid-cols-12 gap-12 md:gap-16 items-center">
                 {/* Text block */}
                 <div className={`flex flex-col gap-6 md:gap-7 md:col-span-6 ${reversed ? "md:order-2" : ""}`}>
                     <div className="flex items-center gap-4">
-                        <span className="font-mono text-base text-[var(--project-accent)]">{number}</span>
+                        <span className="font-mono text-base text-volt-ink dark:text-volt">{number}</span>
                         <span className="h-px flex-1 bg-neutral-200 dark:bg-neutral-800" aria-hidden="true" />
                         <span className="font-mono text-sm text-neutral-500 dark:text-neutral-400">{activeProject.year}</span>
                     </div>
@@ -47,7 +43,7 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
                     <h3 className="text-[clamp(1.75rem,2.4vw+0.75rem,2.75rem)] leading-[1.15] tracking-[-0.02em] font-bold text-gray-900 dark:text-white">
                         <ViewTransitionLink
                             to={href}
-                            className="inline-flex items-baseline gap-2 transition-colors hover:text-[var(--project-accent)] group-hover/card:text-[var(--project-accent)]"
+                            className="inline-flex items-baseline gap-2 transition-colors hover:text-volt-ink group-hover/card:text-volt-ink dark:hover:text-volt dark:group-hover/card:text-volt"
                         >
                             {project.title}
                             <ArrowUpRight
@@ -82,7 +78,7 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
 
                     <ViewTransitionLink
                         to={href}
-                        className="group/cta mt-1 inline-flex w-fit items-center gap-2 border-b border-[var(--project-accent)] pb-1.5 text-base font-medium text-[var(--project-accent)] transition-opacity hover:opacity-75"
+                        className="group/cta mt-1 inline-flex w-fit items-center gap-2 border-b border-volt-ink pb-1.5 text-base font-medium text-volt-ink transition-opacity hover:opacity-75 dark:border-volt dark:text-volt"
                     >
                         Open case study
                         <ArrowUpRight

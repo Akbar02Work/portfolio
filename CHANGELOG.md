@@ -14,8 +14,8 @@ dependency update.
 - Made product maturity explicit: Android is a release candidate, Web is in
   public beta, and iOS is visibly in development with Swift and SwiftUI marked
   as planned.
-- Added project accents (`#E85D04` for Lumingo and `#2F6364` for VoiceNotes)
-  and kept Lumingo source links private.
+- Kept project branding inside screenshots and media while restoring one shared
+  portfolio accent across both interfaces; Lumingo source links remain private.
 - Added temporary product mockups so the presentation can be reviewed before
   replacing them with final release screenshots.
 

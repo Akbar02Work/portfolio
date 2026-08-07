@@ -52,6 +52,6 @@ describe("ProjectPlatformTabs", () => {
       screen
         .getByRole("tab", { name: "Android — Release candidate" })
         .className
-    ).toContain("bg-[var(--project-accent)]");
+    ).toContain("bg-volt-ink");
   });
 });

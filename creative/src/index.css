@@ -910,18 +910,7 @@ img {
   filter: blur(60px);
   opacity: 0.4;
   pointer-events: none;
-}
-
-.work-card--voicenotes .work-card__glow {
-  background: radial-gradient(circle, rgba(47, 99, 100, 0.55), transparent 70%);
-}
-
-.work-card--lumingo .work-card__glow {
-  background: radial-gradient(circle, rgba(232, 93, 4, 0.5), transparent 70%);
-}
-
-.work-card--signal .work-card__glow {
-  background: radial-gradient(circle, rgba(120, 180, 255, 0.45), transparent 70%);
+  background: radial-gradient(circle, var(--signal-dim), transparent 70%);
 }
 
 .work-card__visual {

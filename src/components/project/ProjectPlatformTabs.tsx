@@ -37,9 +37,9 @@ export const ProjectPlatformTabs = ({
               aria-label={`${platform.label} — ${platform.status}`}
               onClick={() => onSelect(platform.id)}
               className={cn(
-                "px-3 py-2 font-mono text-[11px] uppercase tracking-[0.1em] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--project-accent)]",
+                "px-3 py-2 font-mono text-[11px] uppercase tracking-[0.1em] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-volt-ink dark:focus-visible:outline-volt",
                 selected
-                  ? "bg-[var(--project-accent)] text-white"
+                  ? "bg-volt-ink text-white dark:bg-volt dark:text-black"
                   : "text-neutral-500 hover:text-gray-900 dark:text-neutral-400 dark:hover:text-white"
               )}
             >
