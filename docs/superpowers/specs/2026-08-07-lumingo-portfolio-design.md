@@ -13,6 +13,18 @@ must change the complete case-study narrative, not only the screenshot.
 - The order is shared by the Business home page, Creative work list, project IDs,
   and next-project navigation.
 
+## Project Colors
+
+- Lumingo uses `#E85D04`.
+- VoiceNotes uses `#2F6364`.
+- Each project color is a reusable project token, not duplicated inline across
+  components.
+- The token controls project-specific active tabs, lines, links, focus rings,
+  hover borders, and case-study accents while preserving readable foreground
+  contrast.
+- Neutral global navigation and non-project sections keep the existing site
+  palette.
+
 ## Positioning
 
 Lumingo remains one founder-led product with three platform views:
@@ -147,6 +159,8 @@ platform view.
 - Detail tests verify query initialization, invalid-value fallback, URL updates,
   and synchronized content.
 - Existing VoiceNotes and Creative behavior remain covered.
+- Style tests verify the exact project color tokens and their use by shared
+  project components.
 - Final verification includes lint, cycle detection, TypeScript, unit tests,
   production builds, bundle budget, Playwright tests, and desktop/mobile visual
   inspection.
