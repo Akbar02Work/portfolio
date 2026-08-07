@@ -3,11 +3,11 @@ import { useState } from "react";
 import { describe, expect, it } from "vitest";
 import ProjectGallery from "@/components/project/ProjectGallery";
 import { projectStylesBySlug } from "@/constants/projectStyles";
-import { projects } from "@/data/projects";
+import { allProjects } from "@/data/projects";
 
 describe("ProjectGallery platform switching", () => {
   it("shows one Lumingo platform at a time and keeps iOS visible in development", () => {
-    const project = projects.find((candidate) => candidate.slug === "lumingo");
+    const project = allProjects.find((candidate) => candidate.slug === "lumingo");
     const style = projectStylesBySlug.lumingo;
 
     expect(project).toBeDefined();

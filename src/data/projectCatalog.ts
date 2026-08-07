@@ -25,6 +25,7 @@ export interface ProjectPlatformContent extends ProjectPlatform {
 }
 
 export interface ProjectData {
+  published: boolean;
   title: string;
   description: string;
   role: string;
@@ -59,14 +60,16 @@ type CatalogProject = ProjectData & {
   coverImage: string;
 };
 
-type CreateProjectInput = Omit<ProjectData, "engineeringNote"> & {
+type CreateProjectInput = Omit<ProjectData, "engineeringNote" | "published"> & {
   engineeringNote?: ProjectData["engineeringNote"];
+  published?: ProjectData["published"];
 };
 
 const DEFAULT_ENGINEERING_NOTE = "";
 
 export const createProject = (project: CreateProjectInput): ProjectData => ({
   ...project,
+  published: project.published ?? true,
   engineeringNote: project.engineeringNote ?? DEFAULT_ENGINEERING_NOTE,
 });
 
@@ -153,6 +156,7 @@ const projectDefinitions = [
   }),
   createProject({
     title: "Lumingo",
+    published: false,
     description:
       "An adaptive language-learning product delivered through a live web experience and a native Android client — with iOS now in development.",
     role: "Founder · Product direction · Android & Web development",
@@ -364,5 +368,9 @@ export const projectsCatalog: CatalogProject[] = projectDefinitions
     ...project,
     id: index + 1,
   }));
+
+export const publicProjectsCatalog = projectsCatalog.filter(
+  (project) => project.published
+);
 
 export type ProjectSlug = string;

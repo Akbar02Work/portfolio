@@ -27,6 +27,7 @@ test("renders the Creative experience on desktop", async ({ page }) => {
   ).toBeVisible({ timeout: 10_000 });
   await expect(page.locator(".site")).toBeVisible();
   await expect(page.locator(".work-card").first().getByRole("heading")).toHaveText(
-    "Lumingo",
+    "VoiceNotes",
   );
+  await expect(page.getByRole("heading", { name: "Lumingo" })).toHaveCount(0);
 });

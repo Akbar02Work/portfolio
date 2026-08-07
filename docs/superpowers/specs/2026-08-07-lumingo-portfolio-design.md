@@ -13,6 +13,13 @@ must change the complete case-study narrative, not only the screenshot.
 - The order is shared by the Business home page, Creative work list, project IDs,
   and next-project navigation.
 
+## Temporary Visibility
+
+- Lumingo remains complete in the repository but is marked `published: false`.
+- Public Business and Creative collections, navigation, sitemap, prerendering,
+  and direct routes exclude it until final screenshots and presentation are ready.
+- Restoring the case requires changing the single publication flag.
+
 ## Project Colors
 
 - Project brand colors stay inside screenshots and media.

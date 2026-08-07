@@ -2,9 +2,10 @@ import { getBusinessUrl } from "./siteConfig";
 
 const businessUrl = getBusinessUrl();
 
-export const PROJECTS = [
+const PROJECT_CATALOG = [
   {
     id: "lumingo",
+    published: false,
     index: "01",
     name: "Lumingo",
     glyph: "LU",
@@ -16,6 +17,7 @@ export const PROJECTS = [
   },
   {
     id: "voicenotes",
+    published: true,
     index: "02",
     name: "VoiceNotes",
     glyph: "VN",
@@ -27,6 +29,7 @@ export const PROJECTS = [
   },
   {
     id: "signal",
+    published: true,
     index: "03",
     name: "This Lab",
     glyph: "110",
@@ -38,6 +41,12 @@ export const PROJECTS = [
   },
 ] as const;
 
+export const PROJECTS = PROJECT_CATALOG.filter((project) => project.published).map(
+  (project, index) => ({
+    ...project,
+    index: String(index + 1).padStart(2, "0"),
+  })
+);
 
 export const STACK = [
   "Kotlin",

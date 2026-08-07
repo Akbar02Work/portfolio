@@ -1,4 +1,4 @@
-import { projects } from "./projects";
+import { allProjects, projects } from "./projects";
 import type { ProjectPlatformView } from "./projects";
 import type {
   ProjectMediaType,
@@ -31,7 +31,7 @@ export type ProjectSummary = {
   technologies: string[];
 };
 
-export const projectsSummary: ProjectSummary[] = projects.map((project) => ({
+const toProjectSummary = (project: (typeof projects)[number]): ProjectSummary => ({
   id: project.id,
   title: project.title,
   slug: project.slug,
@@ -54,7 +54,12 @@ export const projectsSummary: ProjectSummary[] = projects.map((project) => ({
   }),
   image: toWebpPath(project.image),
   technologies: project.technologies,
-}));
+});
+
+export const allProjectsSummary: ProjectSummary[] =
+  allProjects.map(toProjectSummary);
+
+export const projectsSummary: ProjectSummary[] = projects.map(toProjectSummary);
 
 export const resolveProjectSummaryPlatform = (
   project: ProjectSummary,

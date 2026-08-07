@@ -16,6 +16,8 @@ dependency update.
   as planned.
 - Kept project branding inside screenshots and media while restoring one shared
   portfolio accent across both interfaces; Lumingo source links remain private.
+- Temporarily hid Lumingo from Business, Creative, navigation, sitemap, and
+  direct public routes while preserving its complete case data and media.
 - Added temporary product mockups so the presentation can be reviewed before
   replacing them with final release screenshots.
 

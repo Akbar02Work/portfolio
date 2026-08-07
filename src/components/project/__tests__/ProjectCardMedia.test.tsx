@@ -3,11 +3,11 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import ProjectCardMedia from "@/components/project/ProjectCardMedia";
 import { projectStylesBySlug } from "@/constants/projectStyles";
-import { projectsSummary } from "@/data/projectsSummary";
+import { allProjectsSummary } from "@/data/projectsSummary";
 
 describe("ProjectCardMedia", () => {
   it("keeps Android first and lets the visitor inspect Web and iOS", () => {
-    const project = projectsSummary.find((candidate) => candidate.slug === "lumingo");
+    const project = allProjectsSummary.find((candidate) => candidate.slug === "lumingo");
     const style = projectStylesBySlug.lumingo;
 
     expect(project).toBeDefined();

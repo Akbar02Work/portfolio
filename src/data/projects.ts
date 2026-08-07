@@ -1,4 +1,4 @@
-import { projectsCatalog } from "./projectCatalog";
+import { projectsCatalog, publicProjectsCatalog } from "./projectCatalog";
 import type {
   ProjectMediaType,
   ProjectMetric,
@@ -59,7 +59,7 @@ export interface Project {
   engineeringNote: string;
 }
 
-export const projects: Project[] = projectsCatalog.map((project) => ({
+const toProject = (project: (typeof projectsCatalog)[number]): Project => ({
   id: project.id,
   title: project.title,
   slug: project.slug,
@@ -101,7 +101,11 @@ export const projects: Project[] = projectsCatalog.map((project) => ({
     github: project.links.github,
   },
   engineeringNote: project.engineeringNote,
-}));
+});
+
+export const allProjects: Project[] = projectsCatalog.map(toProject);
+
+export const projects: Project[] = publicProjectsCatalog.map(toProject);
 
 export const resolveProjectPlatform = (
   project: Project,

@@ -15,6 +15,7 @@ describe("smoke", () => {
     expect(screen.getByRole("heading", { level: 1, name: /android developer/i })).toBeTruthy();
     expect(screen.getByRole("heading", { level: 2, name: /about me/i })).toBeTruthy();
     expect(screen.getByRole("heading", { level: 2, name: "Selected Works" })).toBeTruthy();
+    expect(screen.queryByRole("heading", { name: "Lumingo" })).toBeNull();
     expect(screen.getAllByRole("link", { name: "Open case study" }).length).toBeGreaterThan(0);
   });
 

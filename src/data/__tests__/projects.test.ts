@@ -1,12 +1,16 @@
 import { describe, expect, it } from "vitest";
 import {
   createProject,
+  publicProjectsCatalog,
   projectsCatalog,
   type ProjectData,
   type ProjectMediaType,
 } from "@/data/projectCatalog";
-import { projects, resolveProjectPlatform } from "@/data/projects";
-import { projectsSummary } from "@/data/projectsSummary";
+import { allProjects, projects, resolveProjectPlatform } from "@/data/projects";
+import {
+  allProjectsSummary,
+  projectsSummary,
+} from "@/data/projectsSummary";
 
 const validMediaTypes: ProjectMediaType[] = ["phone", "browser"];
 
@@ -87,7 +91,7 @@ describe("project data model", () => {
   });
 
   it("models Lumingo as one product across Android, Web, and iOS", () => {
-    const lumingo = projects.find((project) => project.slug === "lumingo");
+    const lumingo = allProjects.find((project) => project.slug === "lumingo");
 
     expect(lumingo).toBeDefined();
     expect(
@@ -124,7 +128,7 @@ describe("project data model", () => {
       }, {})
     ).toEqual({ android: 3, web: 3, ios: 1 });
 
-    const summary = projectsSummary.find((project) => project.slug === "lumingo");
+    const summary = allProjectsSummary.find((project) => project.slug === "lumingo");
     expect(summary?.platforms.map((platform) => platform.id)).toEqual([
       "android",
       "web",
@@ -137,13 +141,20 @@ describe("project data model", () => {
     ]);
   });
 
-  it("keeps Lumingo first and resolves complete platform-specific content", () => {
-    expect(projects.map((project) => project.slug)).toEqual([
+  it("keeps Lumingo data intact while excluding it from public collections", () => {
+    expect(allProjects.map((project) => project.slug)).toEqual([
       "lumingo",
       "voicenotes",
     ]);
+    expect(publicProjectsCatalog.map((project) => project.slug)).toEqual([
+      "voicenotes",
+    ]);
+    expect(projects.map((project) => project.slug)).toEqual(["voicenotes"]);
+    expect(projectsSummary.map((project) => project.slug)).toEqual([
+      "voicenotes",
+    ]);
 
-    const lumingo = projects.find((project) => project.slug === "lumingo");
+    const lumingo = allProjects.find((project) => project.slug === "lumingo");
     expect(lumingo).toBeDefined();
     expect(lumingo?.links.github).toBeUndefined();
 

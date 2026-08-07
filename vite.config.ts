@@ -4,28 +4,21 @@ import { visualizer } from "rollup-plugin-visualizer";
 import path from "path";
 import { execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { projectsCatalog } from "./src/data/projectCatalog";
+import { publicProjectsCatalog } from "./src/data/projectCatalog";
 import { prerenderRoutes, type PrerenderRoute } from "./scripts/prerender";
 
 const SITE_URL = "https://www.akbar02work.xyz";
 const HOME_TITLE = "Akbar — Android & AI Engineer";
 const HOME_DESCRIPTION =
   "Android apps built with Kotlin and Jetpack Compose, with practical AI integrations.";
-const PUBLIC_PROJECT_SLUGS = ["voicenotes", "lumingo"] as const;
-
-const projectRoutes = PUBLIC_PROJECT_SLUGS.map((slug): PrerenderRoute => {
-  const project = projectsCatalog.find((candidate) => candidate.slug === slug);
-  if (!project) {
-    throw new Error(`Missing project data for prerender route: ${slug}`);
-  }
-
-  return {
-    path: `/projects/${slug}`,
+const projectRoutes = publicProjectsCatalog.map(
+  (project): PrerenderRoute => ({
+    path: `/projects/${project.slug}`,
     title: `${project.title} | Akbar Azizov`,
     description: project.description,
     image: project.coverImage || "/og-image.png",
-  };
-});
+  })
+);
 
 const publicRoutes: PrerenderRoute[] = [
   {

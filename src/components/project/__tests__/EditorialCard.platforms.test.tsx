@@ -3,11 +3,11 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import EditorialCard from "@/components/project/EditorialCard";
 import { projectStylesBySlug } from "@/constants/projectStyles";
-import { projectsSummary } from "@/data/projectsSummary";
+import { allProjectsSummary } from "@/data/projectsSummary";
 
 describe("EditorialCard platform content", () => {
   it("changes the complete Lumingo card and destination when Web is selected", () => {
-    const project = projectsSummary.find((candidate) => candidate.slug === "lumingo");
+    const project = allProjectsSummary.find((candidate) => candidate.slug === "lumingo");
     const style = projectStylesBySlug.lumingo;
 
     expect(project).toBeDefined();

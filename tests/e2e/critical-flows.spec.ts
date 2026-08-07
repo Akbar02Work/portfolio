@@ -19,21 +19,18 @@ test("follows the editorial project detail flow", async ({ page }) => {
   await expect(detailSections.nth(2).getByRole("heading", { level: 2, name: "Overview" })).toBeVisible();
 });
 
-test("opens the selected Lumingo platform as a complete case", async ({ page }) => {
+test("keeps hidden Lumingo content out of public routes", async ({ page }) => {
   await page.goto("/");
-
-  const lumingoCard = page.locator("article").filter({
-    has: page.getByRole("heading", { level: 3, name: "Lumingo" }),
-  });
-  await lumingoCard.getByRole("tab", { name: "Web — Public beta" }).click();
-  await lumingoCard.getByRole("link", { name: "Open case study" }).click();
-
-  await expect(page).toHaveURL(/\/projects\/lumingo\?platform=web$/);
   await expect(
-    page.getByRole("tab", { name: "Web — Public beta" }),
-  ).toHaveAttribute("aria-selected", "true");
-  await expect(page.getByText(/The live web product turns a learner/i)).toBeVisible();
-  await expect(page.getByText("TypeScript", { exact: true })).toBeVisible();
+    page.getByRole("heading", { level: 3, name: "Lumingo" }),
+  ).toHaveCount(0);
+
+  await page.goto("/projects/lumingo");
+  await expect(page.getByRole("heading", { level: 1, name: /404/i })).toBeVisible();
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+    "content",
+    "noindex, nofollow",
+  );
 });
 
 test("shows 404 for invalid project slug", async ({ page }) => {
