@@ -26,4 +26,7 @@ test("renders the Creative experience on desktop", async ({ page }) => {
     page.getByRole("heading", { level: 1, name: /akbar builds signal/i }),
   ).toBeVisible({ timeout: 10_000 });
   await expect(page.locator(".site")).toBeVisible();
+  await expect(page.locator(".work-card").first().getByRole("heading")).toHaveText(
+    "Lumingo",
+  );
 });

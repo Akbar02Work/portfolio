@@ -3,7 +3,10 @@ import { expect, test } from "@playwright/test";
 test("follows the editorial project detail flow", async ({ page }) => {
   await page.goto("/");
 
-  await page.getByRole("link", { name: "Open case study", exact: true }).click();
+  await page
+    .locator('a[href="/projects/voicenotes"]')
+    .filter({ hasText: "Open case study" })
+    .click();
   await expect(page).toHaveURL(/\/projects\/voicenotes$/);
 
   const detailFlow = page.locator("[data-project-detail]");
@@ -14,6 +17,23 @@ test("follows the editorial project detail flow", async ({ page }) => {
   const detailSections = detailFlow.locator(":scope > section");
   await expect(detailSections.nth(0).getByText("Screens", { exact: true })).toBeVisible();
   await expect(detailSections.nth(2).getByRole("heading", { level: 2, name: "Overview" })).toBeVisible();
+});
+
+test("opens the selected Lumingo platform as a complete case", async ({ page }) => {
+  await page.goto("/");
+
+  const lumingoCard = page.locator("article").filter({
+    has: page.getByRole("heading", { level: 3, name: "Lumingo" }),
+  });
+  await lumingoCard.getByRole("tab", { name: "Web — Public beta" }).click();
+  await lumingoCard.getByRole("link", { name: "Open case study" }).click();
+
+  await expect(page).toHaveURL(/\/projects\/lumingo\?platform=web$/);
+  await expect(
+    page.getByRole("tab", { name: "Web — Public beta" }),
+  ).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByText(/The live web product turns a learner/i)).toBeVisible();
+  await expect(page.getByText("TypeScript", { exact: true })).toBeVisible();
 });
 
 test("shows 404 for invalid project slug", async ({ page }) => {
@@ -80,13 +100,16 @@ test("rapid scroll reaches the footer without collapsing document height", async
   const initialHeight = await page.evaluate(() => document.documentElement.scrollHeight);
   await page.mouse.wheel(0, initialHeight * 2);
 
-  const revealOpacities = await page.evaluate(() =>
-    Array.from(document.querySelectorAll(".translate-y-0")).map((element) =>
-      Number.parseFloat(window.getComputedStyle(element).opacity)
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const opacities = Array.from(document.querySelectorAll(".translate-y-0")).map(
+          (element) => Number.parseFloat(window.getComputedStyle(element).opacity)
+        );
+        return opacities.length > 0 && opacities.every((opacity) => opacity >= 0.99);
+      })
     )
-  );
-  expect(revealOpacities.length).toBeGreaterThan(0);
-  expect(revealOpacities.every((opacity) => opacity >= 0.99)).toBe(true);
+    .toBe(true);
 
   const footer = page.locator("footer#contact");
   await expect(footer).toBeVisible();

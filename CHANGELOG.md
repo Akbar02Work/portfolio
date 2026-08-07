@@ -3,7 +3,21 @@
 This file records meaningful public milestones, not every deployment or
 dependency update.
 
-## Unreleased — 2026-07-25
+## Unreleased — 2026-08-07
+
+### Portfolio
+
+- Added Lumingo as a multi-platform case study with selectable Android, Web,
+  and iOS product surfaces.
+- Promoted Lumingo to the primary case and gave every platform its own summary,
+  metrics, stack, challenge, features, engineering note, and shareable URL.
+- Made product maturity explicit: Android is a release candidate, Web is in
+  public beta, and iOS is visibly in development with Swift and SwiftUI marked
+  as planned.
+- Added project accents (`#E85D04` for Lumingo and `#2F6364` for VoiceNotes)
+  and kept Lumingo source links private.
+- Added temporary product mockups so the presentation can be reviewed before
+  replacing them with final release screenshots.
 
 ### Maintenance
 

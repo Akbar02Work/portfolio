@@ -61,10 +61,13 @@ at the seams:
   TypeScript, unit tests, production builds, bundle budgets, Creative embed drift,
   and Playwright browser tests run as one CI contract.
 
-The current featured case is
-[VoiceNotes](https://www.akbar02work.xyz/projects/voicenotes): a native Android
-voice-to-notes system that turns short recordings into searchable notes through
-cloud providers or a verified on-device Russian transcription path.
+The featured cases are:
+
+- [Lumingo](https://www.akbar02work.xyz/projects/lumingo), a language-learning
+  product presented across Android, Web, and an openly in-development iOS client.
+- [VoiceNotes](https://www.akbar02work.xyz/projects/voicenotes), a native Android
+  voice-to-notes system that turns short recordings into searchable notes through
+  cloud providers or a verified on-device Russian transcription path.
 
 ## Human direction, AI-assisted execution
 

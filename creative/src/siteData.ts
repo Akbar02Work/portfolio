@@ -1,7 +1,22 @@
+import { getBusinessUrl } from "./siteConfig";
+
+const businessUrl = getBusinessUrl();
+
 export const PROJECTS = [
   {
-    id: "voicenotes",
+    id: "lumingo",
     index: "01",
+    name: "Lumingo",
+    glyph: "LU",
+    year: "2026",
+    role: "Web · Android · iOS next",
+    desc: "An adaptive language-learning product built across a live web beta and a native Android client — with iOS in development.",
+    tags: ["Product", "Android", "Next.js", "Convex", "AI"],
+    href: `${businessUrl}projects/lumingo`,
+  },
+  {
+    id: "voicenotes",
+    index: "02",
     name: "VoiceNotes",
     glyph: "VN",
     year: "2026",
@@ -12,7 +27,7 @@ export const PROJECTS = [
   },
   {
     id: "signal",
-    index: "02",
+    index: "03",
     name: "This Lab",
     glyph: "110",
     year: "2026",

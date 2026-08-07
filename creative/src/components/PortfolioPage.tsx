@@ -171,7 +171,10 @@ export function PortfolioPage({
               </h2>
             </div>
             <p className="eyebrow works__hint works__hint--desktop">
-              <span className="works__hint-count">02</span> cases · scroll to travel →
+              <span className="works__hint-count">
+                {String(PROJECTS.length).padStart(2, "0")}
+              </span>{" "}
+              cases · scroll to travel →
             </p>
           </div>
 
