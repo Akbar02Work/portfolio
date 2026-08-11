@@ -69,10 +69,10 @@ const Index = () => {
       className="bg-background text-gray-900 dark:text-slate-100 antialiased overflow-x-clip font-sans"
     >
       <Helmet>
-        <title>Akbar — Android &amp; AI Engineer</title>
+        <title>Akbar — Android Engineer · Founder of Lumingo</title>
         <meta
           name="description"
-          content="Android apps built with Kotlin and Jetpack Compose, with practical AI integrations."
+          content="I build native Android apps and AI-powered products — from architecture and offline recovery to release."
         />
       </Helmet>
       <Hero />

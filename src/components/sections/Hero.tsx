@@ -6,7 +6,6 @@ const HeroText = () => (
     <div className="flex-1 space-y-5 text-center md:text-left">
         <div className="hero-reveal" style={{ animationDelay: "0ms" }}>
             <h1 className="text-display-hero text-gray-900 dark:text-white">
-                I&apos;m{" "}
                 <span className="relative inline-block">
                     Akbar
                     <svg
@@ -34,13 +33,13 @@ const HeroText = () => (
                 </span>
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-slate-400">
-                    Android Developer
+                    Android Engineer Founder of Lumingo
                 </span>
             </h1>
         </div>
         <div className="hero-reveal" style={{ animationDelay: "120ms" }}>
             <p className="text-body-lg font-medium text-gray-600 dark:text-slate-200 max-w-lg mx-auto md:mx-0">
-                Turning AI models into real Android features
+                I build native Android apps and AI-powered products — from architecture and offline recovery to release.
             </p>
         </div>
         <div className="hero-reveal" style={{ animationDelay: "200ms" }}>

@@ -12,7 +12,7 @@ describe("smoke", () => {
     window.history.replaceState({}, "", "/");
     render(<App />);
 
-    expect(screen.getByRole("heading", { level: 1, name: /android developer/i })).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 1, name: /android engineer/i })).toBeTruthy();
     expect(screen.getByRole("heading", { level: 2, name: /about me/i })).toBeTruthy();
     expect(screen.getByRole("heading", { level: 2, name: "Selected Works" })).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "Lumingo" })).toBeNull();

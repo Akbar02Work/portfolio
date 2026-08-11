@@ -86,8 +86,9 @@ export function PortfolioPage({
           </p>
 
           <p className="hero__meta">
-            Android &amp; AI engineer turning raw models into product features —
-            offline-first, production-shaped, obsessively finished.
+            Android engineer at Market-R building native cashbox, retail, and
+            transport systems — from architecture and APIs to offline recovery
+            and release validation.
           </p>
 
           <h1 className="hero__title" id="hero-title">
@@ -291,7 +292,7 @@ export function PortfolioPage({
               <div className="about__portrait-meta">
                 <div className="about__portrait-meta-copy">
                   <span>Fig. 01</span>
-                  <span>Android &amp; AI Engineer</span>
+                  <span>Android Engineer · Product Builder</span>
                 </div>
                 <div className="about__portrait-clock">
                   <span className="about__portrait-clock-time">{clock || "—:—:—"}</span>
@@ -302,32 +303,34 @@ export function PortfolioPage({
 
             <div className="about__content">
               <h2 className="about__lead" id="about-title" data-reveal>
-                I turn AI models into <em>real Android features</em> — not demos, not
-                slides.
+                I build <em>native Android systems</em> that hold up in the real
+                world.
               </h2>
               <div className="about__copy" data-reveal>
                 <p>
-                  Based in Tashkent. Building with Kotlin, Jetpack Compose, and practical
-                  LLM integration — structured outputs, offline resilience, clean
-                  architecture that survives production.
+                  At Market-R, I design and build two native Android apps for cashbox,
+                  retail, and transport workflows — covering product design,
+                  architecture, API integration, security, offline recovery, and
+                  release validation.
                 </p>
                 <p>
-                  This lab exists because the website should feel like the work: sharp,
-                  intentional, a little impossible.
+                  I also founded Lumingo and built VoiceNotes, combining hands-on
+                  engineering with end-to-end product ownership and practical AI
+                  integration.
                 </p>
               </div>
               <ul className="about__metrics" data-reveal>
                 <li>
-                  <span className="about__metric-value">110%</span>
-                  <span className="about__metric-label">Finish standard</span>
+                  <span className="about__metric-value">2 native apps</span>
+                  <span className="about__metric-label">Market-R systems</span>
                 </li>
                 <li>
-                  <span className="about__metric-value">AI × OS</span>
-                  <span className="about__metric-label">Core focus</span>
+                  <span className="about__metric-value">Founder</span>
+                  <span className="about__metric-label">Lumingo</span>
                 </li>
                 <li>
-                  <span className="about__metric-value">Remote</span>
-                  <span className="about__metric-label">Available now</span>
+                  <span className="about__metric-value">Solo build</span>
+                  <span className="about__metric-label">VoiceNotes</span>
                 </li>
               </ul>
             </div>

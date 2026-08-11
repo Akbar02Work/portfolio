@@ -8,9 +8,9 @@ import { publicProjectsCatalog } from "./src/data/projectCatalog";
 import { prerenderRoutes, type PrerenderRoute } from "./scripts/prerender";
 
 const SITE_URL = "https://www.akbar02work.xyz";
-const HOME_TITLE = "Akbar — Android & AI Engineer";
+const HOME_TITLE = "Akbar — Android Engineer · Founder of Lumingo";
 const HOME_DESCRIPTION =
-  "Android apps built with Kotlin and Jetpack Compose, with practical AI integrations.";
+  "I build native Android apps and AI-powered products — from architecture and offline recovery to release.";
 const projectRoutes = publicProjectsCatalog.map(
   (project): PrerenderRoute => ({
     path: `/projects/${project.slug}`,

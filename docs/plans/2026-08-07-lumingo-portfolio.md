@@ -1,6 +1,8 @@
 # Platform-Aware Lumingo Case Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **Implementation workflow:** Execute this plan task by task, keep changes
+> scoped, use checkbox (`- [ ]`) syntax for tracking, and verify each completed
+> task before continuing.
 
 **Goal:** Make Lumingo the primary project and synchronize Android, Web, and iOS selection across card content, URLs, complete case-study content, screenshots, and project-specific colors.
 

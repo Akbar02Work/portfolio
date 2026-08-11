@@ -10,7 +10,7 @@ const PROJECT_CATALOG = [
     name: "Lumingo",
     glyph: "LU",
     year: "2026",
-    role: "Web · Android · iOS next",
+    role: "Founder · Product Engineer",
     desc: "An adaptive language-learning product built across a live web beta and a native Android client — with iOS in development.",
     tags: ["Product", "Android", "Next.js", "Convex", "AI"],
     href: `${businessUrl}projects/lumingo`,
@@ -22,7 +22,7 @@ const PROJECT_CATALOG = [
     name: "VoiceNotes",
     glyph: "VN",
     year: "2026",
-    role: "Android · AI · Offline",
+    role: "Solo Android Engineer",
     desc: "A native Android voice-to-notes system — cloud providers when useful, verified on-device Russian transcription when privacy matters.",
     tags: ["Kotlin", "Compose", "Gemini", "Groq", "sherpa-onnx"],
     href: "https://github.com/Akbar02Work/VoiceNotes",
@@ -50,15 +50,18 @@ export const PROJECTS = PROJECT_CATALOG.filter((project) => project.published).m
 
 export const STACK = [
   "Kotlin",
+  "Java",
   "Jetpack Compose",
-  "Gemini",
-  "OpenAI",
+  "Coroutines · Flow",
+  "MVVM",
   "Clean Architecture",
   "Room",
-  "Hilt",
-  "Coroutines",
-  "Offline-first",
-  "LLM → Features",
+  "SQLCipher",
+  "DataStore",
+  "Retrofit · OkHttp",
+  "REST APIs",
+  "Unit · UI testing",
+  "Git · Code review",
 ] as const;
 
 export const SECTIONS = [
