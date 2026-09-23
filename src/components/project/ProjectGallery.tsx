@@ -560,13 +560,13 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                                     }
                                 }}
                                 className={cn(
-                                    "flex shrink-0 cursor-pointer select-none flex-col gap-4 transition-opacity duration-300 ease-out",
+                                    "flex shrink-0 cursor-pointer select-none flex-col gap-4 transition-[opacity,transform] duration-300 ease-out",
                                     screen.mediaType === "browser"
                                         ? "w-[82vw] max-w-3xl"
                                         : "w-52 sm:w-56 md:w-64",
                                     isActive
                                         ? "z-[1] opacity-100"
-                                        : "opacity-45 hover:opacity-70"
+                                        : "opacity-75 scale-[0.94] hover:opacity-100 motion-reduce:scale-100"
                                 )}
                             >
                                 <div
@@ -591,7 +591,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                                         "font-mono text-caption text-center transition-colors duration-500 line-clamp-2",
                                         isActive
                                             ? "text-gray-700 dark:text-slate-200"
-                                            : "text-neutral-400 dark:text-neutral-600"
+                                            : "text-neutral-500 dark:text-neutral-500"
                                     )}
                                 >
                                     {screen.title}

@@ -19,6 +19,8 @@ version: motion, atmosphere, and personality. They are intentionally different
 interfaces, but they ship from one repository and one release pipeline.
 Creative is intentionally a desktop-only experience: below 901 px it shows an
 access gate and keeps its desktop interactions out of the mobile runtime.
+Business is available in English and [Russian](https://www.akbar02work.xyz/ru);
+Creative stays English.
 
 ## Why two versions?
 
@@ -53,6 +55,10 @@ at the seams:
 - **Static hosting without static UX.** Client-side routes, direct project URLs,
   `/creative/`, `/old/`, metadata, and 404 behavior are prepared for a single
   Vercel deployment.
+- **Two languages without a runtime framework.** A typed EN/RU dictionary with a
+  parity test, locale-prefixed routes (`/ru/...`) prerendered with `lang`,
+  hreflang alternates and sitemap entries, and Cyrillic font subsets that load
+  only when Cyrillic text renders.
 - **Privacy as a release constraint.** Public media is deliberately curated;
   project screenshots, the downloadable CV, claims, and external links are
   reviewed as publishable product data rather than copied into `public/`
@@ -87,6 +93,7 @@ not evidence of completion.
 
 ```text
 src/                 Business portfolio and case-study system
+src/i18n/            Locale routing and EN/RU interface copy
 creative/            Creative portfolio application
 public/creative/     Generated Creative embed shipped by the root app
 scripts/             Build integration, route, image, cycle, and bundle checks
@@ -113,7 +120,8 @@ it never refreshes the embed during the check.
 
 `npm run ci` checks both applications, script regressions, the Creative embed,
 and gzip budgets (Business initial JS/CSS and all Creative JS/CSS, each 150 KiB).
-It also builds Business route HTML and `dist/sitemap.xml` from the public catalog.
+It also builds Business route HTML (English and `/ru`) and `dist/sitemap.xml`
+from the public catalog.
 `npm run ci:full` adds Chromium E2E; first install it with
 `npx playwright install chromium`. To check other engines, install `firefox webkit`
 and run `npx playwright test --browser=firefox` and `--browser=webkit` after a build.

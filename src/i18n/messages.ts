@@ -33,7 +33,6 @@ const en = {
   projects: {
     eyebrow: "01 / Works",
     title: "Selected Works",
-    hint: "Click a project for the full case →",
     openCase: "Open case study",
     openCaseAria: (title: string) => `Open ${title} case study`,
     openPlatformCaseAria: (title: string, platform: string) => `Open ${title} ${platform} case study`,
@@ -168,7 +167,6 @@ const ru: Messages = {
   projects: {
     eyebrow: "01 / Работы",
     title: "Избранные работы",
-    hint: "Нажмите на проект, чтобы открыть кейс →",
     openCase: "Открыть кейс",
     openCaseAria: (title) => `Открыть кейс ${title}`,
     openPlatformCaseAria: (title, platform) => `Открыть кейс ${title} — ${platform}`,
