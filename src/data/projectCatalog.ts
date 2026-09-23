@@ -104,6 +104,18 @@ const projectDefinitions = [
       "Native Android voice notes that turn short recordings into searchable notes — cloud AI when useful, private on-device transcription when it matters.",
     role: "Product design & Android engineering — solo build",
     year: 2026,
+    // TODO(Akbar): replace with measured numbers when you have them (keep 3 items).
+    // Suggested metrics — measure, then swap the values in and delete this note:
+    //   { value: "~X s", label: "to transcribe 30 s of speech on-device" }
+    //     Local mode, airplane mode on, record a 30 s clip, time from "stop" to the
+    //     transcript appearing; average 3 runs, note the phone model.
+    //   { value: "X MB", label: "offline Russian ASR model, downloaded once" }
+    //     Size of the model the app downloads (Settings → offline model, or the
+    //     files in the app's private storage).
+    //   { value: "X MB", label: "release APK" }
+    //     ./gradlew assembleRelease → app/build/outputs/apk/release/*.apk size
+    //     (or the download size shown in Play Console for an AAB).
+    // Russian labels live in src/data/i18n/projects.ru.ts (same order).
     metrics: [
       { value: "4 modes", label: "cloud + local processing" },
       { value: "BYOK", label: "encrypted on-device keys" },

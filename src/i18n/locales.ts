@@ -39,3 +39,6 @@ export const localizePath = (path: string, locale: Locale): string => {
 export const HTML_LANG: Record<Locale, string> = { en: "en", ru: "ru" };
 
 export const OG_LOCALE: Record<Locale, string> = { en: "en_US", ru: "ru_RU" };
+
+/** Default social preview image per language. */
+export const OG_IMAGE: Record<Locale, string> = { en: "/og-image.png", ru: "/og-image-ru.png" };

@@ -11,6 +11,7 @@ const excludedFileNames = new Set([
   "favicon-16x16.png",
   "favicon-32x32.png",
   "og-image.png",
+  "og-image-ru.png",
   "android-phone-frame.png",
 ]);
 

@@ -1,4 +1,5 @@
 import type { Project } from "@/data/projects";
+import { ProjectArchitecture } from "@/components/project/ProjectArchitecture";
 import { useI18n } from "@/i18n/useI18n";
 
 type ProjectEngineeringNoteProps = {
@@ -23,6 +24,8 @@ export const ProjectEngineeringNote = ({ project }: ProjectEngineeringNoteProps)
                         {t.project.engineeringNote}
                     </h2>
                 </div>
+
+                <ProjectArchitecture slug={project.slug} />
 
                 <aside className="max-w-3xl">
                     {role ? (

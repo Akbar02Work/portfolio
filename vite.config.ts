@@ -6,7 +6,7 @@ import { execSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { publicProjectsCatalogByLocale } from "./src/data/projectCatalog";
 import { SITE_URL } from "./src/data/siteMetadata";
-import { HTML_LANG, LOCALES, OG_LOCALE, localizePath, type Locale } from "./src/i18n/locales";
+import { HTML_LANG, LOCALES, OG_IMAGE, OG_LOCALE, localizePath, type Locale } from "./src/i18n/locales";
 import { messages } from "./src/i18n/messages";
 import { HERO_PORTRAIT_SIZES, heroPortraitSrcSet } from "./src/data/heroPortrait";
 import { prerenderRoutes, type PrerenderRoute } from "./scripts/prerender";
@@ -30,14 +30,14 @@ const publicRoutes: PrerenderRoute[] = LOCALES.flatMap((locale): PrerenderRoute[
     ...localeRouteFields(locale, "/"),
     title: messages[locale].seo.homeTitle,
     description: messages[locale].seo.homeDescription,
-    image: "/og-image.png",
+    image: OG_IMAGE[locale],
   },
   ...publicProjectsCatalogByLocale[locale].map(
     (project): PrerenderRoute => ({
       ...localeRouteFields(locale, `/projects/${project.slug}`),
       title: messages[locale].seo.projectTitle(project.title),
       description: project.description,
-      image: project.coverImage || "/og-image.png",
+      image: project.coverImage || OG_IMAGE[locale],
     })
   ),
 ]);

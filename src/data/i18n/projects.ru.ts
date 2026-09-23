@@ -9,6 +9,10 @@ export const projectTranslationsRu: Record<string, ProjectTranslation> = {
     description:
       "Нативное Android-приложение для голосовых заметок: короткие записи превращаются в заметки с поиском — облачный AI, когда он полезен, и приватная расшифровка на устройстве, когда это важно.",
     role: "Продуктовый дизайн и Android-разработка — в одиночку",
+    // TODO(Akbar): when the English metrics get measured values, mirror them here:
+    //   { value: "~X с", label: "на расшифровку 30 с речи на устройстве" }
+    //   { value: "X МБ", label: "офлайн-модель русской речи, скачивается один раз" }
+    //   { value: "X МБ", label: "релизный APK" }
     metrics: [
       { value: "4 режима", label: "облачная + локальная обработка" },
       { value: "BYOK", label: "зашифрованные ключи на устройстве" },

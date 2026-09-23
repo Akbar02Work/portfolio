@@ -113,8 +113,13 @@ npm run dev:pair
 stopping its owner. `npm run dev:pair:stop` stops only this checkout's supervisor
 and its children.
 
+`npm run build` builds Business with the committed Creative embed, so local builds
+(including on Windows, where Creative's bundle hashes differ) leave `public/creative/`
+untouched. `npm run build:all` rebuilds Creative first.
+
 After changing Creative source or project publication, run `npm run build:creative`
-and include the resulting `public/creative/` output with the source change.
+on Linux/macOS (or let CI's drift check tell you) and include the resulting
+`public/creative/` output with the source change.
 `npm run check:creative-drift` rebuilds Creative and compares files byte for byte;
 it never refreshes the embed during the check.
 

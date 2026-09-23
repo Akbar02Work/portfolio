@@ -20,6 +20,9 @@ test("serves prerendered Russian routes with language metadata", async ({ reques
 
   const english = await (await request.get("/")).text();
   expect(english).toContain('<html lang="en">');
+  expect(english).toContain(`og:image" content="${SITE_URL}/og-image.png"`);
+  expect(await (await request.get("/ru")).text()).toContain(`og:image" content="${SITE_URL}/og-image-ru.png"`);
+  expect((await request.get("/og-image-ru.png")).status()).toBe(200);
   expect(english).toContain(`hreflang="ru" href="${SITE_URL}/ru"`);
 
   expect((await request.get("/ru/missing")).status()).toBe(404);
@@ -44,6 +47,7 @@ test("renders the Russian site and keeps navigation inside the locale", async ({
   await expect(page).toHaveURL(/\/ru\/projects\/voicenotes/);
   await expect(page.getByRole("heading", { level: 2, name: ru.project.overview })).toBeVisible();
   await expect(page.getByText("Задача была не просто вызвать AI API", { exact: false })).toBeVisible();
+  await expect(page.getByRole("figure", { name: "Архитектура обработки VoiceNotes" })).toBeVisible();
 
   await page.getByRole("link", { name: ru.project.back, exact: true }).click();
   await expect(page).toHaveURL(/\/ru$/);

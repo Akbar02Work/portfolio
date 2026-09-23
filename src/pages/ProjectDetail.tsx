@@ -56,7 +56,7 @@ const ProjectDetail = () => {
   const pageImage =
     projectView && !hasPlaceholderContent && projectView.image
       ? projectView.image
-      : "/og-image.png";
+      : undefined;
   const selectPlatform = (platform: ProjectPlatformId) => {
     const nextParams = new URLSearchParams(searchParams);
     nextParams.set("platform", platform);

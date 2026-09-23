@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import { SITE_URL } from "@/data/siteMetadata";
 import { useI18n } from "@/i18n/useI18n";
-import { HTML_LANG, LOCALES, OG_LOCALE, localizePath } from "@/i18n/locales";
+import { HTML_LANG, LOCALES, OG_IMAGE, OG_LOCALE, localizePath } from "@/i18n/locales";
 import { withBase } from "@/lib/urls";
 
 type PageSeoProps = {
@@ -14,13 +14,13 @@ type PageSeoProps = {
 
 const absoluteUrl = (path: string) => new URL(withBase(path), SITE_URL).href;
 
-export const PageSeo = ({ title, description, image = "/og-image.png", noIndex = false }: PageSeoProps) => {
+export const PageSeo = ({ title, description, image, noIndex = false }: PageSeoProps) => {
   const { pathname } = useLocation();
   const { locale, t } = useI18n();
   const pageTitle = title ?? t.seo.homeTitle;
   const pageDescription = description ?? t.seo.homeDescription;
   const canonicalUrl = absoluteUrl(pathname);
-  const imageUrl = absoluteUrl(image);
+  const imageUrl = absoluteUrl(image ?? OG_IMAGE[locale]);
 
   return (
     <Helmet htmlAttributes={{ lang: HTML_LANG[locale] }}>
