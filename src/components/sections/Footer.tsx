@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { type MouseEvent } from "react";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import { CopySwap } from "@/components/ui/CopySwap";
+import { useCopyFeedback } from "@/hooks/useCopyFeedback";
 import { ANIMATION_DELAYS } from "@/constants/animation.constants";
 import { isAllowedExternalUrl } from "@/lib/externalLinks";
 import { sanitizeUrl } from "@/lib/urlSanitizer";
@@ -22,39 +24,20 @@ const sanitizeSocialLink = (link: (typeof socialLinks)[number]) => {
 
 export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boolean }) => {
     const { t } = useI18n();
-    const [emailCopied, setEmailCopied] = useState(false);
-    const copiedTimeoutRef = useRef<number | null>(null);
+    const { copiedKey, copy, pulse } = useCopyFeedback<"email">();
+    const emailCopied = copiedKey === "email";
 
     const safeSocialLinks = socialLinks
         .map(sanitizeSocialLink)
         .filter((link): link is NonNullable<ReturnType<typeof sanitizeSocialLink>> => Boolean(link));
-
-    useEffect(() => {
-        return () => {
-            if (copiedTimeoutRef.current !== null) {
-                window.clearTimeout(copiedTimeoutRef.current);
-            }
-        };
-    }, []);
 
     const handleEmailClick = async (event: MouseEvent<HTMLAnchorElement>) => {
         // Cmd/Ctrl+click keeps the default mailto behaviour.
         if (event.metaKey || event.ctrlKey) return;
 
         event.preventDefault();
-        try {
-            await navigator.clipboard.writeText(EMAIL);
-            setEmailCopied(true);
-            if (copiedTimeoutRef.current !== null) {
-                window.clearTimeout(copiedTimeoutRef.current);
-            }
-            copiedTimeoutRef.current = window.setTimeout(() => {
-                setEmailCopied(false);
-                copiedTimeoutRef.current = null;
-            }, 1800);
-        } catch {
-            window.location.href = `mailto:${EMAIL.toLowerCase()}`;
-        }
+        const copied = await copy("email", EMAIL);
+        if (!copied) window.location.href = `mailto:${EMAIL.toLowerCase()}`;
     };
 
     return (
@@ -81,29 +64,34 @@ export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boole
                             title={t.footer.emailHint}
                             className="group inline-flex flex-wrap items-baseline font-semibold text-gray-900 dark:text-white hover:text-volt-ink dark:hover:text-volt transition-colors duration-200 text-[clamp(1.75rem,6vw,4.5rem)] leading-[1.05] tracking-tight"
                         >
-                            {emailCopied ? (
-                                <span className="inline-flex items-center gap-3 md:gap-4 whitespace-nowrap text-volt-ink dark:text-volt">
-                                    {t.footer.copied}
-                                    <CircleCheck
-                                        className="flex-none w-[0.72em] h-[0.72em] animate-in zoom-in-50 fade-in duration-300"
-                                        strokeWidth={2}
-                                        aria-hidden="true"
-                                    />
-                                </span>
-                            ) : (
-                                <>
-                                    <span className="whitespace-nowrap">Akbar02work</span>
-                                    <span className="inline-flex items-center gap-2 md:gap-4 whitespace-nowrap">
-                                        @gmail.com
-                                        <ArrowUpRight
-                                            className="flex-none w-[0.6em] h-[0.6em] text-volt-ink dark:text-volt transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1"
-                                            strokeWidth={2}
-                                            aria-hidden="true"
-                                        />
+                            <CopySwap
+                                active={emailCopied}
+                                pulse={pulse}
+                                className="[--copy-origin:left_center] text-left"
+                                idle={
+                                    <span className="inline-flex flex-wrap items-baseline">
+                                        <span className="whitespace-nowrap">Akbar02work</span>
+                                        <span className="inline-flex items-center gap-2 md:gap-4 whitespace-nowrap">
+                                            @gmail.com
+                                            <ArrowUpRight
+                                                className="flex-none w-[0.6em] h-[0.6em] text-volt-ink dark:text-volt transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1"
+                                                strokeWidth={2}
+                                                aria-hidden="true"
+                                            />
+                                        </span>
                                     </span>
-                                </>
-                            )}
+                                }
+                                done={
+                                    <span className="inline-flex items-center gap-3 md:gap-4 whitespace-nowrap self-center text-volt-ink dark:text-volt">
+                                        {t.footer.copied}
+                                        <CircleCheck className="flex-none w-[0.72em] h-[0.72em]" strokeWidth={2} aria-hidden="true" />
+                                    </span>
+                                }
+                            />
                         </a>
+                        <span className="sr-only" aria-live="polite">
+                            {emailCopied ? t.contact.emailCopied : ""}
+                        </span>
 
                         {/* Social pills */}
                         <nav className="mt-14 md:mt-20 border-t border-neutral-200 dark:border-neutral-800 pt-6 flex flex-wrap items-center gap-4" aria-label={t.footer.socialLinks}>

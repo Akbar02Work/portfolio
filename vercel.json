@@ -96,6 +96,10 @@
     {
       "source": "/easter",
       "destination": "/index.html"
+    },
+    {
+      "source": "/ru/easter",
+      "destination": "/ru/index.html"
     }
   ]
 }

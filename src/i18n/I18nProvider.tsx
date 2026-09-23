@@ -11,8 +11,6 @@ import {
 import { messages } from "./messages";
 import { I18nContext, type I18nValue } from "./useI18n";
 
-/** Paths that exist only in English (no localized twin). */
-const UNLOCALIZED_PATHS = ["/easter"];
 
 export const I18nProvider = ({ children }: { children: ReactNode }) => {
   const { pathname, search, hash } = useLocation();
@@ -25,7 +23,7 @@ export const I18nProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (checkedStoredChoiceRef.current) return;
     checkedStoredChoiceRef.current = true;
-    if (locale !== DEFAULT_LOCALE || UNLOCALIZED_PATHS.includes(pathname)) return;
+    if (locale !== DEFAULT_LOCALE) return;
     const stored = storage.getString(LOCALE_STORAGE_KEY);
     if (isLocale(stored) && stored !== DEFAULT_LOCALE) {
       navigate(localizePath(`${pathname}${search}${hash}`, stored), { replace: true });

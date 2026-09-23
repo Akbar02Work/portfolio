@@ -5,7 +5,6 @@ import type { useProjectsMenu } from "@/hooks/useProjectsMenu";
 import { useI18n } from "@/i18n/useI18n";
 import { LanguageSwitch } from "./LanguageSwitch";
 import { ThemeMenu } from "./ThemeMenu";
-import { VersionSwitch } from "./VersionSwitch";
 import { navLinks, type NavLinkId } from "./navigation";
 
 type DesktopNavProps = {
@@ -124,7 +123,6 @@ export const DesktopNav = ({
     {/* Right utilities */}
     <div className="relative z-20 hidden min-[901px]:flex items-center gap-3 ml-auto">
       <LanguageSwitch className="hidden min-[901px]:inline-flex" />
-      <VersionSwitch className="hidden min-[901px]:inline-flex" />
       <ThemeMenu />
     </div>
   </>

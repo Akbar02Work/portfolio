@@ -74,7 +74,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
     }, []);
 
     const runEasedScroll = useCallback(
-        (el: HTMLDivElement, nextLeft: number, duration: number) => {
+        (el: HTMLDivElement, nextLeft: number, duration: number, onDone?: () => void) => {
             if (scrollAnimFrameRef.current != null) {
                 cancelAnimationFrame(scrollAnimFrameRef.current);
                 scrollAnimFrameRef.current = null;
@@ -83,6 +83,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
             if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
                 el.scrollLeft = nextLeft;
                 animatingToRef.current = null;
+                onDone?.();
                 return;
             }
 
@@ -91,6 +92,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
             if (Math.abs(delta) < 0.5) {
                 el.scrollLeft = nextLeft;
                 animatingToRef.current = null;
+                onDone?.();
                 return;
             }
 
@@ -105,6 +107,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                 el.scrollLeft = nextLeft;
                 scrollAnimFrameRef.current = null;
                 animatingToRef.current = null;
+                onDone?.();
             };
 
             scrollAnimFrameRef.current = requestAnimationFrame(tick);
@@ -185,6 +188,49 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
         ]
     );
 
+    /**
+     * Seamless wrap: ease into the neighbouring loop copy (e.g. screen 6 → the
+     * next copy's screen 1), then silently re-centre on the middle copy.
+     */
+    const animateThroughBuffer = useCallback(
+        (loopIndex: number) => {
+            const el = scrollerRef.current;
+            const nextLeft = getCenteredScrollLeft(loopIndex);
+            if (!el || nextLeft == null) return;
+
+            cancelScrollAnimation();
+            animatingToRef.current = loopIndex;
+            applyActive(loopIndex);
+            runEasedScroll(
+                el,
+                nextLeft,
+                Math.min(720, Math.max(360, Math.abs(nextLeft - el.scrollLeft) * 0.7)),
+                () => {
+                    const middle = toMiddleLoopIndex(loopIndex);
+                    if (middle === loopIndex) return;
+                    const middleLeft = getCenteredScrollLeft(middle);
+                    if (middleLeft == null) return;
+                    isJumpingRef.current = true;
+                    withFrozenTransitions(el, () => {
+                        el.scrollLeft = middleLeft;
+                        applyActive(middle);
+                    });
+                    requestAnimationFrame(() => {
+                        isJumpingRef.current = false;
+                    });
+                }
+            );
+        },
+        [
+            applyActive,
+            cancelScrollAnimation,
+            getCenteredScrollLeft,
+            runEasedScroll,
+            toMiddleLoopIndex,
+            withFrozenTransitions,
+        ]
+    );
+
     const findClosestLoopIndexRef = useRef<() => number>(() => middleStart);
 
     const isLoopWrap = useCallback(
@@ -220,9 +266,10 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                 return;
             }
 
-            // Full-circle wrap: no animation, just land
+            // Wrap to the neighbour: ease through the adjacent loop copy
             if (isLoopWrap(from, target)) {
-                jumpToLoopIndex(target);
+                const fromReal = ((from % total) + total) % total;
+                animateThroughBuffer(fromReal === total - 1 ? from + 1 : from - 1);
                 return;
             }
 
@@ -238,6 +285,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
             );
         },
         [
+            animateThroughBuffer,
             applyActive,
             getCenteredScrollLeft,
             isLoopWrap,
@@ -418,13 +466,14 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
 
         const closest = toMiddleLoopIndex(findClosestLoopIndex());
         const realIndex = ((closest % total) + total) % total;
+        const wraps =
+            (direction === 1 && realIndex === total - 1) ||
+            (direction === -1 && realIndex === 0);
 
-        if (direction === 1 && realIndex === total - 1) {
-            jumpToLoopIndex(middleStart);
-            return;
-        }
-        if (direction === -1 && realIndex === 0) {
-            jumpToLoopIndex(middleStart + total - 1);
+        if (wraps && total > 1) {
+            // Settle exactly on the middle copy first, then ease one step out.
+            jumpToLoopIndex(closest);
+            animateThroughBuffer(closest + direction);
             return;
         }
 
@@ -440,7 +489,10 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
 
         const from = toMiddleLoopIndex(findClosestLoopIndex());
         if (isLoopWrap(from, target)) {
-            jumpToLoopIndex(target);
+            // The visible neighbour across the seam is one step away in loop space.
+            const fromReal = ((from % total) + total) % total;
+            jumpToLoopIndex(from);
+            animateThroughBuffer(fromReal === total - 1 ? from + 1 : from - 1);
             return;
         }
 

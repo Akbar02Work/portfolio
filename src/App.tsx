@@ -33,14 +33,17 @@ const App = () => {
                 <Route path={ROUTES.PROJECT_DETAIL} element={<ProjectDetail />} />
                 <Route path={localizePath(ROUTES.HOME, "ru")} element={<Index />} />
                 <Route path={localizePath(ROUTES.PROJECT_DETAIL, "ru")} element={<ProjectDetail />} />
-                <Route
-                  path={ROUTES.EASTER}
-                  element={
-                    <Suspense fallback={<PageLoader />}>
-                      <Easter />
-                    </Suspense>
-                  }
-                />
+                {[ROUTES.EASTER, localizePath(ROUTES.EASTER, "ru")].map((path) => (
+                  <Route
+                    key={path}
+                    path={path}
+                    element={
+                      <Suspense fallback={<PageLoader />}>
+                        <Easter />
+                      </Suspense>
+                    }
+                  />
+                ))}
                 <Route
                   path="*"
                   element={

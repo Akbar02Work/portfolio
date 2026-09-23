@@ -49,7 +49,8 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
   const { handleLogoClick } = useEasterLogo({
     pathname: location.pathname,
     homePath,
-    easterPath: ROUTES.EASTER,
+    easterPath: localize(ROUTES.EASTER),
+    clicksRequired: 3,
     navigate,
   });
 

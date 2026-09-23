@@ -86,3 +86,38 @@ test("mobile menu exposes the language switch", async ({ page }) => {
   await expect(page.getByRole("dialog", { name: ru.nav.menuTitle })).toHaveCount(0);
   await expect(page.getByRole("button", { name: ru.nav.openMenu })).toBeVisible();
 });
+
+test("the language thumb can be dragged and applies the language on release", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/");
+  const group = page.getByRole("group", { name: "Language" });
+  const box = (await group.boundingBox())!;
+  const y = box.y + box.height / 2;
+
+  // A short drag that ends on the same side keeps the language.
+  await page.mouse.move(box.x + 20, y);
+  await page.mouse.down();
+  await page.mouse.move(box.x + 30, y, { steps: 4 });
+  await page.mouse.up();
+  await expect(page).toHaveURL(/\/$/);
+
+  // Dragging across the middle switches on release.
+  await page.mouse.move(box.x + 20, y);
+  await page.mouse.down();
+  await page.mouse.move(box.x + 70, y, { steps: 8 });
+  await expect(page).toHaveURL(/\/$/);
+  await page.mouse.up();
+  await expect(page).toHaveURL(/\/ru$/);
+});
+
+test("theme menu opens on hover without stealing focus", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/");
+  const trigger = page.getByRole("button", { name: "Select theme" });
+  await trigger.hover();
+  await expect(trigger).toHaveAttribute("aria-expanded", "true");
+  await expect(page.getByRole("menuitem", { name: "Dark" })).toBeVisible();
+  await expect(page.getByRole("menuitem", { name: "Dark" })).not.toBeFocused();
+  await page.mouse.move(10, 400);
+  await expect(trigger).toHaveAttribute("aria-expanded", "false");
+});

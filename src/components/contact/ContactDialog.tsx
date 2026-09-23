@@ -4,6 +4,7 @@ import { useState, type MouseEvent, type ReactNode, type RefObject } from "react
 import { CONTACT_EMAIL, contactLinks, revealPhone } from "@/data/contacts";
 import { useI18n } from "@/i18n/useI18n";
 import { useCopyFeedback } from "@/hooks/useCopyFeedback";
+import { CopySwap } from "@/components/ui/CopySwap";
 import { isAllowedExternalUrl } from "@/lib/externalLinks";
 import { sanitizeUrl } from "@/lib/urlSanitizer";
 
@@ -19,7 +20,7 @@ const RowLabel = ({ children }: { children: ReactNode }) => (
 );
 
 const RowValue = ({ children }: { children: ReactNode }) => (
-  <span className="min-w-0 truncate text-base sm:text-lg font-medium text-gray-900 dark:text-white group-hover:text-volt-ink dark:group-hover:text-volt transition-colors">
+  <span className="min-w-0 truncate px-0.5 -mx-0.5 py-0.5 -my-0.5 text-base sm:text-lg font-medium text-gray-900 dark:text-white group-hover:text-volt-ink dark:group-hover:text-volt transition-colors">
     {children}
   </span>
 );
@@ -40,7 +41,8 @@ const safeLinks = contactLinks.flatMap((link) => {
 
 const ContactList = () => {
   const { t } = useI18n();
-  const { copiedKey, copy } = useCopyFeedback<CopyKey>();
+  const { copiedKey, copy, pulse } = useCopyFeedback<CopyKey>();
+  const pulseFor = (key: CopyKey) => (copiedKey === key ? pulse : 0);
   const [phone, setPhone] = useState<ReturnType<typeof revealPhone> | null>(null);
 
   const handleEmail = async (event: MouseEvent<HTMLAnchorElement>) => {
@@ -81,8 +83,21 @@ const ContactList = () => {
             aria-label={t.contact.emailAria(CONTACT_EMAIL)}
           >
             <RowLabel>{t.contact.email}</RowLabel>
-            <RowValue>{CONTACT_EMAIL}</RowValue>
-            {copiedKey === "email" ? <CopiedMark label={t.contact.copied} /> : <Copy className={iconClass} strokeWidth={2} aria-hidden="true" />}
+            <RowValue>
+              <CopySwap
+                active={false}
+                pulse={pulseFor("email")}
+                className="[--copy-origin:left_center]"
+                idle={CONTACT_EMAIL}
+                done={null}
+              />
+            </RowValue>
+            <CopySwap
+              active={copiedKey === "email"}
+              className="justify-items-end"
+              idle={<Copy className={iconClass} strokeWidth={2} aria-hidden="true" />}
+              done={<CopiedMark label={t.contact.copied} />}
+            />
           </a>
         </li>
         <li>
@@ -94,21 +109,30 @@ const ContactList = () => {
           >
             <RowLabel>{t.contact.phone}</RowLabel>
             <RowValue>
-              {phone ? (
-                <span className="tabular-nums">{phone.display}</span>
-              ) : (
-                <span className="text-neutral-500 dark:text-neutral-400 group-hover:text-volt-ink dark:group-hover:text-volt">
-                  {t.contact.showNumber}
-                </span>
-              )}
+              <CopySwap
+                active={Boolean(phone)}
+                pulse={pulseFor("phone")}
+                className="[--copy-origin:left_center]"
+                idle={
+                  <span className="text-neutral-500 dark:text-neutral-400 group-hover:text-volt-ink dark:group-hover:text-volt">
+                    {t.contact.showNumber}
+                  </span>
+                }
+                done={phone ? <span className="tabular-nums">{phone.display}</span> : null}
+              />
             </RowValue>
-            {copiedKey === "phone" ? (
-              <CopiedMark label={t.contact.copied} />
-            ) : phone ? (
-              <Copy className={iconClass} strokeWidth={2} aria-hidden="true" />
-            ) : (
-              <Eye className={iconClass} strokeWidth={2} aria-hidden="true" />
-            )}
+            <CopySwap
+              active={copiedKey === "phone"}
+              className="justify-items-end"
+              idle={
+                phone ? (
+                  <Copy className={iconClass} strokeWidth={2} aria-hidden="true" />
+                ) : (
+                  <Eye className={iconClass} strokeWidth={2} aria-hidden="true" />
+                )
+              }
+              done={<CopiedMark label={t.contact.copied} />}
+            />
           </button>
         </li>
         {otherLinks.map(renderLink)}

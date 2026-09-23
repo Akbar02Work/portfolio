@@ -16,11 +16,13 @@ test("blocks Creative on mobile and skips the desktop experience", async ({ page
   expect(requestedScripts.some((url) => url.includes("DesktopExperience-"))).toBe(false);
 });
 
-test("does not advertise the Creative switch below desktop width", async ({ page }) => {
-  await page.setViewportSize({ width: 844, height: 390 });
-  await page.goto("/");
-
-  await expect(page.getByRole("link", { name: "Creative", exact: true })).toHaveCount(0);
+test("Business no longer advertises a Creative switch at any width", async ({ page }) => {
+  for (const width of [844, 1280]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto("/");
+    await expect(page.getByRole("link", { name: "Creative", exact: true })).toHaveCount(0);
+    await expect(page.getByRole("group", { name: "Site version" })).toHaveCount(0);
+  }
 });
 
 test("renders the Creative experience on desktop", async ({ page }) => {

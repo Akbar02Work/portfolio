@@ -1,10 +1,11 @@
-import { PageSeo } from "@/components/PageSeo";
-import { Link } from "react-router-dom";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { PageSeo } from "@/components/PageSeo";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { ROUTES } from "@/constants/routes";
-import { parseEasterReport } from "@/lib/easterReport";
-import reportMarkdown from "../../CHANGELOG.md?raw";
+import { getCreativeUrl } from "@/constants/siteVersions";
+import { ViewTransitionLink } from "@/hooks/usePageTransition";
+import { useI18n } from "@/i18n/useI18n";
 
 type ConfettiPiece = {
   id: number;
@@ -69,25 +70,12 @@ const getConfettiCount = (reduceMotion: boolean): number => {
     : DESKTOP_CONFETTI_COUNT;
 };
 
-type EasterProps = {
-  reportMarkdownOverride?: string;
-  buildVersionOverride?: string;
-};
-
-const Easter = ({
-  reportMarkdownOverride,
-  buildVersionOverride,
-}: EasterProps) => {
-  const buildVersion = buildVersionOverride ?? `v${__APP_VERSION__}+${__GIT_COMMIT_SHA__}`;
-  const reportSource = reportMarkdownOverride ?? reportMarkdown;
+const Easter = () => {
+  const { t, localize } = useI18n();
   const [reduceMotion, setReduceMotion] = useState(false);
   const [confettiCount, setConfettiCount] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
   const confettiPieces = useMemo(() => createConfettiPieces(confettiCount), [confettiCount]);
-  const { manualVersion, reportBody } = useMemo(
-    () => parseEasterReport(reportSource, buildVersion),
-    [reportSource, buildVersion]
-  );
 
   useEffect(() => {
     if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
@@ -98,18 +86,8 @@ const Easter = ({
     const applyPreference = () => setReduceMotion(mediaQuery.matches);
     applyPreference();
 
-    if (typeof mediaQuery.addEventListener === "function") {
-      mediaQuery.addEventListener("change", applyPreference);
-      return () => mediaQuery.removeEventListener("change", applyPreference);
-    }
-
-    const legacyMediaQuery = mediaQuery as MediaQueryList & {
-      addListener?: (listener: () => void) => void;
-      removeListener?: (listener: () => void) => void;
-    };
-
-    legacyMediaQuery.addListener?.(applyPreference);
-    return () => legacyMediaQuery.removeListener?.(applyPreference);
+    mediaQuery.addEventListener("change", applyPreference);
+    return () => mediaQuery.removeEventListener("change", applyPreference);
   }, []);
 
   useEffect(() => {
@@ -118,8 +96,6 @@ const Easter = ({
     };
 
     updateConfettiCount();
-    if (typeof window === "undefined") return;
-
     window.addEventListener("resize", updateConfettiCount);
     return () => window.removeEventListener("resize", updateConfettiCount);
   }, [reduceMotion]);
@@ -140,12 +116,11 @@ const Easter = ({
   return (
     <MainLayout
       variant="detail"
-      className="bg-[#f8f9fa] dark:bg-slate-950 text-gray-900 dark:text-slate-100"
+      className="bg-background text-gray-900 dark:text-white"
+      showFooter={false}
+      showBackToTop={false}
     >
-      <PageSeo
-        title="Easter Page | Akbar Portfolio"
-        description="Release notes and build information for the Portfolio site."
-      />
+      <PageSeo title={t.easter.seoTitle} description={t.easter.text} noIndex />
 
       {showConfetti && (
         <div className="easter-confetti-layer" aria-hidden="true">
@@ -159,49 +134,41 @@ const Easter = ({
         </div>
       )}
 
-      <div className="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 pt-24 pb-20 space-y-8">
-        <section className="rounded-3xl border border-gray-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/70 backdrop-blur px-6 py-8">
-          <p className="text-caption uppercase text-gray-500 dark:text-slate-400">Easter Page</p>
-          <p className="mt-2 text-body-sm font-medium text-gray-500 dark:text-slate-400">Site Version</p>
-          <h1 className="mt-1 text-heading-1 text-gray-900 dark:text-white">
-            {manualVersion}
+      <section className="flex min-h-[calc(100svh-88px)] items-center px-6 sm:px-8 lg:px-12 py-16">
+        <div className="mx-auto w-full max-w-3xl">
+          <p className="font-mono text-caption uppercase tracking-[0.2em] text-volt-ink dark:text-volt">
+            {t.easter.eyebrow}
+          </p>
+          <h1 className="mt-6 font-black text-[clamp(3rem,9vw,7rem)] leading-[0.95] tracking-[-0.045em] text-gray-900 dark:text-white">
+            Creative mode
           </h1>
-          <h2 className="mt-4 text-heading-2 text-gray-900 dark:text-white">
-            Release Changelog
-          </h2>
-          <p className="mt-3 text-body-sm text-gray-600 dark:text-slate-300">
-            The latest milestone is read directly from the repository&apos;s single{" "}
-            <code>CHANGELOG.md</code>; the runtime build remains visible separately.
+          <p className="mt-6 max-w-xl text-body-lg text-gray-600 dark:text-slate-300">
+            {t.easter.text}
           </p>
 
-          <div className="mt-6 grid sm:grid-cols-2 gap-3">
-            <div className="rounded-2xl border border-gray-200 dark:border-slate-700 p-4 bg-gray-50 dark:bg-slate-800/60">
-              <p className="text-caption text-gray-500 dark:text-slate-400">Current Runtime Version</p>
-              <p className="mt-1 text-heading-3 text-gray-900 dark:text-white">{buildVersion}</p>
-            </div>
-            <div className="rounded-2xl border border-gray-200 dark:border-slate-700 p-4 bg-gray-50 dark:bg-slate-800/60">
-              <p className="text-caption text-gray-500 dark:text-slate-400">Route</p>
-              <p className="mt-1 text-heading-3 text-gray-900 dark:text-white">{ROUTES.EASTER}</p>
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <Link
-              to={ROUTES.HOME}
-              state={{ scrollTo: "home" }}
-              className="inline-flex items-center px-4 py-2 rounded-full border border-gray-300 dark:border-slate-700 text-button hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+          <div className="mt-10 flex flex-wrap items-center gap-3">
+            <a
+              href={getCreativeUrl()}
+              className="touch-no-ring h-[3.25rem] px-7 rounded-full bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-[0.9375rem] font-medium inline-flex items-center gap-2 transition-colors hover:bg-volt-ink dark:hover:bg-volt focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-volt-ink dark:focus-visible:outline-volt"
             >
-              Back to Home
-            </Link>
+              {t.easter.enter}
+              <ArrowUpRight className="w-[1.125rem] h-[1.125rem]" strokeWidth={2} aria-hidden="true" />
+            </a>
+            <ViewTransitionLink
+              to={localize(ROUTES.HOME)}
+              state={{ scrollTo: "home" }}
+              className="touch-no-ring h-[3.25rem] px-7 rounded-full border border-gray-300 dark:border-slate-600 text-gray-900 dark:text-slate-200 text-[0.9375rem] font-medium inline-flex items-center gap-2 transition-colors hover:border-volt-ink dark:hover:border-volt hover:text-volt-ink dark:hover:text-volt"
+            >
+              <ArrowLeft className="w-[1.125rem] h-[1.125rem]" strokeWidth={2} aria-hidden="true" />
+              {t.easter.back}
+            </ViewTransitionLink>
           </div>
-        </section>
 
-        <section className="rounded-3xl border border-gray-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/70 px-6 py-8">
-          <pre className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/90 p-4 text-code whitespace-pre-wrap break-words text-gray-700 dark:text-slate-300 overflow-x-auto">
-            {reportBody}
-          </pre>
-        </section>
-      </div>
+          <p className="mt-8 font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400 min-[901px]:hidden">
+            {t.easter.desktopOnly}
+          </p>
+        </div>
+      </section>
     </MainLayout>
   );
 };

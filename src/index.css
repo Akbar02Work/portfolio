@@ -360,6 +360,55 @@
     box-shadow: none !important;
   }
 
+  /* Copy feedback — blur cross-fade + elastic bounce (shared with Creative's email). */
+  .copy-swap {
+    display: inline-grid;
+    transform-origin: var(--copy-origin, center);
+  }
+
+  .copy-swap__face {
+    grid-area: 1 / 1;
+    transition:
+      opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, filter;
+  }
+
+  .copy-swap__face[data-active="false"] {
+    opacity: 0;
+    filter: blur(8px);
+    pointer-events: none;
+  }
+
+  .copy-swap__face[data-active="true"] {
+    opacity: 1;
+    filter: blur(0);
+  }
+
+  @keyframes copy-rubber {
+    0% { transform: scale3d(1, 1, 1); }
+    28% { transform: scale3d(1.07, 0.93, 1); }
+    44% { transform: scale3d(0.95, 1.05, 1); }
+    60% { transform: scale3d(1.025, 0.975, 1); }
+    76% { transform: scale3d(0.992, 1.008, 1); }
+    100% { transform: scale3d(1, 1, 1); }
+  }
+
+  .copy-rubber {
+    animation: copy-rubber 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .copy-swap__face {
+      transition: opacity 0.2s linear;
+      filter: none !important;
+    }
+
+    .copy-rubber {
+      animation: none;
+    }
+  }
+
   .easter-confetti-layer {
     position: fixed;
     inset: 0;

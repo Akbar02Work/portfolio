@@ -6,6 +6,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
  */
 export const useCopyFeedback = <Key extends string>(resetMs = 1800) => {
   const [copiedKey, setCopiedKey] = useState<Key | null>(null);
+  /** Increments on every successful copy (drives the bounce animation). */
+  const [pulse, setPulse] = useState(0);
   const timeoutRef = useRef<number | null>(null);
 
   useEffect(
@@ -23,6 +25,7 @@ export const useCopyFeedback = <Key extends string>(resetMs = 1800) => {
         return false;
       }
       setCopiedKey(key);
+      setPulse((value) => value + 1);
       if (timeoutRef.current !== null) window.clearTimeout(timeoutRef.current);
       timeoutRef.current = window.setTimeout(() => {
         setCopiedKey(null);
@@ -33,5 +36,5 @@ export const useCopyFeedback = <Key extends string>(resetMs = 1800) => {
     [resetMs]
   );
 
-  return { copiedKey, copy };
+  return { copiedKey, copy, pulse };
 };

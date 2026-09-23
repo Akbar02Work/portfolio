@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Moon, Sun, SunMoon } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { useI18n } from "@/i18n/useI18n";
@@ -11,13 +11,32 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
   const menuRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const openAtLastRef = useRef(false);
+  // Hover opens without stealing focus; click/keyboard moves focus into the menu.
+  const focusOnOpenRef = useRef(true);
+  const openedByHoverRef = useRef(false);
+  const hoverCloseTimerRef = useRef<number | null>(null);
 
-  const closeMenu = () => setIsOpen(false);
+  const clearHoverClose = useCallback(() => {
+    if (hoverCloseTimerRef.current !== null) {
+      window.clearTimeout(hoverCloseTimerRef.current);
+      hoverCloseTimerRef.current = null;
+    }
+  }, []);
+
+  const closeMenu = useCallback(() => {
+    clearHoverClose();
+    openedByHoverRef.current = false;
+    setIsOpen(false);
+  }, [clearHoverClose]);
+
+  useEffect(() => clearHoverClose, [clearHoverClose]);
 
   useEffect(() => {
     if (!isOpen) return;
-    const items = menuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]');
-    items?.[openAtLastRef.current ? items.length - 1 : 0]?.focus();
+    if (focusOnOpenRef.current) {
+      const items = menuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]');
+      items?.[openAtLastRef.current ? items.length - 1 : 0]?.focus();
+    }
 
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
@@ -43,7 +62,7 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen]);
+  }, [closeMenu, isOpen]);
 
   const applyTheme = (nextMode: "light" | "dark" | "system") => {
     setTheme(nextMode);
@@ -67,20 +86,49 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
     }`;
 
   return (
-    <div className="relative" onBlur={(event) => {
-      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) closeMenu();
-    }}>
+    <div
+      className="relative"
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) closeMenu();
+      }}
+      onPointerEnter={(event) => {
+        if (event.pointerType !== "mouse") return;
+        clearHoverClose();
+        if (isOpen) return;
+        focusOnOpenRef.current = false;
+        openAtLastRef.current = false;
+        openedByHoverRef.current = true;
+        setIsOpen(true);
+      }}
+      onPointerLeave={(event) => {
+        if (event.pointerType !== "mouse" || !openedByHoverRef.current) return;
+        clearHoverClose();
+        hoverCloseTimerRef.current = window.setTimeout(closeMenu, 220);
+      }}
+    >
       <button
         ref={triggerRef}
         type="button"
         onClick={() => {
           openAtLastRef.current = false;
+          focusOnOpenRef.current = true;
+          if (openedByHoverRef.current) {
+            // Clicking a hover-opened menu pins it instead of closing it.
+            // (Read the ref, not state: the hover update may not be rendered yet.)
+            openedByHoverRef.current = false;
+            clearHoverClose();
+            setIsOpen(true);
+            return;
+          }
+          openedByHoverRef.current = false;
           setIsOpen((prev) => !prev);
         }}
         onKeyDown={(event) => {
           if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
           event.preventDefault();
           openAtLastRef.current = event.key === "ArrowUp";
+          focusOnOpenRef.current = true;
+          openedByHoverRef.current = false;
           setIsOpen(true);
           if (isOpen) {
             const items = menuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]');

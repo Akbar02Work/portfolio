@@ -84,13 +84,28 @@ test("renders and switches theme when browser storage is denied", async ({ page 
   expect(errors).toEqual([]);
 });
 
-test("switches between the two applications on the current host", async ({ page }) => {
+test("three logo clicks unlock Creative mode, which links back to Business", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/");
-  await page.getByRole("link", { name: "Creative", exact: true }).click();
+  const logo = page.locator("nav").getByRole("link").first();
+  for (let click = 0; click < 3; click += 1) await logo.click();
+  await expect(page).toHaveURL("http://127.0.0.1:4173/easter");
+  await expect(page.getByRole("heading", { level: 1, name: "Creative mode" })).toBeVisible();
+  await expect(page.getByText(/changelog/i)).toHaveCount(0);
+
+  await page.getByRole("link", { name: "Enter Creative mode" }).click();
   await expect(page).toHaveURL("http://127.0.0.1:4173/creative/");
   await page.getByRole("link", { name: "Business", exact: true }).click();
   await expect(page).toHaveURL("http://127.0.0.1:4173/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Android Engineer");
+});
+
+test("the Russian easter page keeps the locale", async ({ page }) => {
+  const response = await page.goto("/ru/easter");
+  expect(response?.status()).toBe(200);
+  await expect(page.getByRole("heading", { level: 1, name: "Creative mode" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Открыть Creative mode" })).toBeVisible();
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
 });
 
 test("keeps tablet navigation clear of the logo", async ({ page }) => {
