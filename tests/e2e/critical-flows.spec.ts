@@ -168,3 +168,41 @@ test("persists theme across reload", async ({ page }) => {
   await page.reload();
   await expect(page.locator("html")).toHaveClass(/dark/);
 });
+
+test("hero contact dialog opens, reveals the phone on request and returns focus", async ({ page, context }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.goto("/");
+
+  const trigger = page.locator("#home").getByRole("button", { name: "Contact" });
+  await trigger.click();
+
+  const dialog = page.getByRole("dialog", { name: "Let's talk" });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole("link", { name: /telegram/i })).toHaveAttribute("href", "https://t.me/Akbar02Work");
+  await expect(dialog).not.toContainText("964");
+
+  await dialog.getByRole("button", { name: "Show and copy phone number" }).click();
+  await expect(dialog).toContainText("+998 90 964 67 69");
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe("+998909646769");
+
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
+});
+
+test("contact dialog becomes a bottom sheet on mobile", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+
+  await page.locator("#home").getByRole("button", { name: "Contact" }).click();
+  const dialog = page.getByRole("dialog", { name: "Let's talk" });
+  await expect(dialog).toBeVisible();
+
+  // Poll so the slide-in animation can settle before measuring.
+  await expect
+    .poll(async () => {
+      const box = await dialog.boundingBox();
+      return box ? [Math.round(box.y + box.height), Math.round(box.width)] : null;
+    })
+    .toEqual([844, 390]);
+});

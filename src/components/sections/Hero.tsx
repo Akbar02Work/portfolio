@@ -1,7 +1,7 @@
 import { ArrowUpRight, Download, User } from "lucide-react";
-import { useState, type MouseEvent } from "react";
+import { useState } from "react";
 import { withBase } from "@/lib/urls";
-import { scrollBehavior } from "@/lib/motion";
+import { ContactDialog } from "@/components/contact/ContactDialog";
 import { HERO_PORTRAIT_SIZES, heroPortraitSrcSet } from "@/data/heroPortrait";
 import { eagerPictureRef } from "@/lib/picture";
 
@@ -35,16 +35,6 @@ const NameStroke = () => (
     </svg>
 );
 
-const scrollToContact = (event: MouseEvent<HTMLAnchorElement>) => {
-    // Modified clicks keep the default anchor behaviour.
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    const contact = document.getElementById("contact");
-    if (!contact) return;
-
-    event.preventDefault();
-    contact.scrollIntoView({ behavior: scrollBehavior() });
-};
-
 const HeroText = () => (
     <div className="flex-1 space-y-7 text-center md:text-left">
         <div className="hero-reveal" style={{ animationDelay: "0ms" }}>
@@ -67,14 +57,17 @@ const HeroText = () => (
         </div>
         <div className="hero-reveal" style={{ animationDelay: "200ms" }}>
             <div className="hero-cta flex flex-wrap justify-center md:justify-start gap-3 pt-2">
-                <a
-                    href="#contact"
-                    onClick={scrollToContact}
-                    className={`${ctaBase} bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:bg-volt-ink dark:hover:bg-volt`}
-                >
-                    Contact
-                    <ArrowUpRight className="w-[1.125rem] h-[1.125rem]" strokeWidth={2} aria-hidden="true" />
-                </a>
+                <ContactDialog
+                    trigger={
+                        <button
+                            type="button"
+                            className={`${ctaBase} bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:bg-volt-ink dark:hover:bg-volt`}
+                        >
+                            Contact
+                            <ArrowUpRight className="w-[1.125rem] h-[1.125rem]" strokeWidth={2} aria-hidden="true" />
+                        </button>
+                    }
+                />
                 <a
                     href={withBase("/CV_Akbar_Azizov_Kotlin&Compose_EN.pdf")}
                     download="Akbar_Azizov_CV.pdf"

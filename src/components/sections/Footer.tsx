@@ -4,14 +4,14 @@ import { ANIMATION_DELAYS } from "@/constants/animation.constants";
 import { isAllowedExternalUrl } from "@/lib/externalLinks";
 import { sanitizeUrl } from "@/lib/urlSanitizer";
 import { ArrowUpRight, CircleCheck } from "lucide-react";
+import { CONTACT_AVAILABILITY, CONTACT_EMAIL, contactLinks, footerLinkOrder } from "@/data/contacts";
 
-const EMAIL = "Akbar02work@gmail.com";
+const EMAIL = CONTACT_EMAIL;
 
-const socialLinks = [
-    { href: "https://github.com/Akbar02Work", label: "GitHub" },
-    { href: "https://t.me/Akbar02Work", label: "Telegram" },
-    { href: "https://www.linkedin.com/in/akbar02work", label: "LinkedIn" },
-];
+const socialLinks = footerLinkOrder.flatMap((id) => {
+    const link = contactLinks.find((candidate) => candidate.id === id);
+    return link ? [{ href: link.href, label: link.label }] : [];
+});
 
 const sanitizeSocialLink = (link: (typeof socialLinks)[number]) => {
     const href = sanitizeUrl(link.href);
@@ -69,7 +69,7 @@ export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boole
 
                     <div className="border-t border-neutral-200 dark:border-neutral-800 pt-12 md:pt-16">
                         <p className="font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400 mb-6">
-                            Open to remote opportunities — Tashkent, UTC+5
+                            {CONTACT_AVAILABILITY}
                         </p>
 
                         {/* Giant email — click copies, Cmd/Ctrl+click opens mailto */}
