@@ -208,17 +208,6 @@
 
 @layer utilities {
 
-  /* Hero section mesh gradient — MONO/VOLT: neutral haze + volt tint near the portrait */
-  .hero-gradient {
-    background: radial-gradient(at 82% 18%, hsl(var(--volt) / 0.16) 0, transparent 52%),
-      radial-gradient(at 8% 0%, hsl(var(--muted-foreground) / 0.08) 0, transparent 48%);
-  }
-
-  /* Dark theme: mesh turns muddy — portrait volt glow carries the accent */
-  .dark .hero-gradient {
-    background: none;
-  }
-
   /* Hero section - uses dvh for dynamic viewport and flexbox for content distribution */
   .hero-section {
     min-height: 100dvh;

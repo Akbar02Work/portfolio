@@ -42,7 +42,8 @@ export default {
 		},
 		extend: {
 			fontSize: {				// ── Display Layer ──────────────────────────────────────────
-				'display-hero': ['clamp(2.5rem, 5vw + 1rem, 6rem)', { lineHeight: '1.1', letterSpacing: '-0.03em', fontWeight: '900' }],
+				'display-hero': ['clamp(4rem, 8vw, 8rem)', { lineHeight: '0.95', letterSpacing: '-0.045em', fontWeight: '900' }],
+				'display-role': ['clamp(1.75rem, 2.6vw, 2.75rem)', { lineHeight: '1.15', letterSpacing: '-0.025em', fontWeight: '500' }],
 				'display-404': ['clamp(8.5rem, 30vh, 22rem)', { lineHeight: '0.85', letterSpacing: '-0.02em', fontWeight: '700' }],
 				// ── Heading Layer (High Contrast) ──────────────────────────
 				'heading-1': ['clamp(2.25rem, 4vw + 0.75rem, 3.75rem)', { lineHeight: '1.1', letterSpacing: '-0.025em', fontWeight: '900' }],
