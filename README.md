@@ -61,13 +61,16 @@ at the seams:
   TypeScript, unit tests, production builds, bundle budgets, Creative embed drift,
   and Playwright browser tests run as one CI contract.
 
-The featured cases are:
+The currently published case is:
 
-- [Lumingo](https://www.akbar02work.xyz/projects/lumingo), a language-learning
-  product presented across Android, Web, and an openly in-development iOS client.
 - [VoiceNotes](https://www.akbar02work.xyz/projects/voicenotes), a native Android
   voice-to-notes system that turns short recordings into searchable notes through
   cloud providers or a verified on-device Russian transcription path.
+
+Lumingo's Android, Web, and iOS case data remains in the repository with
+`published: false`. The catalog in `src/data/projectCatalog.ts` controls public
+Business routes, summaries, navigation, the generated sitemap, and Creative case
+visibility. Creative retains its own presentation and the local “This Lab” card.
 
 ## Human direction, AI-assisted execution
 
@@ -94,13 +97,62 @@ docs/history/        Archived design and audit context
 For a local review, use Node.js 24:
 
 ```bash
-npm install
-npm --prefix creative install
+npm ci
+npm --prefix creative ci
 npm run dev:pair
 ```
 
-`npm run ci` runs the fast production gates for both applications.
-`npm run ci:full` adds Playwright.
+`dev:pair` uses ports 5173 and 5174. An occupied port causes startup to fail without
+stopping its owner. `npm run dev:pair:stop` stops only this checkout's supervisor
+and its children.
+
+After changing Creative source or project publication, run `npm run build:creative`
+and include the resulting `public/creative/` output with the source change.
+`npm run check:creative-drift` rebuilds Creative and compares files byte for byte;
+it never refreshes the embed during the check.
+
+`npm run ci` checks both applications, script regressions, the Creative embed,
+and gzip budgets (Business initial JS/CSS and all Creative JS/CSS, each 150 KiB).
+It also builds Business route HTML and `dist/sitemap.xml` from the public catalog.
+`npm run ci:full` adds Chromium E2E; first install it with
+`npx playwright install chromium`. To check other engines, install `firefox webkit`
+and run `npx playwright test --browser=firefox` and `--browser=webkit` after a build.
+
+`npm run test:e2e` builds both applications before running browser checks. Tests
+serve `dist/` using `scripts/serve-static.mjs` and the routing/header rules from
+`vercel.json`, including static 404 responses. This bounded local server is not a
+Vercel emulator; production edge behavior still needs a deployment smoke check.
+`npm run preview` remains the standard Vite preview for interactive development.
+
+For reproducible performance measurements, build first, then run these **serially**
+from the repository root with other browser tests stopped:
+
+```bash
+node scripts/profile-performance.mjs before
+node scripts/profile-interactions.mjs before
+node scripts/profile-navigation.mjs before
+```
+
+Repeat with `after` following a change. The load and navigation labs use Chromium,
+4× CPU slowdown, 150 ms latency, and 1.6 Mbps download; the interaction profiler
+uses unthrottled networking and exports CPU profiles and call counts. Reports go
+to ignored `logs/performance/<label>/`; `PERF_OUTPUT_DIR` overrides the report root.
+Use `PERF_RUNS` for load/navigation repetitions, `PERF_SCENARIOS` for load scenario
+names, and `PERF_ROUTES` for interaction routes. `PORTFOLIO_DIST_DIR` and
+`PORTFOLIO_CONFIG` select saved build/config snapshots for an A/B check. Lab ports
+are 4180, 4181, and 4182. Gzip delivery is enabled only for these lab servers.
+`PERF_FLOW=projects node scripts/profile-navigation.mjs after` measures opening
+the case study and returning to the list, including completion of the curtain.
+
+These are local comparisons, not Lighthouse scores or real-device INP/FPS.
+The [performance report](docs/audits/2026-09-05-performance-optimization.md)
+defines the metrics, trade-offs, and measured before/after results.
+
+Critical images are preloaded by route using the same responsive portrait sizes
+as the React view. The phone bezel has a 512 px WebP variant; regenerate it with
+`npm run optimize:images -- --phone-frame`. Vercel caches unversioned fonts,
+portraits, project images, and mockups for one day (rename an asset for an immediate refresh), while hashed
+JS/CSS retain their immutable cache policy. HTML receives no long-lived override.
 
 ## License
 

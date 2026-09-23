@@ -12,7 +12,6 @@
   --font-loud: "Bebas Neue", "Syne", system-ui, sans-serif;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --pad-x: clamp(1.1rem, 4vw, 2.75rem);
-  --scroll: 0;
   color-scheme: dark;
 }
 
@@ -316,7 +315,7 @@ img {
   font-variant-numeric: tabular-nums;
 }
 
-.preloader__count span {
+.preloader__count span:last-child {
   color: var(--signal);
 }
 
@@ -328,7 +327,8 @@ img {
 
 .preloader__bar-fill {
   height: 100%;
-  width: 0%;
+  width: 100%;
+  transform: scaleX(0);
   background: var(--signal);
   transform-origin: left center;
 }
@@ -1429,6 +1429,28 @@ img {
 
 /* ——— Reduced motion ——— */
 @media (prefers-reduced-motion: reduce) {
+  .works__pin {
+    height: auto;
+    overflow: visible;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  .works__track {
+    width: 100%;
+    flex-direction: column;
+    padding: 0;
+  }
+
+  .work-card {
+    flex: none;
+    max-width: 100%;
+  }
+
+  .works__hint--desktop {
+    display: none;
+  }
+
   .nav__status-dot {
     animation: none;
   }

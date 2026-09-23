@@ -1,14 +1,16 @@
 import { useEffect, useLayoutEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
+import { PageSeo } from "@/components/PageSeo";
 import { Hero } from "@/components/sections/Hero";
 import { TechStack } from "@/components/sections/TechStack";
 import { About } from "@/components/sections/About";
 import { Projects } from "@/components/sections/Projects";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { projectsSummary } from "@/data/projectsSummary";
+import { useReloadScroll } from "@/hooks/useReloadScroll";
 
 const Index = () => {
+  useReloadScroll();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -23,8 +25,7 @@ const Index = () => {
     } else {
       const element = document.getElementById(scrollTo);
       if (element) {
-        const top = element.getBoundingClientRect().top + window.scrollY;
-        window.scrollTo(0, Math.max(0, top));
+        element.scrollIntoView({ behavior: "instant" });
       }
     }
 
@@ -68,13 +69,7 @@ const Index = () => {
       variant="home"
       className="bg-background text-gray-900 dark:text-slate-100 antialiased overflow-x-clip font-sans"
     >
-      <Helmet>
-        <title>Akbar — Android Engineer · Founder of Lumingo</title>
-        <meta
-          name="description"
-          content="I build native Android apps and AI-powered products — from architecture and offline recovery to release."
-        />
-      </Helmet>
+      <PageSeo />
       <Hero />
       <TechStack />
       <Projects projects={projectsSummary} />

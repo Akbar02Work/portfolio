@@ -125,6 +125,8 @@ export function PageTransitionLink({
         onClick?.(event);
         if (
           !viewTransition ||
+          rest.reloadDocument ||
+          (rest.target && rest.target !== "_self") ||
           event.defaultPrevented ||
           event.button !== 0 ||
           event.metaKey ||

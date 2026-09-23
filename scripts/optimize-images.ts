@@ -82,7 +82,15 @@ const optimizeImage = async (sourcePath: string): Promise<void> => {
   console.log(`${relativeSource}: ${sizes.join(", ")}`);
 };
 
-const images = await collectRasterImages(publicDirectory);
+const optimizePhoneFrame = async () => {
+  const source = path.join(publicDirectory, "mockups/android-phone-frame.png");
+  const output = path.join(publicDirectory, "mockups/android-phone-frame-512.webp");
+  const buffer = await sharp(source).resize({ width: 512 }).webp({ quality: 90, effort: 6 }).toBuffer();
+  await writeFile(output, buffer);
+  console.log(`Responsive phone frame: ${formatBytes(buffer.length)}`);
+};
+
+const images = process.argv.includes("--phone-frame") ? [] : await collectRasterImages(publicDirectory);
 
 if (images.length === 0) {
   console.log("No raster images found to optimize.");
@@ -92,3 +100,5 @@ if (images.length === 0) {
   }
   console.log(`Optimized ${images.length} raster images; original files preserved.`);
 }
+
+await optimizePhoneFrame();

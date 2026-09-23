@@ -5,7 +5,6 @@ const businessUrl = getBusinessUrl();
 const PROJECT_CATALOG = [
   {
     id: "lumingo",
-    published: false,
     index: "01",
     name: "Lumingo",
     glyph: "LU",
@@ -17,7 +16,6 @@ const PROJECT_CATALOG = [
   },
   {
     id: "voicenotes",
-    published: true,
     index: "02",
     name: "VoiceNotes",
     glyph: "VN",
@@ -29,7 +27,6 @@ const PROJECT_CATALOG = [
   },
   {
     id: "signal",
-    published: true,
     index: "03",
     name: "This Lab",
     glyph: "110",
@@ -41,7 +38,12 @@ const PROJECT_CATALOG = [
   },
 ] as const;
 
-export const PROJECTS = PROJECT_CATALOG.filter((project) => project.published).map(
+export const PROJECTS = PROJECT_CATALOG.filter((project) =>
+  project.id === "signal" || __PUBLIC_PROJECT_SLUGS__.includes(project.id)
+).sort((left, right) => {
+  const order = (id: string) => id === "signal" ? __PUBLIC_PROJECT_SLUGS__.length : __PUBLIC_PROJECT_SLUGS__.indexOf(id);
+  return order(left.id) - order(right.id);
+}).map(
   (project, index) => ({
     ...project,
     index: String(index + 1).padStart(2, "0"),

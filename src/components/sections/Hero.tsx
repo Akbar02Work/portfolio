@@ -1,6 +1,8 @@
 import { Download, User } from "lucide-react";
 import { useState } from "react";
 import { withBase } from "@/lib/urls";
+import { HERO_PORTRAIT_SIZES, heroPortraitSrcSet } from "@/data/heroPortrait";
+import { eagerPictureRef } from "@/lib/picture";
 
 const HeroText = () => (
     <div className="flex-1 space-y-5 text-center md:text-left">
@@ -47,7 +49,7 @@ const HeroText = () => (
                 <a
                     href={withBase("/CV_Akbar_Azizov_Kotlin&Compose_EN.pdf")}
                     download="Akbar_Azizov_CV.pdf"
-                    className="touch-no-ring select-none h-[3.25rem] px-7 sm:px-8 bg-transparent border border-gray-900 dark:border-slate-500 text-gray-900 dark:text-slate-200 text-[0.9375rem] font-medium rounded-full hover:border-volt-ink dark:hover:border-volt hover:text-volt-ink dark:hover:text-volt transition-colors flex items-center justify-center gap-2 focus:outline-none focus-visible:outline-none"
+                    className="touch-no-ring select-none h-[3.25rem] px-7 sm:px-8 bg-transparent border border-gray-900 dark:border-slate-500 text-gray-900 dark:text-slate-200 text-[0.9375rem] font-medium rounded-full hover:border-volt-ink dark:hover:border-volt hover:text-volt-ink dark:hover:text-volt transition-colors flex items-center justify-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
                 >
                     Download CV
                     <Download className="w-[1.125rem] h-[1.125rem]" strokeWidth={2} />
@@ -62,11 +64,9 @@ const highFetchPriority = { fetchpriority: "high" };
 const HeroPortrait = () => {
     const [imageError, setImageError] = useState(false);
     const avatarSrc = withBase("/avatar.png");
-    const avatarSrc320 = withBase("/avatar-320.png");
-    const avatarSrc480 = withBase("/avatar-480.png");
     // Prefer PNG/WebP for the face — AVIF was over-compressing skin detail.
-    const avatarWebpSrcSet = `${withBase("/avatar-320.webp")} 320w, ${withBase("/avatar-480.webp")} 480w, ${withBase("/avatar.webp")} 586w`;
-    const avatarSizes = "(min-width: 1024px) 400px, (min-width: 768px) 40vw, 80vw";
+    const avatarWebpSrcSet = heroPortraitSrcSet("webp", import.meta.env.BASE_URL);
+    const avatarSizes = HERO_PORTRAIT_SIZES;
 
     return (
         <div className="hero-reveal flex-1 flex justify-center md:justify-end relative" style={{ animationDelay: "260ms" }}>
@@ -87,14 +87,15 @@ const HeroPortrait = () => {
                     <picture>
                         <source srcSet={avatarWebpSrcSet} sizes={avatarSizes} type="image/webp" />
                         <img
-                            src={avatarSrc}
-                            srcSet={`${avatarSrc320} 320w, ${avatarSrc480} 480w, ${avatarSrc} 586w`}
+                            loading="lazy"
+                            ref={eagerPictureRef}
                             sizes={avatarSizes}
+                            srcSet={heroPortraitSrcSet("png", import.meta.env.BASE_URL)}
+                            src={avatarSrc}
                             alt="Akbar Azizov"
                             width={586}
                             height={934}
                             {...highFetchPriority}
-                            loading="eager"
                             decoding="async"
                             draggable="false"
                             onError={() => setImageError(true)}

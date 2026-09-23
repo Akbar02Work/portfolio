@@ -7,6 +7,7 @@ export interface PrerenderRoute {
   title: string;
   description: string;
   image: string;
+  preloadImage?: { src: string; type?: string; srcSet?: string; sizes?: string };
 }
 
 interface PrerenderOptions {
@@ -98,13 +99,23 @@ const renderRouteHtml = (
     `  <meta name="twitter:title" content="${escapeHtml(route.title)}" />`,
     `  <meta name="twitter:description" content="${escapeHtml(route.description)}" />`,
     `  <meta name="twitter:image" content="${escapeHtml(imageUrl)}" />`,
-  ].join("\n");
+  ].map((tag) => tag.replace(/^ {2}<(meta|link)\b/, '  <$1 data-rh="true"')).join("\n");
+  const preload = route.preloadImage;
+  // Omit href for responsive hints: older WebKit scanners fetch it in addition to imagesrcset.
+  const imageHint = preload ? [
+    '\n  <link rel="preload" as="image"',
+    preload.srcSet ? "" : ` href="${escapeHtml(preload.src)}"`,
+    preload.type ? ` type="${escapeHtml(preload.type)}"` : "",
+    preload.srcSet ? ` imagesrcset="${escapeHtml(preload.srcSet)}"` : "",
+    preload.sizes ? ` imagesizes="${escapeHtml(preload.sizes)}"` : "",
+    " />",
+  ].join("") : "";
 
   if (!withoutRouteSeo.includes("</head>")) {
     throw new Error("Cannot prerender routes: dist/index.html has no </head> tag");
   }
 
-  return withoutRouteSeo.replace("</head>", `${tags}\n</head>`);
+  return withoutRouteSeo.replace("</head>", `${tags}${imageHint}\n</head>`);
 };
 
 const routeOutputPath = (outDir: string, routePath: string): string =>
@@ -137,6 +148,15 @@ export const prerenderRoutes = ({ siteUrl, routes }: PrerenderOptions): Plugin =
             "utf8"
           );
         })
+      );
+
+      const sitemapUrls = [...routes.map((route) => route.path), "/creative/"];
+      await writeFile(
+        path.join(outDir, "sitemap.xml"),
+        `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapUrls
+          .map((routePath) => `  <url><loc>${escapeHtml(new URL(routePath, normalizedSiteUrl).href)}</loc></url>`)
+          .join("\n")}\n</urlset>\n`,
+        "utf8"
       );
 
       resolvedConfig.logger.info(

@@ -15,6 +15,16 @@ type Props = {
   onNavClick: (event: MouseEvent<HTMLAnchorElement>, id: string) => void;
 };
 
+function BrandBlink() {
+  const blink = useBlink();
+  return <em className={blink ? "is-on" : "is-off"}>_</em>;
+}
+
+function PortraitClock() {
+  const clock = useTashkentClock();
+  return <span className="about__portrait-clock-time">{clock || "—:—:—"}</span>;
+}
+
 export function PortfolioPage({
   ready,
   reveal,
@@ -22,8 +32,6 @@ export function PortfolioPage({
   onCopyEmail,
   onNavClick,
 }: Props) {
-  const clock = useTashkentClock();
-  const blink = useBlink();
   const businessUrl = getBusinessUrl();
 
   return (
@@ -37,7 +45,7 @@ export function PortfolioPage({
           onClick={(event) => onNavClick(event, "top")}
         >
           aka
-          <em className={blink ? "is-on" : "is-off"}>_</em>
+          <BrandBlink />
           /signal
         </a>
         <nav className="nav__links" aria-label="Primary">
@@ -295,7 +303,7 @@ export function PortfolioPage({
                   <span>Android Engineer · Product Builder</span>
                 </div>
                 <div className="about__portrait-clock">
-                  <span className="about__portrait-clock-time">{clock || "—:—:—"}</span>
+                  <PortraitClock />
                   <span className="about__portrait-clock-zone">Tashkent · UTC+5</span>
                 </div>
               </div>
@@ -353,6 +361,7 @@ export function PortfolioPage({
           <a
             className="contact__email"
             href="mailto:akbar02work@gmail.com"
+            aria-label={emailCopied ? "Email address copied to clipboard" : "Copy email address akbar02work@gmail.com"}
             data-cursor="hover"
             data-cursor-label={emailCopied ? "Done" : "Copy"}
             data-reveal
@@ -363,6 +372,7 @@ export function PortfolioPage({
                 className={`contact__email-face contact__email-face--copied${
                   emailCopied ? " is-active" : ""
                 }`}
+                aria-hidden={!emailCopied}
               >
                 Copied to clipboard ✓
               </span>
@@ -370,6 +380,7 @@ export function PortfolioPage({
                 className={`contact__email-face contact__email-face--address${
                   emailCopied ? "" : " is-active"
                 }`}
+                aria-hidden={emailCopied}
               >
                 akbar02work@gmail.com
               </span>

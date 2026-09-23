@@ -1,7 +1,6 @@
 import type {
   Dispatch,
   MouseEventHandler,
-  RefObject,
   SetStateAction,
 } from "react";
 import { ChevronRight, Menu, X } from "lucide-react";
@@ -29,8 +28,6 @@ type MobileMenuProps = {
   setMobileMenuOpen: Dispatch<SetStateAction<boolean>>;
   mobileProjectsOpen: boolean;
   setMobileProjectsOpen: Dispatch<SetStateAction<boolean>>;
-  mobileProjectsHeight: number;
-  mobileProjectsContentRef: RefObject<HTMLDivElement>;
   projectMenu: ProjectSummary[];
 };
 
@@ -43,11 +40,9 @@ export const MobileMenu = ({
   setMobileMenuOpen,
   mobileProjectsOpen,
   setMobileProjectsOpen,
-  mobileProjectsHeight,
-  mobileProjectsContentRef,
   projectMenu,
 }: MobileMenuProps) => (
-  <div className="flex items-center gap-2 md:hidden">
+  <div className="flex items-center gap-2 min-[901px]:hidden">
     <Sheet open={mobileMenuOpen} onOpenChange={(open) => {
       setMobileMenuOpen(open);
       if (!open) {
@@ -143,32 +138,31 @@ export const MobileMenu = ({
                   <div
                     id="mobile-project-links"
                     aria-hidden={!mobileProjectsOpen}
-                    className="overflow-hidden transition-all duration-300 ease-in-out"
+                    className="grid transition-[grid-template-rows,opacity] duration-300 ease-in-out"
                     style={{
-                      maxHeight: mobileProjectsOpen
-                        ? `${mobileProjectsHeight}px`
-                        : "0",
+                      gridTemplateRows: mobileProjectsOpen ? "1fr" : "0fr",
                       opacity: mobileProjectsOpen ? 1 : 0,
                     }}
                   >
-                    <div
-                      ref={mobileProjectsContentRef}
-                      className="pl-[clamp(1.5rem,6vw,3rem)] pt-[clamp(0.1rem,0.5vh,0.5rem)] pb-[clamp(0.25rem,1vh,1rem)] flex flex-col gap-[clamp(0.2rem,0.5vh,0.5rem)]"
-                    >
-                      {projectMenu.map((project) => (
-                        <Link
-                          key={project.slug}
-                          to={buildProjectUrl(project.slug)}
-                          onClick={() => {
-                            setMobileMenuOpen(false);
-                            setMobileProjectsOpen(false);
-                          }}
-                          tabIndex={mobileProjectsOpen ? 0 : -1}
-                          className="text-[clamp(1rem,3vh,1.5rem)] text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-colors py-[clamp(0.25rem,1vh,0.75rem)]"
-                        >
-                          {project.title}
-                        </Link>
-                      ))}
+                    <div className="min-h-0 overflow-hidden">
+                      <div
+                        className="pl-[clamp(1.5rem,6vw,3rem)] pt-[clamp(0.1rem,0.5vh,0.5rem)] pb-[clamp(0.25rem,1vh,1rem)] flex flex-col gap-[clamp(0.2rem,0.5vh,0.5rem)]"
+                      >
+                        {projectMenu.map((project) => (
+                          <Link
+                            key={project.slug}
+                            to={buildProjectUrl(project.slug)}
+                            onClick={() => {
+                              setMobileMenuOpen(false);
+                              setMobileProjectsOpen(false);
+                            }}
+                            tabIndex={mobileProjectsOpen ? 0 : -1}
+                            className="text-[clamp(1rem,3vh,1.5rem)] text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-colors py-[clamp(0.25rem,1vh,0.75rem)]"
+                          >
+                            {project.title}
+                          </Link>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}

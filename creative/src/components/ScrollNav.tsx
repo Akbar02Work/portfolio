@@ -1,15 +1,16 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type MutableRefObject } from "react";
 import { SECTIONS } from "../siteData";
 
 type Props = {
   onJump: (id: string) => void;
+  scrollRef: MutableRefObject<number>;
 };
 
 /**
  * Unified right-rail: section stops sit on a shared spine,
  * scroll fill travels through them, readout lives at the foot.
  */
-export function ScrollNav({ onJump }: Props) {
+export function ScrollNav({ onJump, scrollRef }: Props) {
   const rootRef = useRef<HTMLElement>(null);
   const fillRef = useRef<HTMLDivElement>(null);
   const headRef = useRef<HTMLSpanElement>(null);
@@ -28,10 +29,7 @@ export function ScrollNav({ onJump }: Props) {
 
     const update = () => {
       raf = 0;
-      const raw = getComputedStyle(document.documentElement)
-        .getPropertyValue("--scroll")
-        .trim();
-      const progress = Math.min(1, Math.max(0, Number(raw) || 0));
+      const progress = Math.min(1, Math.max(0, scrollRef.current));
 
       // Active = last section whose top has crossed the upper probe.
       // Works for short sections (01 Manifesto) when scrolling up or down.
@@ -47,6 +45,8 @@ export function ScrollNav({ onJump }: Props) {
         lastActive = active;
         buttons.forEach((btn, i) => {
           btn.classList.toggle("is-active", i === active);
+          if (i === active) btn.setAttribute("aria-current", "location");
+          else btn.removeAttribute("aria-current");
         });
       }
 
@@ -82,7 +82,7 @@ export function ScrollNav({ onJump }: Props) {
       window.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleUpdate);
     };
-  }, []);
+  }, [scrollRef]);
 
   return (
     <nav className="scroll-nav" ref={rootRef} aria-label="Section navigation">

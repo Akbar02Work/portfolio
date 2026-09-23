@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Helmet } from "react-helmet-async";
+import { PageSeo } from "@/components/PageSeo";
 import { useParams, useSearchParams } from "react-router-dom";
 import { MainLayout } from "@/components/layout/MainLayout";
 import ProjectGallery from "@/components/project/ProjectGallery";
@@ -11,7 +11,6 @@ import { ROUTES } from "@/constants/routes";
 import { fallbackProjectStyle, projectStylesBySlug } from "@/constants/projectStyles";
 import { projects, resolveProjectPlatform } from "@/data/projects";
 import type { ProjectPlatformId } from "@/data/projectCatalog";
-import { toAbsoluteUrl } from "@/lib/urls";
 import { ViewTransitionLink } from "@/hooks/usePageTransition";
 
 const DEFAULT_TITLE = "Akbar — Android & AI Engineer";
@@ -55,12 +54,10 @@ const ProjectDetail = () => {
       : "Project not found | Akbar Azizov";
   const pageDescription =
     projectView && !hasPlaceholderContent ? projectView.summary : DEFAULT_DESCRIPTION;
-  const pageUrl = typeof window !== "undefined" ? window.location.href : "";
-  const pageImage = toAbsoluteUrl(
+  const pageImage =
     projectView && !hasPlaceholderContent && projectView.image
       ? projectView.image
-      : "/og-image.png"
-  );
+      : "/og-image.png";
   const selectPlatform = (platform: ProjectPlatformId) => {
     const nextParams = new URLSearchParams(searchParams);
     nextParams.set("platform", platform);
@@ -72,23 +69,12 @@ const ProjectDetail = () => {
       variant="detail"
       className="bg-background text-gray-900 dark:text-white"
     >
-      <Helmet>
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDescription} />
-        <meta
-          name="robots"
-          content={projectData ? "index, follow" : "noindex, nofollow"}
-        />
-        <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content={pageDescription} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={pageUrl} />
-        <meta property="og:image" content={pageImage} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={pageTitle} />
-        <meta name="twitter:description" content={pageDescription} />
-        <meta name="twitter:image" content={pageImage} />
-      </Helmet>
+      <PageSeo
+        title={pageTitle}
+        description={pageDescription}
+        image={pageImage}
+        noIndex={!projectData}
+      />
 
       <div data-project-detail>
         {projectData && projectView ? (

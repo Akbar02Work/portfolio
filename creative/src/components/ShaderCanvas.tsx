@@ -132,9 +132,10 @@ export function ShaderCanvas({ scrollRef }: Props) {
       gl.STATIC_DRAW,
     );
 
-    const bindQuad = (program: WebGLProgram) => {
+    const trailPosition = gl.getAttribLocation(trailProg, "position");
+    const displayPosition = gl.getAttribLocation(displayProg, "position");
+    const bindQuad = (program: WebGLProgram, posLoc: number) => {
       gl.useProgram(program);
-      const posLoc = gl.getAttribLocation(program, "position");
       gl.enableVertexAttribArray(posLoc);
       gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
     };
@@ -247,9 +248,10 @@ export function ShaderCanvas({ scrollRef }: Props) {
       const fade = trailFade(scroll);
       const m = mouseRef.current;
 
-      if (readFbo && writeFbo) {
+      // An untouched, cleared trail stays exactly zero; no simulation is needed yet.
+      if (pointerSeen && readFbo && writeFbo) {
         // --- Trail update ---
-        bindQuad(trailProg);
+        bindQuad(trailProg, trailPosition);
         gl.bindFramebuffer(gl.FRAMEBUFFER, writeFbo.fbo);
         gl.viewport(0, 0, trailW, trailH);
         gl.activeTexture(gl.TEXTURE0);
@@ -275,7 +277,7 @@ export function ShaderCanvas({ scrollRef }: Props) {
       }
 
       // --- Display ---
-      bindQuad(displayProg);
+      bindQuad(displayProg, displayPosition);
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.uniform1f(dTime, t);

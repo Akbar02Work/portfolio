@@ -1,11 +1,13 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { gzipSync } from "node:zlib";
 
 const MAX_INITIAL_PAYLOAD_KB = Number(
   process.env.MAX_BUNDLE_SIZE_KB ?? 150
 );
-const distDir = path.resolve(process.cwd(), "dist");
+const distDir = path.resolve(process.cwd(), process.argv[2] ?? "dist");
+const checkAll = process.argv.includes("--all");
+const payloadLabel = checkAll ? "Complete JS/CSS payload" : "Initial payload";
 const indexPath = path.join(distDir, "index.html");
 const assetsDir = path.join(distDir, "assets");
 
@@ -25,7 +27,7 @@ const assetReferences = Array.from(
   indexHtml.matchAll(/<(?:script|link)\b[^>]*(?:src|href)="([^"]+)"[^>]*>/g),
   (match) => match[1]
 );
-const initialAssetFiles = [
+const initialAssetFiles = checkAll ? readdirSync(assetsDir).filter((file) => /\.(?:js|css)$/.test(file)) : [
   ...new Set(
     assetReferences
       .filter((reference) => /\/assets\/.*\.(?:js|css)(?:\?.*)?$/.test(reference))
@@ -59,21 +61,21 @@ const initialPayloadKb = initialAssets.reduce(
   0
 );
 
-console.log("Initial payload assets (raw / gzip):");
+console.log(`${payloadLabel} assets (raw / gzip):`);
 for (const asset of initialAssets) {
   console.log(
     ` - ${asset.file}: ${asset.rawSizeKb.toFixed(2)} KB / ${asset.gzipSizeKb.toFixed(2)} KB`
   );
 }
-console.log(`Total initial payload (gzip): ${initialPayloadKb.toFixed(2)} KB`);
+console.log(`${payloadLabel} total (gzip): ${initialPayloadKb.toFixed(2)} KB`);
 
 if (initialPayloadKb > MAX_INITIAL_PAYLOAD_KB) {
   console.error(
-    `\nInitial payload budget exceeded: ${initialPayloadKb.toFixed(2)} KB > ${MAX_INITIAL_PAYLOAD_KB.toFixed(2)} KB.`
+    `\n${payloadLabel} budget exceeded: ${initialPayloadKb.toFixed(2)} KB > ${MAX_INITIAL_PAYLOAD_KB.toFixed(2)} KB.`
   );
   process.exit(1);
 }
 
 console.log(
-  `\nInitial payload budget OK: ${initialPayloadKb.toFixed(2)} KB <= ${MAX_INITIAL_PAYLOAD_KB.toFixed(2)} KB.`
+  `\n${payloadLabel} budget OK: ${initialPayloadKb.toFixed(2)} KB <= ${MAX_INITIAL_PAYLOAD_KB.toFixed(2)} KB.`
 );

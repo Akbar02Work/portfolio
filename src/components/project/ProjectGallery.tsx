@@ -78,6 +78,12 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                 scrollAnimFrameRef.current = null;
             }
 
+            if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                el.scrollLeft = nextLeft;
+                animatingToRef.current = null;
+                return;
+            }
+
             const startLeft = el.scrollLeft;
             const delta = nextLeft - startLeft;
             if (Math.abs(delta) < 0.5) {
@@ -439,57 +445,6 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
         animateToLoopIndex(target);
     };
 
-    const stepRef = useRef(step);
-    stepRef.current = step;
-
-    const sectionRef = useRef<HTMLElement>(null);
-    const galleryInViewRef = useRef(false);
-
-    useEffect(() => {
-        const section = sectionRef.current;
-        if (!section || total === 0) return;
-
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                galleryInViewRef.current = Boolean(entry?.isIntersecting);
-            },
-            { threshold: 0.25 }
-        );
-        observer.observe(section);
-
-        const onKeyDown = (event: KeyboardEvent) => {
-            if (!galleryInViewRef.current) return;
-            if (event.metaKey || event.ctrlKey || event.altKey) return;
-
-            const target = event.target as HTMLElement | null;
-            if (
-                target &&
-                (target.tagName === "INPUT" ||
-                    target.tagName === "TEXTAREA" ||
-                    target.tagName === "SELECT" ||
-                    target.isContentEditable)
-            ) {
-                return;
-            }
-
-            if (event.key === "ArrowLeft") {
-                event.preventDefault();
-                stepRef.current(-1);
-                return;
-            }
-            if (event.key === "ArrowRight") {
-                event.preventDefault();
-                stepRef.current(1);
-            }
-        };
-
-        window.addEventListener("keydown", onKeyDown);
-        return () => {
-            observer.disconnect();
-            window.removeEventListener("keydown", onKeyDown);
-        };
-    }, [total]);
-
     if (total === 0) {
         return (
             <section className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-16 md:pb-24">
@@ -507,7 +462,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
     }
 
     return (
-        <section ref={sectionRef} className="pb-16 md:pb-24">
+        <section className="pb-16 md:pb-24">
             <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
                 <div className="border-t border-neutral-200 dark:border-neutral-800 pt-12 md:pt-16">
                 <div className="flex items-end justify-between gap-6 mb-8 md:mb-10">
@@ -524,7 +479,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                             <span className="mx-1.5 text-neutral-300 dark:text-neutral-600">/</span>
                             {String(total).padStart(2, "0")}
                         </p>
-                        <div className="flex items-center gap-2">
+                        {total > 1 && <div className="flex items-center gap-2">
                             <button
                                 type="button"
                                 onClick={() => step(-1)}
@@ -541,7 +496,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                             >
                                 <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
                             </button>
-                        </div>
+                        </div>}
                     </div>
                 </div>
                 </div>
@@ -560,8 +515,10 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                 <div
                     ref={scrollerRef}
                     tabIndex={0}
+                    role="region"
                     aria-label="Project screens carousel"
                     onKeyDown={(event) => {
+                        if (event.metaKey || event.ctrlKey || event.altKey || event.defaultPrevented) return;
                         if (event.key === "ArrowLeft") {
                             event.preventDefault();
                             step(-1);
@@ -582,13 +539,15 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                 >
                     {loopedScreens.map((screen) => {
                         const isActive = screen.loopIndex === activeLoopIndex;
+                        const isBuffer = total > 1 && (screen.loopIndex < middleStart || screen.loopIndex >= middleStart + total);
                         return (
                             <figure
                                 key={screen.loopKey}
                                 data-loop-index={screen.loopIndex}
                                 data-real-index={screen.realIndex}
                                 role="button"
-                                tabIndex={0}
+                                tabIndex={isActive && !isBuffer ? 0 : -1}
+                                aria-hidden={isBuffer}
                                 aria-label={`Show screen ${screen.realIndex + 1}`}
                                 aria-pressed={isActive}
                                 onClick={() => focusLoopIndex(screen.loopIndex)}

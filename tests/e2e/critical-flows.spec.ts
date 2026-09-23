@@ -49,10 +49,14 @@ test("restores scroll after reload", async ({ page }) => {
   await page.evaluate(() => {
     window.scrollTo(0, 900);
   });
-  await page.waitForTimeout(120);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(800);
 
-  await page.reload();
-  await page.waitForTimeout(120);
+  // Exercise native reload: Firefox's automation reload can create a navigation entry.
+  await Promise.all([
+    page.waitForEvent("load"),
+    page.evaluate(() => window.location.reload()),
+  ]);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(400);
 
   const scrollY = await page.evaluate(() => window.scrollY);
   expect(scrollY).toBeGreaterThan(400);
@@ -95,7 +99,9 @@ test("rapid scroll reaches the footer without collapsing document height", async
   })).toBe(true);
 
   const initialHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+  // Firefox caps a single wheel delta. End still exercises one rapid jump to the footer.
   await page.mouse.wheel(0, initialHeight * 2);
+  await page.keyboard.press("End");
 
   await expect
     .poll(() =>

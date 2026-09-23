@@ -8,11 +8,14 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
   const menuId = useId();
   const menuRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const openAtLastRef = useRef(false);
 
   const closeMenu = () => setIsOpen(false);
 
   useEffect(() => {
     if (!isOpen) return;
+    const items = menuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]');
+    items?.[openAtLastRef.current ? items.length - 1 : 0]?.focus();
 
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
@@ -43,6 +46,7 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
   const applyTheme = (nextMode: "light" | "dark" | "system") => {
     setTheme(nextMode);
     closeMenu();
+    triggerRef.current?.focus();
   };
 
   const triggerIcon =
@@ -61,11 +65,26 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
     }`;
 
   return (
-    <div className="relative">
+    <div className="relative" onBlur={(event) => {
+      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) closeMenu();
+    }}>
       <button
         ref={triggerRef}
         type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={() => {
+          openAtLastRef.current = false;
+          setIsOpen((prev) => !prev);
+        }}
+        onKeyDown={(event) => {
+          if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+          event.preventDefault();
+          openAtLastRef.current = event.key === "ArrowUp";
+          setIsOpen(true);
+          if (isOpen) {
+            const items = menuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]');
+            items?.[openAtLastRef.current ? items.length - 1 : 0]?.focus();
+          }
+        }}
         aria-label="Select theme"
         aria-haspopup="menu"
         aria-expanded={isOpen}
@@ -79,6 +98,18 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
         id={menuId}
         ref={menuRef}
         role="menu"
+        onKeyDown={(event) => {
+          const items = Array.from(event.currentTarget.querySelectorAll<HTMLElement>('[role="menuitem"]'));
+          const index = items.indexOf(document.activeElement as HTMLElement);
+          let nextIndex: number;
+          if (event.key === "ArrowDown") nextIndex = (index + 1) % items.length;
+          else if (event.key === "ArrowUp") nextIndex = (index - 1 + items.length) % items.length;
+          else if (event.key === "Home") nextIndex = 0;
+          else if (event.key === "End") nextIndex = items.length - 1;
+          else return;
+          event.preventDefault();
+          items[nextIndex]?.focus();
+        }}
         aria-hidden={!isOpen}
         className={`absolute right-0 z-50 w-36 rounded-2xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-black/80 backdrop-blur-3xl shadow-2xl shadow-black/10 dark:shadow-black/40 transition-all duration-200 ease-out overflow-hidden before:content-[''] before:absolute before:left-0 before:h-6 before:w-full before:bg-white/80 dark:before:bg-black/80 before:backdrop-blur-2xl ${direction === "down"
           ? "top-full mt-5 before:-top-6"

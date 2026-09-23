@@ -2,6 +2,8 @@ import type { ProjectStyle } from "@/constants/projectStyles";
 import { ANDROID_PHONE_FRAME } from "@/constants/phoneMockup";
 import type { ProjectMediaType } from "@/data/projectCatalog";
 import { withBase } from "@/lib/urls";
+import { eagerPictureRef } from "@/lib/picture";
+import { useState } from "react";
 
 interface ProjectMediaFrameProps {
   image: string;
@@ -26,12 +28,13 @@ const Screenshot = ({
   alt: string;
   priority: boolean;
 }) => {
+  const [useOriginal, setUseOriginal] = useState(false);
   if (/\.svg$/i.test(image)) {
     return (
       <img
+        loading={priority ? "eager" : "lazy"}
         src={withBase(image)}
         alt={alt}
-        loading={priority ? "eager" : "lazy"}
         decoding="async"
         draggable={false}
         className="absolute inset-0 h-full w-full object-cover"
@@ -42,12 +45,14 @@ const Screenshot = ({
   const sourceBase = toSourceBase(image);
   return (
     <picture>
-      <source srcSet={`${sourceBase}.avif`} type="image/avif" />
-      <source srcSet={`${sourceBase}.webp`} type="image/webp" />
+      {!useOriginal && <source srcSet={`${sourceBase}.avif`} type="image/avif" />}
+      {!useOriginal && <source srcSet={`${sourceBase}.webp`} type="image/webp" />}
       <img
-        src={`${sourceBase}.png`}
+        loading="lazy"
+        ref={priority ? eagerPictureRef : undefined}
+        src={withBase(image)}
+        onError={() => setUseOriginal(true)}
         alt={alt}
-        loading={priority ? "eager" : "lazy"}
         decoding="async"
         draggable={false}
         className="absolute inset-0 h-full w-full object-cover"
@@ -104,7 +109,7 @@ const BrowserFrame = ({
         className={`relative mx-auto aspect-[16/10] overflow-hidden rounded-2xl border border-neutral-300 bg-white shadow-xl dark:border-neutral-700 dark:bg-neutral-950 ${className ?? "w-full max-w-3xl"}`}
       >
         {hasImage ? (
-          <Screenshot image={image} alt={alt} priority={priority} />
+          <Screenshot key={image} image={image} alt={alt} priority={priority} />
         ) : (
           <EmptyMedia style={style} iconLabel="// web preview coming soon" />
         )}
@@ -125,7 +130,7 @@ const BrowserFrame = ({
         </div>
         <div className="absolute inset-x-0 bottom-0 top-[8%] overflow-hidden">
           {hasImage ? (
-            <Screenshot image={image} alt={alt} priority={priority} />
+            <Screenshot key={image} image={image} alt={alt} priority={priority} />
           ) : (
             <EmptyMedia style={style} iconLabel="// web preview coming soon" />
           )}
@@ -166,7 +171,7 @@ const ProjectMediaFrame = ({
         className={`relative mx-auto aspect-[9/19] overflow-hidden rounded-2xl border border-neutral-300 bg-white shadow-xl dark:border-neutral-700 dark:bg-neutral-950 ${phoneClassName ?? "w-44 md:w-64"}`}
       >
         {hasImage ? (
-          <Screenshot image={image} alt={alt} priority={priority} />
+          <Screenshot key={image} image={image} alt={alt} priority={priority} />
         ) : (
           <EmptyMedia style={style} iconLabel="// screenshot coming soon" />
         )}
@@ -190,22 +195,28 @@ const ProjectMediaFrame = ({
         }}
       >
         {hasImage ? (
-          <Screenshot image={image} alt={alt} priority={priority} />
+          <Screenshot key={image} image={image} alt={alt} priority={priority} />
         ) : (
           <EmptyMedia style={style} iconLabel="// screenshot coming soon" />
         )}
       </div>
 
       <img
+        loading={priority ? "eager" : "lazy"}
+        sizes="(min-width: 768px) 256px, 176px"
+        srcSet={`${withBase(ANDROID_PHONE_FRAME.webp512)} 512w, ${withBase(ANDROID_PHONE_FRAME.webp)} 1620w`}
         src={withBase(ANDROID_PHONE_FRAME.webp)}
         alt=""
         aria-hidden="true"
         draggable={false}
         decoding="async"
-        loading={priority ? "eager" : "lazy"}
         className="pointer-events-none absolute inset-0 h-full w-full select-none drop-shadow-[0_12px_28px_rgba(0,0,0,0.5)]"
         onError={(event) => {
-          event.currentTarget.src = withBase(ANDROID_PHONE_FRAME.png);
+          const fallback = withBase(ANDROID_PHONE_FRAME.png);
+          if (event.currentTarget.getAttribute("src") !== fallback) {
+            event.currentTarget.removeAttribute("srcset");
+            event.currentTarget.src = fallback;
+          }
         }}
       />
     </div>

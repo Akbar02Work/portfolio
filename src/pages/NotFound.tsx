@@ -4,7 +4,7 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { ROUTES } from "@/constants/routes";
 import ServerLoader from "@/components/ui/ServerLoader";
 import { Magnetic } from "@/components/ui/Magnetic";
-import { Helmet } from "react-helmet-async";
+import { PageSeo } from "@/components/PageSeo";
 
 const NotFound = () => {
   const location = useLocation();
@@ -25,10 +25,7 @@ const NotFound = () => {
       showFooter={false}
       showBackToTop={false}
     >
-      <Helmet>
-        <title>Page not found | Akbar Azizov</title>
-        <meta name="robots" content="noindex, nofollow" />
-      </Helmet>
+      <PageSeo title="Page not found | Akbar Azizov" noIndex />
       <section className="flex min-h-[calc(100svh-88px)] min-h-[calc(100dvh-88px)] max-w-full items-center justify-center overflow-hidden px-4 py-[clamp(0.75rem,2.2vh,2rem)]">
         <div className="flex w-full max-w-4xl flex-col items-center gap-[clamp(0.75rem,2vh,1.75rem)]">
           {/* MONO/VOLT eyebrow */}

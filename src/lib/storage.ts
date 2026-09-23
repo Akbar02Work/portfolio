@@ -15,10 +15,9 @@ const resolveArea = (options?: StorageOptions): StorageArea =>
 
 export const storage = {
   getString(key: string, fallback = "", options?: StorageOptions): string {
-    const target = getStorageInstance(resolveArea(options));
-    if (!target) return fallback;
-
     try {
+      const target = getStorageInstance(resolveArea(options));
+      if (!target) return fallback;
       const item = target.getItem(key);
       return item ?? fallback;
     } catch {
@@ -27,10 +26,9 @@ export const storage = {
   },
 
   setString(key: string, value: string, options?: StorageOptions): boolean {
-    const target = getStorageInstance(resolveArea(options));
-    if (!target) return false;
-
     try {
+      const target = getStorageInstance(resolveArea(options));
+      if (!target) return false;
       target.setItem(key, value);
       return true;
     } catch {

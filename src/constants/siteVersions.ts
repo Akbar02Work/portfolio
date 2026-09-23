@@ -1,7 +1,7 @@
 /** Creative (wow) local pair — HTTPS via Vite basicSsl. */
 const DEV_CREATIVE_URL = "https://127.0.0.1:5174/";
 /** Creative ships under the Business host at /creative. */
-const PROD_CREATIVE_URL = "https://www.akbar02work.xyz/creative/";
+const PROD_CREATIVE_URL = "/creative/";
 
 const withTrailingSlash = (url: string) =>
   url.endsWith("/") ? url : `${url}/`;

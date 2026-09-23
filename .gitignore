@@ -14,6 +14,7 @@ dist-ssr
 playwright-report
 test-results
 .dev-portfolios.pid
+.dev-portfolios.sock
 
 # Editor directories and files
 .vscode/*

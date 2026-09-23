@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
 const PRELOADER_SEEN_KEY = "signal-preloader-seen";
@@ -29,17 +29,22 @@ type Props = {
 };
 
 export function Preloader({ onReady, onReveal, onExitComplete }: Props) {
-  const [count, setCount] = useState(0);
+  const countRef = useRef<HTMLSpanElement>(null);
   const fillRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const doneRef = useRef(false);
 
   useEffect(() => {
     document.body.classList.add("is-loading");
+    const updateCount = (value: number) => {
+      const text = String(Math.round(value)).padStart(2, "0");
+      if (countRef.current && countRef.current.textContent !== text) countRef.current.textContent = text;
+      if (value >= 100) rootRef.current?.setAttribute("aria-hidden", "true");
+    };
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced || hasSeenPreloader()) {
-      setCount(100);
+      updateCount(100);
       document.body.classList.remove("is-loading");
       document.getElementById("boot-curtain")?.remove();
       onReady();
@@ -84,8 +89,8 @@ export function Preloader({ onReady, onReveal, onExitComplete }: Props) {
       duration: 0.9,
       ease: "power2.inOut",
       onUpdate: () => {
-        setCount(Math.round(obj.v));
-        if (fillRef.current) fillRef.current.style.width = `${obj.v}%`;
+        updateCount(obj.v);
+        if (fillRef.current) fillRef.current.style.transform = `scaleX(${obj.v / 100})`;
       },
     });
 
@@ -97,11 +102,11 @@ export function Preloader({ onReady, onReveal, onExitComplete }: Props) {
   }, [onReady, onReveal, onExitComplete]);
 
   return (
-    <div className="preloader" ref={rootRef} aria-hidden={count >= 100}>
+    <div className="preloader" ref={rootRef}>
       <div className="preloader__inner">
         <p className="preloader__label">Booting signal // portfolio lab</p>
         <p className="preloader__count">
-          {String(count).padStart(2, "0")}
+          <span ref={countRef}>00</span>
           <span>%</span>
         </p>
         <div className="preloader__bar" aria-hidden="true">

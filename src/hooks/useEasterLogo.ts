@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, type MouseEvent } from "react";
 import type { NavigateFunction } from "react-router-dom";
+import { scrollBehavior } from "@/lib/motion";
 
 type UseEasterLogoOptions = {
   pathname: string;
@@ -41,6 +42,7 @@ export const useEasterLogo = ({
   const handleLogoClick = useCallback(
     (event: MouseEvent<HTMLAnchorElement>) => {
       if (pathname !== homePath) return;
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
 
       event.preventDefault();
       easterClickCountRef.current += 1;
@@ -52,7 +54,7 @@ export const useEasterLogo = ({
       }
 
       scheduleEasterReset();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: scrollBehavior() });
     },
     [
       clicksRequired,

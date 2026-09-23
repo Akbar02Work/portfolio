@@ -1,6 +1,7 @@
 /** Generic Android phone frame — Pixel 9 Pro Obsidian from device-frames-media. */
 export const ANDROID_PHONE_FRAME = {
   webp: "/mockups/android-phone-frame.webp",
+  webp512: "/mockups/android-phone-frame-512.webp",
   png: "/mockups/android-phone-frame.png",
   aspectRatio: "1620 / 3136",
   screenInset: {

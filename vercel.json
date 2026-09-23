@@ -1,7 +1,36 @@
 {
   "headers": [
     {
+      "source": "/avatar(.*)\\.(png|webp)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+    },
+    {
+      "source": "/projects/(.*)\\.(avif|webp|png|jpg|jpeg|svg)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+    },
+    {
+      "source": "/fonts/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+    },
+    {
+      "source": "/creative/fonts/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+    },
+    {
+      "source": "/mockups/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+    },
+    {
       "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/creative/assets/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -53,8 +82,8 @@
       "destination": "/old/index.html"
     },
     {
-      "source": "/projects/voicenotes",
-      "destination": "/projects/voicenotes/index.html"
+      "source": "/projects/:slug",
+      "destination": "/projects/:slug/index.html"
     },
     {
       "source": "/easter",

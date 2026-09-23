@@ -338,10 +338,7 @@
   @media (hover: none),
   (pointer: coarse) {
 
-    .touch-no-ring,
-    .touch-no-ring:focus,
-    .touch-no-ring:focus-visible,
-    .touch-no-ring:active {
+    .touch-no-ring:not(:focus-visible) {
       --tw-ring-offset-shadow: 0 0 #0000 !important;
       --tw-ring-shadow: 0 0 #0000 !important;
       --tw-ring-color: transparent !important;

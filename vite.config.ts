@@ -3,14 +3,12 @@ import react from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
 import path from "path";
 import { execSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { publicProjectsCatalog } from "./src/data/projectCatalog";
+import { HOME_DESCRIPTION, HOME_TITLE, SITE_URL } from "./src/data/siteMetadata";
+import { HERO_PORTRAIT_SIZES, heroPortraitSrcSet } from "./src/data/heroPortrait";
 import { prerenderRoutes, type PrerenderRoute } from "./scripts/prerender";
 
-const SITE_URL = "https://www.akbar02work.xyz";
-const HOME_TITLE = "Akbar — Android Engineer · Founder of Lumingo";
-const HOME_DESCRIPTION =
-  "I build native Android apps and AI-powered products — from architecture and offline recovery to release.";
 const projectRoutes = publicProjectsCatalog.map(
   (project): PrerenderRoute => ({
     path: `/projects/${project.slug}`,
@@ -64,6 +62,26 @@ export default defineConfig(({ mode }) => {
   const devPort = Number(env.VITE_DEV_PORT) || 5173;
   const appVersion = getPackageVersion();
   const gitCommitSha = getGitCommitSha();
+  const routes = publicRoutes.map((route): PrerenderRoute => {
+    if (route.path === "/") {
+      return {
+        ...route,
+        preloadImage: {
+          src: `${base}avatar.webp`,
+          type: "image/webp",
+          srcSet: heroPortraitSrcSet("webp", base),
+          sizes: HERO_PORTRAIT_SIZES,
+        },
+      };
+    }
+    const avif = route.image.replace(/\.(png|webp|jpe?g)$/i, ".avif").replace(/^\//, "");
+    return {
+      ...route,
+      preloadImage: avif.endsWith(".avif") && existsSync(path.resolve(__dirname, "public", avif))
+        ? { src: `${base}${avif}`, type: "image/avif" }
+        : undefined,
+    };
+  });
 
   return {
     base,
@@ -77,7 +95,7 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       react(),
-      prerenderRoutes({ siteUrl: SITE_URL, routes: publicRoutes }),
+      prerenderRoutes({ siteUrl: SITE_URL, routes }),
       ...(shouldAnalyze
         ? [
             visualizer({

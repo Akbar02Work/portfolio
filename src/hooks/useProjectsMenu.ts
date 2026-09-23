@@ -86,7 +86,18 @@ export const useProjectsMenu = ({
         event.preventDefault();
         closeProjectsMenuNow();
         projectsTriggerRef.current?.focus();
+        return;
       }
+      const items = Array.from(event.currentTarget.querySelectorAll<HTMLElement>('[role="menuitem"]'));
+      const index = items.indexOf(document.activeElement as HTMLElement);
+      let nextIndex: number;
+      if (event.key === "ArrowDown") nextIndex = (index + 1) % items.length;
+      else if (event.key === "ArrowUp") nextIndex = (index - 1 + items.length) % items.length;
+      else if (event.key === "Home") nextIndex = 0;
+      else if (event.key === "End") nextIndex = items.length - 1;
+      else return;
+      event.preventDefault();
+      items[nextIndex]?.focus();
     },
     [closeProjectsMenuNow]
   );

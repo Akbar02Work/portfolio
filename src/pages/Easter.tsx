@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet-async";
+import { PageSeo } from "@/components/PageSeo";
 import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
@@ -142,13 +142,10 @@ const Easter = ({
       variant="detail"
       className="bg-[#f8f9fa] dark:bg-slate-950 text-gray-900 dark:text-slate-100"
     >
-      <Helmet>
-        <title>Easter Page | Akbar Portfolio</title>
-        <meta
-          name="description"
-          content="Release notes and build information for the Portfolio site."
-        />
-      </Helmet>
+      <PageSeo
+        title="Easter Page | Akbar Portfolio"
+        description="Release notes and build information for the Portfolio site."
+      />
 
       {showConfetti && (
         <div className="easter-confetti-layer" aria-hidden="true">

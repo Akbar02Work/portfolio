@@ -23,7 +23,7 @@ export const DesktopNav = ({
     {/* True center — section links only.
         pointer-events-none on the absolute shell so it can't steal hits from
         right-side utilities (theme / version) when the centered row is wide. */}
-    <ul className="pointer-events-none hidden md:flex absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 flex-row items-center space-x-8">
+    <ul className="pointer-events-none hidden min-[901px]:flex absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 flex-row items-center space-x-8">
       {navLinks.map((link) => {
         const isActive = activeSection === link.id;
         if (link.id === "projects") {
@@ -106,7 +106,7 @@ export const DesktopNav = ({
     </ul>
 
     {/* Right utilities */}
-    <div className="relative z-20 hidden md:flex items-center gap-3 ml-auto">
+    <div className="relative z-20 hidden min-[901px]:flex items-center gap-3 ml-auto">
       <VersionSwitch className="hidden min-[901px]:inline-flex" />
       <ThemeMenu />
     </div>

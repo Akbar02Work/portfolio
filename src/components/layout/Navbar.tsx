@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DesktopNav } from "@/components/layout/navbar/DesktopNav";
 import { MobileMenu } from "@/components/layout/navbar/MobileMenu";
@@ -14,6 +14,7 @@ import { useActiveSection } from "@/hooks/useActiveSection";
 import { useBlink } from "@/hooks/useBlink";
 import { useEasterLogo } from "@/hooks/useEasterLogo";
 import { useProjectsMenu } from "@/hooks/useProjectsMenu";
+import { scrollBehavior } from "@/lib/motion";
 
 type NavbarProps = {
   variant?: "home" | "detail";
@@ -26,8 +27,6 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileProjectsOpen, setMobileProjectsOpen] = useState(false);
-  const [mobileProjectsHeight, setMobileProjectsHeight] = useState(0);
-  const mobileProjectsContentRef = useRef<HTMLDivElement | null>(null);
 
   const { activeSection, setActiveSection } = useActiveSection<NavLinkId>({
     isHome,
@@ -50,12 +49,12 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
 
   const scrollToSection = (sectionId: string) => {
     if (sectionId === "home") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: scrollBehavior() });
       return;
     }
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      element.scrollIntoView({ behavior: scrollBehavior() });
     }
   };
 
@@ -71,16 +70,6 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
   };
 
   const navPosition = isHome ? "fixed" : "sticky";
-
-  useEffect(() => {
-    const updateMobileProjectsHeight = () => {
-      setMobileProjectsHeight(mobileProjectsContentRef.current?.scrollHeight ?? 0);
-    };
-
-    updateMobileProjectsHeight();
-    window.addEventListener("resize", updateMobileProjectsHeight);
-    return () => window.removeEventListener("resize", updateMobileProjectsHeight);
-  }, [projectsMenu.projectMenu.length, mobileMenuOpen]);
 
   return (
     <nav
@@ -117,8 +106,6 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
             setMobileMenuOpen={setMobileMenuOpen}
             mobileProjectsOpen={mobileProjectsOpen}
             setMobileProjectsOpen={setMobileProjectsOpen}
-            mobileProjectsHeight={mobileProjectsHeight}
-            mobileProjectsContentRef={mobileProjectsContentRef}
             projectMenu={projectsMenu.projectMenu}
           />
         </div>
