@@ -1,3 +1,4 @@
+import { useI18n } from "@/i18n/useI18n";
 import ProjectMediaFrame from "@/components/project/ProjectMediaFrame";
 import { ProjectPlatformTabs } from "@/components/project/ProjectPlatformTabs";
 import type { ProjectStyle } from "@/constants/projectStyles";
@@ -23,6 +24,7 @@ const ProjectCardMedia = ({
   activePlatform,
   onPlatformChange,
 }: ProjectCardMediaProps) => {
+  const { t } = useI18n();
   const firstPlatform = project.platformPreviews[0];
 
   if (!firstPlatform) {
@@ -30,7 +32,7 @@ const ProjectCardMedia = ({
       <ViewTransitionLink
         to={href}
         className={mediaLinkClass}
-        aria-label={`Open ${project.title} case study`}
+        aria-label={t.projects.openCaseAria(project.title)}
       >
         <ProjectMediaFrame
           image={project.image}
@@ -51,14 +53,14 @@ const ProjectCardMedia = ({
         platforms={project.platforms}
         activePlatform={activePreview.id}
         onSelect={onPlatformChange}
-        label={`Choose ${project.title} platform`}
+        label={t.projects.choosePlatform(project.title)}
         className="justify-center md:justify-start"
       />
 
       <ViewTransitionLink
         to={href}
         className={`${mediaLinkClass} flex min-h-[24rem] items-center justify-center md:min-h-[30rem]`}
-        aria-label={`Open ${project.title} ${activePreview.label} case study`}
+        aria-label={t.projects.openPlatformCaseAria(project.title, activePreview.label)}
       >
         <ProjectMediaFrame
           image={activePreview.image}

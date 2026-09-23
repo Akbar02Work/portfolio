@@ -2,9 +2,11 @@ import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { buildProjectUrl } from "@/constants/routes";
 import type { useProjectsMenu } from "@/hooks/useProjectsMenu";
+import { useI18n } from "@/i18n/useI18n";
+import { LanguageSwitch } from "./LanguageSwitch";
 import { ThemeMenu } from "./ThemeMenu";
 import { VersionSwitch } from "./VersionSwitch";
-import { CONTACT_NAV_LABEL, navLinks, type NavLinkId } from "./navigation";
+import { navLinks, type NavLinkId } from "./navigation";
 
 type DesktopNavProps = {
   activeSection: NavLinkId | "";
@@ -20,7 +22,9 @@ export const DesktopNav = ({
   closeMobileMenu,
   projectsMenu,
   onContactClick,
-}: DesktopNavProps) => (
+}: DesktopNavProps) => {
+  const { t, localize } = useI18n();
+  return (
   <>
     {/* True center — section links only.
         pointer-events-none on the absolute shell so it can't steal hits from
@@ -51,13 +55,13 @@ export const DesktopNav = ({
                   : "text-[0.9375rem] text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white after:scale-x-0"
                   }`}
               >
-                {link.label}
+                {t.nav[link.id]}
                 <ChevronDown className="w-4 h-4" />
               </button>
               <div
                 id="projects-menu"
                 role="menu"
-                aria-label="Projects"
+                aria-label={t.nav.projectsMenu}
                 aria-hidden={!projectsMenu.isProjectsMenuOpen}
                 ref={projectsMenu.projectsMenuRef}
                 onKeyDown={projectsMenu.handleProjectsMenuKeyDown}
@@ -72,7 +76,7 @@ export const DesktopNav = ({
                   {projectsMenu.projectMenu.map((project) => (
                     <Link
                       key={project.slug}
-                      to={buildProjectUrl(project.slug)}
+                      to={localize(buildProjectUrl(project.slug))}
                       onClick={() => {
                         closeMobileMenu();
                         projectsMenu.closeProjectsMenuNow();
@@ -100,7 +104,7 @@ export const DesktopNav = ({
                 : "text-[0.9375rem] text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white after:scale-x-0"
                 }`}
             >
-              {link.label}
+              {t.nav[link.id]}
             </button>
           </li>
         );
@@ -112,15 +116,17 @@ export const DesktopNav = ({
           onClick={(event) => onContactClick(event.currentTarget)}
           className="relative block py-2 px-3 text-[0.9375rem] text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors"
         >
-          {CONTACT_NAV_LABEL}
+          {t.nav.contact}
         </button>
       </li>
     </ul>
 
     {/* Right utilities */}
     <div className="relative z-20 hidden min-[901px]:flex items-center gap-3 ml-auto">
+      <LanguageSwitch className="hidden min-[901px]:inline-flex" />
       <VersionSwitch className="hidden min-[901px]:inline-flex" />
       <ThemeMenu />
     </div>
   </>
-);
+  );
+};

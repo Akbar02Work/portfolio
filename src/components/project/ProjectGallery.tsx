@@ -6,6 +6,7 @@ import ProjectMediaFrame from "@/components/project/ProjectMediaFrame";
 import { ProjectPlatformTabs } from "@/components/project/ProjectPlatformTabs";
 import type { ProjectPlatformId } from "@/data/projectCatalog";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/i18n/useI18n";
 
 interface ProjectGalleryProps {
     project: Project;
@@ -21,6 +22,7 @@ const LOOP_COPIES = 3;
 const easeOutExpo = (t: number) => (t >= 1 ? 1 : 1 - 2 ** (-10 * t));
 
 const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
+    const { t } = useI18n();
     const scrollerRef = useRef<HTMLDivElement>(null);
     const isJumpingRef = useRef(false);
     const animatingToRef = useRef<number | null>(null);
@@ -451,10 +453,10 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                 <div className="border-t border-neutral-200 dark:border-neutral-800 pt-12 md:pt-16">
                     <div className="flex items-center gap-4 mb-6">
                         <span className="inline-block h-px w-8 shrink-0 bg-volt-ink dark:bg-volt" aria-hidden="true" />
-                        <h2 className="text-heading-2 text-gray-900 dark:text-white">Screens</h2>
+                        <h2 className="text-heading-2 text-gray-900 dark:text-white">{t.project.screens}</h2>
                     </div>
                     <p className="font-mono text-caption text-neutral-500 dark:text-neutral-400">
-                        // screenshots coming soon
+                        {t.project.screensSoon}
                     </p>
                 </div>
             </section>
@@ -468,7 +470,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                 <div className="flex items-end justify-between gap-6 mb-8 md:mb-10">
                     <div className="flex items-center gap-4 min-w-0">
                         <span className="inline-block h-px w-8 shrink-0 bg-volt-ink dark:bg-volt" aria-hidden="true" />
-                        <h2 className="text-heading-2 text-gray-900 dark:text-white">Screens</h2>
+                        <h2 className="text-heading-2 text-gray-900 dark:text-white">{t.project.screens}</h2>
                     </div>
 
                     <div className="flex items-center gap-4 shrink-0">
@@ -483,7 +485,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                             <button
                                 type="button"
                                 onClick={() => step(-1)}
-                                aria-label="Previous screen"
+                                aria-label={t.project.previousScreen}
                                 className="inline-flex h-10 w-10 items-center justify-center border border-neutral-200 text-gray-900 transition-colors hover:border-volt-ink dark:border-neutral-800 dark:text-white dark:hover:border-volt"
                             >
                                 <ArrowLeft className="h-4 w-4" strokeWidth={1.75} />
@@ -491,7 +493,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                             <button
                                 type="button"
                                 onClick={() => step(1)}
-                                aria-label="Next screen"
+                                aria-label={t.project.nextScreen}
                                 className="inline-flex h-10 w-10 items-center justify-center border border-neutral-200 text-gray-900 transition-colors hover:border-volt-ink dark:border-neutral-800 dark:text-white dark:hover:border-volt"
                             >
                                 <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
@@ -516,7 +518,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                     ref={scrollerRef}
                     tabIndex={0}
                     role="region"
-                    aria-label="Project screens carousel"
+                    aria-label={t.project.carousel}
                     onKeyDown={(event) => {
                         if (event.metaKey || event.ctrlKey || event.altKey || event.defaultPrevented) return;
                         if (event.key === "ArrowLeft") {
@@ -548,7 +550,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                                 role="button"
                                 tabIndex={isActive && !isBuffer ? 0 : -1}
                                 aria-hidden={isBuffer}
-                                aria-label={`Show screen ${screen.realIndex + 1}`}
+                                aria-label={t.project.showScreen(screen.realIndex + 1)}
                                 aria-pressed={isActive}
                                 onClick={() => focusLoopIndex(screen.loopIndex)}
                                 onKeyDown={(event) => {
@@ -609,6 +611,7 @@ const ProjectGallery = ({
     activePlatform: controlledPlatform,
     onPlatformChange,
 }: ProjectGalleryProps) => {
+    const { t } = useI18n();
     const firstPlatform = project.platforms[0];
     const [internalPlatform, setInternalPlatform] = useState<ProjectPlatformId>(
         firstPlatform?.id ?? "android"
@@ -633,17 +636,17 @@ const ProjectGallery = ({
                 <div className="flex flex-col gap-4 border-t border-neutral-200 pt-8 dark:border-neutral-800 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <p className="font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400">
-                            Product surfaces
+                            {t.project.productSurfaces}
                         </p>
                         <p className="mt-2 text-body-base text-gray-600 dark:text-slate-300">
-                            One product, inspected through each client.
+                            {t.project.productSurfacesText}
                         </p>
                     </div>
                     <ProjectPlatformTabs
                         platforms={project.platforms}
                         activePlatform={active.id}
                         onSelect={selectPlatform}
-                        label={`Choose ${project.title} gallery platform`}
+                        label={t.project.galleryPlatform(project.title)}
                     />
                 </div>
             </section>

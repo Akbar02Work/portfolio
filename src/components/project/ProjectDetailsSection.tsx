@@ -1,22 +1,9 @@
 import type { Project } from "@/data/projects";
+import { useI18n } from "@/i18n/useI18n";
 
 type ProjectDetailsSectionProps = {
     project: Project;
 };
-
-const STACK_ROLES: Record<string, string> = {
-  Kotlin: "language",
-  "Jetpack Compose": "ui",
-  "Gemini API": "ai",
-  "OpenAI API": "ai",
-  "Groq API": "ai",
-  "sherpa-onnx": "on-device asr",
-  Room: "storage",
-  WorkManager: "model delivery",
-  Hilt: "di",
-};
-
-const stackRole = (tech: string) => STACK_ROLES[tech] ?? "module";
 
 const SectionLabel = ({ children }: { children: string }) => (
     <div className="flex items-center gap-4 mb-6">
@@ -28,18 +15,21 @@ const SectionLabel = ({ children }: { children: string }) => (
     </div>
 );
 
-export const ProjectDetailsSection = ({ project }: ProjectDetailsSectionProps) => (
+export const ProjectDetailsSection = ({ project }: ProjectDetailsSectionProps) => {
+    const { t } = useI18n();
+    const stackRole = (tech: string) => t.project.stackRoles[tech] ?? t.project.stackRoleFallback;
+    return (
     <section className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-16 md:pb-24">
         {/* Overview + Challenge */}
         <div className="border-t border-neutral-200 dark:border-neutral-800 pt-12 md:pt-16 grid grid-cols-1 md:grid-cols-2 md:gap-0">
             <div className="md:pr-12 lg:pr-14 pb-12 md:pb-0">
-                <SectionLabel>Overview</SectionLabel>
+                <SectionLabel>{t.project.overview}</SectionLabel>
                 <p className="text-body-lg font-light text-gray-600 dark:text-gray-400 max-w-[65ch]">
                     {project.overview}
                 </p>
             </div>
             <div className="md:pl-12 lg:pl-14 pt-12 md:pt-0 border-t md:border-t-0 md:border-l border-neutral-200 dark:border-neutral-800">
-                <SectionLabel>The Challenge</SectionLabel>
+                <SectionLabel>{t.project.challenge}</SectionLabel>
                 <p className="text-body-lg font-light text-gray-600 dark:text-gray-400 max-w-[65ch]">
                     {project.challenge}
                 </p>
@@ -49,7 +39,7 @@ export const ProjectDetailsSection = ({ project }: ProjectDetailsSectionProps) =
         {/* Stack + Key Features */}
         <div className="border-t border-neutral-200 dark:border-neutral-800 pt-12 md:pt-16 mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 md:gap-0">
             <div className="md:pr-12 lg:pr-14 pb-12 md:pb-0">
-                <SectionLabel>Stack</SectionLabel>
+                <SectionLabel>{t.project.stack}</SectionLabel>
                 <ul className="list-none grid grid-cols-2 gap-x-8 gap-y-8 sm:gap-x-10 sm:gap-y-10">
                     {project.technologies.map((tech) => (
                         <li key={tech} className="flex flex-col items-start">
@@ -65,7 +55,7 @@ export const ProjectDetailsSection = ({ project }: ProjectDetailsSectionProps) =
             </div>
 
             <div className="md:pl-12 lg:pl-14 pt-12 md:pt-0 border-t md:border-t-0 md:border-l border-neutral-200 dark:border-neutral-800">
-                <SectionLabel>Key Features</SectionLabel>
+                <SectionLabel>{t.project.keyFeatures}</SectionLabel>
                 <ul className="list-none relative pl-6 before:absolute before:left-[3px] before:top-2 before:bottom-2 before:w-px before:bg-neutral-200 dark:before:bg-neutral-800">
                     {project.features.map((feature) => (
                         <li key={feature.title} className="relative pb-6 last:pb-0">
@@ -87,4 +77,5 @@ export const ProjectDetailsSection = ({ project }: ProjectDetailsSectionProps) =
             </div>
         </div>
     </section>
-);
+    );
+};

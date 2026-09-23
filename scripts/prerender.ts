@@ -2,11 +2,24 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { Plugin, ResolvedConfig } from "vite";
 
+export interface PrerenderAlternate {
+  hrefLang: string;
+  path: string;
+}
+
 export interface PrerenderRoute {
   path: string;
   title: string;
   description: string;
   image: string;
+  /** Value for <html lang>; defaults to the template's. */
+  lang?: string;
+  ogLocale?: string;
+  siteName?: string;
+  /** Extra font files to preload (e.g. a script-specific subset). */
+  preloadFonts?: string[];
+  /** hreflang alternates (including this route itself). */
+  alternates?: PrerenderAlternate[];
   preloadImage?: { src: string; type?: string; srcSet?: string; sizes?: string };
 }
 
@@ -24,6 +37,7 @@ const SEO_META_KEYS = [
   "og:description",
   "og:image",
   "og:site_name",
+  "og:locale",
   "twitter:card",
   "twitter:url",
   "twitter:title",
@@ -79,7 +93,7 @@ const renderRouteHtml = (
       ),
       "\n"
     )
-    .replace(/\s*<link\b[^>]*rel\s*=\s*["']canonical["'][^>]*\/?>\s*/gi, "\n")
+    .replace(/\s*<link\b[^>]*rel\s*=\s*["'](?:canonical|alternate)["'][^>]*\/?>\s*/gi, "\n")
     .replace(/\s*<!-- Route-specific prerendered SEO -->\s*/gi, "\n");
 
   const tags = [
@@ -93,7 +107,12 @@ const renderRouteHtml = (
     `  <meta property="og:title" content="${escapeHtml(route.title)}" />`,
     `  <meta property="og:description" content="${escapeHtml(route.description)}" />`,
     `  <meta property="og:image" content="${escapeHtml(imageUrl)}" />`,
-    '  <meta property="og:site_name" content="Akbar Azizov Portfolio" />',
+    `  <meta property="og:site_name" content="${escapeHtml(route.siteName ?? "Akbar Azizov Portfolio")}" />`,
+    ...(route.ogLocale ? [`  <meta property="og:locale" content="${escapeHtml(route.ogLocale)}" />`] : []),
+    ...(route.alternates ?? []).map(
+      (alternate) =>
+        `  <link rel="alternate" hreflang="${escapeHtml(alternate.hrefLang)}" href="${escapeHtml(new URL(alternate.path, siteUrl).toString())}" />`
+    ),
     '  <meta name="twitter:card" content="summary_large_image" />',
     `  <meta name="twitter:url" content="${escapeHtml(canonicalUrl)}" />`,
     `  <meta name="twitter:title" content="${escapeHtml(route.title)}" />`,
@@ -115,7 +134,15 @@ const renderRouteHtml = (
     throw new Error("Cannot prerender routes: dist/index.html has no </head> tag");
   }
 
-  return withoutRouteSeo.replace("</head>", `${tags}${imageHint}\n</head>`);
+  const fontHints = (route.preloadFonts ?? [])
+    .map((href) => `\n  <link rel="preload" href="${escapeHtml(href)}" as="font" type="font/woff2" crossorigin />`)
+    .join("");
+
+  const withLang = route.lang
+    ? withoutRouteSeo.replace(/<html\b([^>]*?)\slang\s*=\s*["'][^"']*["']/i, `<html$1 lang="${escapeHtml(route.lang)}"`)
+    : withoutRouteSeo;
+
+  return withLang.replace("</head>", `${tags}${imageHint}${fontHints}\n</head>`);
 };
 
 const routeOutputPath = (outDir: string, routePath: string): string =>
@@ -150,12 +177,24 @@ export const prerenderRoutes = ({ siteUrl, routes }: PrerenderOptions): Plugin =
         })
       );
 
-      const sitemapUrls = [...routes.map((route) => route.path), "/creative/"];
+      const toUrl = (routePath: string) => escapeHtml(new URL(routePath, normalizedSiteUrl).href);
+      const sitemapEntries = [
+        ...routes.map((route) =>
+          [
+            `  <url>`,
+            `    <loc>${toUrl(route.path)}</loc>`,
+            ...(route.alternates ?? []).map(
+              (alternate) =>
+                `    <xhtml:link rel="alternate" hreflang="${escapeHtml(alternate.hrefLang)}" href="${toUrl(alternate.path)}" />`
+            ),
+            `  </url>`,
+          ].join("\n")
+        ),
+        `  <url>\n    <loc>${toUrl("/creative/")}</loc>\n  </url>`,
+      ];
       await writeFile(
         path.join(outDir, "sitemap.xml"),
-        `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapUrls
-          .map((routePath) => `  <url><loc>${escapeHtml(new URL(routePath, normalizedSiteUrl).href)}</loc></url>`)
-          .join("\n")}\n</urlset>\n`,
+        `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${sitemapEntries.join("\n")}\n</urlset>\n`,
         "utf8"
       );
 

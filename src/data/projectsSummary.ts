@@ -1,4 +1,5 @@
-import { allProjects, projects } from "./projects";
+import type { Locale } from "@/i18n/locales";
+import { allProjects, projects, projectsByLocale } from "./projects";
 import type { ProjectPlatformView } from "./projects";
 import type {
   ProjectMediaType,
@@ -60,6 +61,11 @@ export const allProjectsSummary: ProjectSummary[] =
   allProjects.map(toProjectSummary);
 
 export const projectsSummary: ProjectSummary[] = projects.map(toProjectSummary);
+
+export const projectsSummaryByLocale: Record<Locale, ProjectSummary[]> = {
+  en: projectsSummary,
+  ru: projectsByLocale.ru.map(toProjectSummary),
+};
 
 export const resolveProjectSummaryPlatform = (
   project: ProjectSummary,

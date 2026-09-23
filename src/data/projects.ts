@@ -1,4 +1,10 @@
-import { projectsCatalog, publicProjectsCatalog } from "./projectCatalog";
+import type { Locale } from "@/i18n/locales";
+import {
+  projectsCatalog,
+  projectsCatalogByLocale,
+  publicProjectsCatalog,
+  publicProjectsCatalogByLocale,
+} from "./projectCatalog";
 import type {
   ProjectMediaType,
   ProjectMetric,
@@ -106,6 +112,16 @@ const toProject = (project: (typeof projectsCatalog)[number]): Project => ({
 export const allProjects: Project[] = projectsCatalog.map(toProject);
 
 export const projects: Project[] = publicProjectsCatalog.map(toProject);
+
+export const allProjectsByLocale: Record<Locale, Project[]> = {
+  en: allProjects,
+  ru: projectsCatalogByLocale.ru.map(toProject),
+};
+
+export const projectsByLocale: Record<Locale, Project[]> = {
+  en: projects,
+  ru: publicProjectsCatalogByLocale.ru.map(toProject),
+};
 
 export const resolveProjectPlatform = (
   project: Project,

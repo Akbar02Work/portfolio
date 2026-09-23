@@ -2,10 +2,9 @@ import { ArrowUpRight, Download, User } from "lucide-react";
 import { useState } from "react";
 import { withBase } from "@/lib/urls";
 import { ContactDialog } from "@/components/contact/ContactDialog";
+import { useI18n } from "@/i18n/useI18n";
 import { HERO_PORTRAIT_SIZES, heroPortraitSrcSet } from "@/data/heroPortrait";
 import { eagerPictureRef } from "@/lib/picture";
-
-const HERO_DESCRIPTION = "Kotlin & Compose. Offline-first apps with AI features — from architecture to release.";
 
 const ctaBase =
     "touch-no-ring select-none h-[3.25rem] px-6 lg:px-8 rounded-full text-[0.9375rem] font-medium flex items-center justify-center gap-2 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-volt-ink dark:focus-visible:outline-volt";
@@ -35,7 +34,9 @@ const NameStroke = () => (
     </svg>
 );
 
-const HeroText = () => (
+const HeroText = () => {
+    const { t } = useI18n();
+    return (
     <div className="flex-1 space-y-7 text-center md:text-left">
         <div className="hero-reveal" style={{ animationDelay: "0ms" }}>
             <h1 className="text-gray-900 dark:text-white">
@@ -44,15 +45,15 @@ const HeroText = () => (
                     <NameStroke />
                 </span>
                 <span className="text-display-role block mt-5 md:mt-6 text-neutral-400 dark:text-neutral-500">
-                    Android Engineer,
+                    {t.hero.roleLine1}
                     <br />
-                    founder of <span className="text-gray-900 dark:text-white">Lumingo</span>.
+                    {t.hero.founderOf} <span className="text-gray-900 dark:text-white">Lumingo</span>.
                 </span>
             </h1>
         </div>
         <div className="hero-reveal" style={{ animationDelay: "120ms" }}>
             <p className="text-body-lg text-gray-600 dark:text-slate-300 max-w-md mx-auto md:mx-0">
-                {HERO_DESCRIPTION}
+                {t.hero.description}
             </p>
         </div>
         <div className="hero-reveal" style={{ animationDelay: "200ms" }}>
@@ -63,7 +64,7 @@ const HeroText = () => (
                             type="button"
                             className={`${ctaBase} bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:bg-volt-ink dark:hover:bg-volt`}
                         >
-                            Contact
+                            {t.hero.contact}
                             <ArrowUpRight className="w-[1.125rem] h-[1.125rem]" strokeWidth={2} aria-hidden="true" />
                         </button>
                     }
@@ -73,17 +74,19 @@ const HeroText = () => (
                     download="Akbar_Azizov_CV.pdf"
                     className={`${ctaBase} border border-gray-300 dark:border-slate-600 text-gray-900 dark:text-slate-200 hover:border-volt-ink dark:hover:border-volt hover:text-volt-ink dark:hover:text-volt`}
                 >
-                    Download CV
+                    {t.hero.downloadCv}
                     <Download className="w-[1.125rem] h-[1.125rem]" strokeWidth={2} aria-hidden="true" />
                 </a>
             </div>
         </div>
     </div>
-);
+    );
+};
 
 const highFetchPriority = { fetchpriority: "high" };
 
 const HeroPortrait = () => {
+    const { t } = useI18n();
     const [imageError, setImageError] = useState(false);
     const avatarSrc = withBase("/avatar.png");
     // Prefer PNG/WebP for the face — AVIF was over-compressing skin detail.
@@ -110,7 +113,7 @@ const HeroPortrait = () => {
                             sizes={avatarSizes}
                             srcSet={heroPortraitSrcSet("png", import.meta.env.BASE_URL)}
                             src={avatarSrc}
-                            alt="Akbar Azizov"
+                            alt={t.hero.portraitAlt}
                             width={586}
                             height={934}
                             {...highFetchPriority}

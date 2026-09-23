@@ -9,16 +9,15 @@ import { ProjectEngineeringNote } from "@/components/project/ProjectEngineeringN
 import { ProjectHeader } from "@/components/project/ProjectHeader";
 import { ROUTES } from "@/constants/routes";
 import { fallbackProjectStyle, projectStylesBySlug } from "@/constants/projectStyles";
-import { projects, resolveProjectPlatform } from "@/data/projects";
+import { projectsByLocale, resolveProjectPlatform } from "@/data/projects";
+import { useI18n } from "@/i18n/useI18n";
 import type { ProjectPlatformId } from "@/data/projectCatalog";
 import { ViewTransitionLink } from "@/hooks/usePageTransition";
 
-const DEFAULT_TITLE = "Akbar — Android & AI Engineer";
-const DEFAULT_DESCRIPTION =
-  "Android apps built with Kotlin and Jetpack Compose, with practical AI integrations.";
-
 const ProjectDetail = () => {
   const { slug } = useParams<{ slug?: string }>();
+  const { t, locale, localize } = useI18n();
+  const projects = projectsByLocale[locale];
   const [searchParams, setSearchParams] = useSearchParams();
   const projectIndex = projects.findIndex((project) => project.slug === slug);
   const projectData = projectIndex >= 0 ? projects[projectIndex] : undefined;
@@ -49,11 +48,11 @@ const ProjectDetail = () => {
   const pageTitle =
     projectView
       ? !hasPlaceholderContent
-        ? `${projectView.title} | Akbar Azizov`
-        : DEFAULT_TITLE
-      : "Project not found | Akbar Azizov";
+        ? t.seo.projectTitle(projectView.title)
+        : t.seo.defaultTitle
+      : t.seo.projectNotFound;
   const pageDescription =
-    projectView && !hasPlaceholderContent ? projectView.summary : DEFAULT_DESCRIPTION;
+    projectView && !hasPlaceholderContent ? projectView.summary : t.seo.defaultDescription;
   const pageImage =
     projectView && !hasPlaceholderContent && projectView.image
       ? projectView.image
@@ -93,13 +92,13 @@ const ProjectDetail = () => {
         ) : (
           <section className="min-h-[60vh] flex items-center justify-center px-6">
             <div className="text-center space-y-4">
-              <h1 className="text-heading-1">404: Project Not Found</h1>
+              <h1 className="text-heading-1">{t.project.notFoundHeading}</h1>
               <ViewTransitionLink
-                to={ROUTES.HOME}
+                to={localize(ROUTES.HOME)}
                 state={{ scrollTo: "projects" }}
                 className="text-volt-ink dark:text-volt hover:underline"
               >
-                Back to Projects
+                {t.project.backToProjects}
               </ViewTransitionLink>
             </div>
           </section>

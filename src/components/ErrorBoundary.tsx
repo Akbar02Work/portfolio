@@ -1,5 +1,14 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { captureError } from "@/lib/monitoring";
+import { localeFromPath } from "@/i18n/locales";
+import { messages } from "@/i18n/messages";
+
+// Rendered outside the router, so the locale is read from the URL directly.
+const currentMessages = () => {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+  const path = window.location.pathname.slice(base.length) || "/";
+  return messages[localeFromPath(path)];
+};
 
 type ErrorBoundaryProps = {
   children: ReactNode;
@@ -34,19 +43,20 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         return this.props.fallback;
       }
 
+      const t = currentMessages();
       return (
         <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white flex items-center justify-center p-6">
           <div className="max-w-md text-center space-y-4">
-            <h1 className="text-heading-3">Something went wrong</h1>
+            <h1 className="text-heading-3">{t.error.title}</h1>
             <p className="text-body-sm text-gray-600 dark:text-slate-400">
-              An unexpected error occurred. Try reloading the page.
+              {t.error.text}
             </p>
             <button
               type="button"
               onClick={this.handleReload}
               className="inline-flex items-center justify-center rounded-full bg-black text-white dark:bg-white dark:text-black px-5 py-2 text-button shadow-sm transition hover:scale-[1.02]"
             >
-              Reload page
+              {t.error.reload}
             </button>
           </div>
         </div>

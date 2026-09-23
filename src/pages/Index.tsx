@@ -6,13 +6,15 @@ import { TechStack } from "@/components/sections/TechStack";
 import { About } from "@/components/sections/About";
 import { Projects } from "@/components/sections/Projects";
 import { MainLayout } from "@/components/layout/MainLayout";
-import { projectsSummary } from "@/data/projectsSummary";
+import { projectsSummaryByLocale } from "@/data/projectsSummary";
+import { useI18n } from "@/i18n/useI18n";
 import { useReloadScroll } from "@/hooks/useReloadScroll";
 
 const Index = () => {
   useReloadScroll();
   const location = useLocation();
   const navigate = useNavigate();
+  const { locale } = useI18n();
 
   // Handle state-driven navigation (e.g., from ProjectDetail).
   // Instant jump — the curtain already handles the visual transition.
@@ -72,7 +74,7 @@ const Index = () => {
       <PageSeo />
       <Hero />
       <TechStack />
-      <Projects projects={projectsSummary} />
+      <Projects projects={projectsSummaryByLocale[locale]} />
       <About />
     </MainLayout>
   );

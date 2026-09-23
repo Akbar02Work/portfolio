@@ -16,8 +16,10 @@ import {
 } from "@/components/ui/sheet";
 import { ROUTES, buildProjectUrl } from "@/constants/routes";
 import type { ProjectSummary } from "@/data/projectsSummary";
+import { useI18n } from "@/i18n/useI18n";
+import { LanguageSwitch } from "./LanguageSwitch";
 import { ThemeMenu } from "./ThemeMenu";
-import { CONTACT_NAV_LABEL, navLinks, type NavLinkId } from "./navigation";
+import { navLinks, type NavLinkId } from "./navigation";
 
 type MobileMenuProps = {
   activeSection: NavLinkId | "";
@@ -43,7 +45,9 @@ export const MobileMenu = ({
   setMobileProjectsOpen,
   projectMenu,
   onContactClick,
-}: MobileMenuProps) => (
+}: MobileMenuProps) => {
+  const { t, localize } = useI18n();
+  return (
   <div className="flex items-center gap-2 min-[901px]:hidden">
     <Sheet open={mobileMenuOpen} onOpenChange={(open) => {
       setMobileMenuOpen(open);
@@ -53,8 +57,9 @@ export const MobileMenu = ({
     }}>
       <SheetTrigger asChild>
         <button
+          data-mobile-menu-trigger
           className="text-gray-500 dark:text-slate-400 p-2 w-10 h-10 inline-flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800"
-          aria-label="Open menu"
+          aria-label={t.nav.openMenu}
         >
           <Menu className="w-5 h-5" />
         </button>
@@ -64,14 +69,14 @@ export const MobileMenu = ({
         className="!w-full !max-w-full !inset-0 bg-white dark:bg-slate-950 border-none flex flex-col [&>button:last-child]:hidden"
       >
         <SheetHeader className="sr-only">
-          <SheetTitle>Menu</SheetTitle>
-          <SheetDescription>Mobile navigation menu</SheetDescription>
+          <SheetTitle>{t.nav.menuTitle}</SheetTitle>
+          <SheetDescription>{t.nav.menuDescription}</SheetDescription>
         </SheetHeader>
 
         {/* ── Header: Logo + Close ── */}
         <div className="flex items-center justify-between px-6 pt-[clamp(1rem,3vh,2rem)] pb-2">
           <Link
-            to={ROUTES.HOME}
+            to={localize(ROUTES.HOME)}
             state={{ scrollTo: "home" }}
             onClick={(e) => {
               handleLogoClick(e);
@@ -87,7 +92,7 @@ export const MobileMenu = ({
           </Link>
           <SheetClose className="p-[clamp(0.25rem,1vh,0.5rem)] rounded-lg text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
             <X className="w-[clamp(1.25rem,3vh,2rem)] h-[clamp(1.25rem,3vh,2rem)]" />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">{t.nav.closeMenu}</span>
           </SheetClose>
         </div>
 
@@ -122,7 +127,7 @@ export const MobileMenu = ({
                     />
                   )}
                   <span>
-                    {link.label}
+                    {t.nav[link.id]}
                   </span>
                   {isProjects && (
                     <ChevronRight
@@ -153,7 +158,7 @@ export const MobileMenu = ({
                         {projectMenu.map((project) => (
                           <Link
                             key={project.slug}
-                            to={buildProjectUrl(project.slug)}
+                            to={localize(buildProjectUrl(project.slug))}
                             onClick={() => {
                               setMobileMenuOpen(false);
                               setMobileProjectsOpen(false);
@@ -177,22 +182,24 @@ export const MobileMenu = ({
               aria-haspopup="dialog"
               onClick={() =>
                 // Focus returns to the menu button once the sheet is gone.
-                onContactClick(document.querySelector<HTMLElement>('button[aria-label="Open menu"]'))
+                onContactClick(document.querySelector<HTMLElement>("[data-mobile-menu-trigger]"))
               }
               className="relative flex items-center py-[clamp(0.25rem,1vh,0.75rem)] text-left text-[clamp(1.75rem,5vh,3rem)] font-light text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-300 transition-colors"
             >
-              {CONTACT_NAV_LABEL}
+              {t.nav.contact}
             </button>
           </div>
         </nav>
 
         {/* ── Bottom: Theme ── */}
         <div className="px-6 pb-[clamp(1rem,4vh,2rem)] pt-[clamp(0.5rem,2vh,1.5rem)]">
-          <div className="flex items-center justify-end gap-3">
+          <div className="flex items-center justify-between gap-3">
+            <LanguageSwitch onSwitch={() => setMobileMenuOpen(false)} />
             <ThemeMenu direction="up" />
           </div>
         </div>
       </SheetContent>
     </Sheet>
   </div>
-);
+  );
+};

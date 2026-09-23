@@ -1,9 +1,11 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Moon, Sun, SunMoon } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
+import { useI18n } from "@/i18n/useI18n";
 
 export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" }) => {
   const { theme, mode, setTheme } = useTheme();
+  const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const menuId = useId();
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -85,7 +87,7 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
             items?.[openAtLastRef.current ? items.length - 1 : 0]?.focus();
           }
         }}
-        aria-label="Select theme"
+        aria-label={t.theme.select}
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-controls={menuId}
@@ -129,7 +131,7 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
           >
             <span className="inline-flex items-center gap-2">
               <Sun className="w-4 h-4" />
-              Light
+              {t.theme.light}
             </span>
           </button>
           <button
@@ -141,7 +143,7 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
           >
             <span className="inline-flex items-center gap-2">
               <Moon className="w-4 h-4" />
-              Dark
+              {t.theme.dark}
             </span>
           </button>
           <button
@@ -153,7 +155,7 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
           >
             <span className="inline-flex items-center gap-2">
               <SunMoon className="w-4 h-4" />
-              System
+              {t.theme.system}
             </span>
           </button>
         </div>

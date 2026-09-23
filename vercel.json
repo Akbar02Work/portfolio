@@ -86,6 +86,14 @@
       "destination": "/projects/:slug/index.html"
     },
     {
+      "source": "/ru",
+      "destination": "/ru/index.html"
+    },
+    {
+      "source": "/ru/projects/:slug",
+      "destination": "/ru/projects/:slug/index.html"
+    },
+    {
       "source": "/easter",
       "destination": "/index.html"
     }

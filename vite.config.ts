@@ -4,29 +4,43 @@ import { visualizer } from "rollup-plugin-visualizer";
 import path from "path";
 import { execSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
-import { publicProjectsCatalog } from "./src/data/projectCatalog";
-import { HOME_DESCRIPTION, HOME_TITLE, SITE_URL } from "./src/data/siteMetadata";
+import { publicProjectsCatalogByLocale } from "./src/data/projectCatalog";
+import { SITE_URL } from "./src/data/siteMetadata";
+import { HTML_LANG, LOCALES, OG_LOCALE, localizePath, type Locale } from "./src/i18n/locales";
+import { messages } from "./src/i18n/messages";
 import { HERO_PORTRAIT_SIZES, heroPortraitSrcSet } from "./src/data/heroPortrait";
 import { prerenderRoutes, type PrerenderRoute } from "./scripts/prerender";
 
-const projectRoutes = publicProjectsCatalog.map(
-  (project): PrerenderRoute => ({
-    path: `/projects/${project.slug}`,
-    title: `${project.title} | Akbar Azizov`,
-    description: project.description,
-    image: project.coverImage || "/og-image.png",
-  })
-);
+const alternatesFor = (neutralPath: string) => [
+  ...LOCALES.map((locale) => ({ hrefLang: HTML_LANG[locale], path: localizePath(neutralPath, locale) })),
+  { hrefLang: "x-default", path: localizePath(neutralPath, "en") },
+];
 
-const publicRoutes: PrerenderRoute[] = [
+const localeRouteFields = (locale: Locale, neutralPath: string) => ({
+  path: localizePath(neutralPath, locale),
+  preloadFonts: locale === "ru" ? ["/fonts/Inter-cyrillic.woff2"] : undefined,
+  lang: HTML_LANG[locale],
+  ogLocale: OG_LOCALE[locale],
+  siteName: messages[locale].seo.siteName,
+  alternates: alternatesFor(neutralPath),
+});
+
+const publicRoutes: PrerenderRoute[] = LOCALES.flatMap((locale): PrerenderRoute[] => [
   {
-    path: "/",
-    title: HOME_TITLE,
-    description: HOME_DESCRIPTION,
+    ...localeRouteFields(locale, "/"),
+    title: messages[locale].seo.homeTitle,
+    description: messages[locale].seo.homeDescription,
     image: "/og-image.png",
   },
-  ...projectRoutes,
-];
+  ...publicProjectsCatalogByLocale[locale].map(
+    (project): PrerenderRoute => ({
+      ...localeRouteFields(locale, `/projects/${project.slug}`),
+      title: messages[locale].seo.projectTitle(project.title),
+      description: project.description,
+      image: project.coverImage || "/og-image.png",
+    })
+  ),
+]);
 
 const getPackageVersion = () => {
   try {
@@ -63,7 +77,7 @@ export default defineConfig(({ mode }) => {
   const appVersion = getPackageVersion();
   const gitCommitSha = getGitCommitSha();
   const routes = publicRoutes.map((route): PrerenderRoute => {
-    if (route.path === "/") {
+    if (route.path === "/" || route.path === localizePath("/", "ru")) {
       return {
         ...route,
         preloadImage: {

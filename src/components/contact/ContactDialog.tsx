@@ -1,12 +1,8 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { ArrowUpRight, Check, Copy, Eye, X } from "lucide-react";
 import { useState, type MouseEvent, type ReactNode, type RefObject } from "react";
-import {
-  CONTACT_AVAILABILITY,
-  CONTACT_EMAIL,
-  contactLinks,
-  revealPhone,
-} from "@/data/contacts";
+import { CONTACT_EMAIL, contactLinks, revealPhone } from "@/data/contacts";
+import { useI18n } from "@/i18n/useI18n";
 import { useCopyFeedback } from "@/hooks/useCopyFeedback";
 import { isAllowedExternalUrl } from "@/lib/externalLinks";
 import { sanitizeUrl } from "@/lib/urlSanitizer";
@@ -30,9 +26,9 @@ const RowValue = ({ children }: { children: ReactNode }) => (
 
 const iconClass = "w-4 h-4 flex-none text-neutral-400 group-hover:text-volt-ink dark:group-hover:text-volt transition-colors";
 
-const CopiedMark = () => (
+const CopiedMark = ({ label }: { label: string }) => (
   <span className="inline-flex items-center gap-1.5 font-mono text-caption uppercase tracking-[0.14em] text-volt-ink dark:text-volt">
-    <span className="hidden min-[420px]:inline">Copied</span>
+    <span className="hidden min-[420px]:inline">{label}</span>
     <Check className="w-4 h-4" strokeWidth={2} aria-hidden="true" />
   </span>
 );
@@ -43,6 +39,7 @@ const safeLinks = contactLinks.flatMap((link) => {
 });
 
 const ContactList = () => {
+  const { t } = useI18n();
   const { copiedKey, copy } = useCopyFeedback<CopyKey>();
   const [phone, setPhone] = useState<ReturnType<typeof revealPhone> | null>(null);
 
@@ -81,11 +78,11 @@ const ContactList = () => {
             href={`mailto:${CONTACT_EMAIL.toLowerCase()}`}
             onClick={handleEmail}
             className={rowClass}
-            aria-label={`Email ${CONTACT_EMAIL} — copy address`}
+            aria-label={t.contact.emailAria(CONTACT_EMAIL)}
           >
-            <RowLabel>Email</RowLabel>
+            <RowLabel>{t.contact.email}</RowLabel>
             <RowValue>{CONTACT_EMAIL}</RowValue>
-            {copiedKey === "email" ? <CopiedMark /> : <Copy className={iconClass} strokeWidth={2} aria-hidden="true" />}
+            {copiedKey === "email" ? <CopiedMark label={t.contact.copied} /> : <Copy className={iconClass} strokeWidth={2} aria-hidden="true" />}
           </a>
         </li>
         <li>
@@ -93,20 +90,20 @@ const ContactList = () => {
             type="button"
             onClick={handlePhone}
             className={rowClass}
-            aria-label={phone ? `Phone ${phone.display} — copy number` : "Show and copy phone number"}
+            aria-label={phone ? t.contact.phoneCopyAria(phone.display) : t.contact.phoneRevealAria}
           >
-            <RowLabel>Phone</RowLabel>
+            <RowLabel>{t.contact.phone}</RowLabel>
             <RowValue>
               {phone ? (
                 <span className="tabular-nums">{phone.display}</span>
               ) : (
                 <span className="text-neutral-500 dark:text-neutral-400 group-hover:text-volt-ink dark:group-hover:text-volt">
-                  Show number
+                  {t.contact.showNumber}
                 </span>
               )}
             </RowValue>
             {copiedKey === "phone" ? (
-              <CopiedMark />
+              <CopiedMark label={t.contact.copied} />
             ) : phone ? (
               <Copy className={iconClass} strokeWidth={2} aria-hidden="true" />
             ) : (
@@ -117,7 +114,7 @@ const ContactList = () => {
         {otherLinks.map(renderLink)}
       </ul>
       <p className="sr-only" aria-live="polite">
-        {copiedKey === "email" ? "Email copied to clipboard" : copiedKey === "phone" ? "Phone number copied to clipboard" : ""}
+        {copiedKey === "email" ? t.contact.emailCopied : copiedKey === "phone" ? t.contact.phoneCopied : ""}
       </p>
     </>
   );
@@ -133,7 +130,9 @@ type ContactDialogProps = {
   returnFocusRef?: RefObject<HTMLElement | null>;
 };
 
-export const ContactDialog = ({ trigger, open, onOpenChange, returnFocusRef }: ContactDialogProps) => (
+export const ContactDialog = ({ trigger, open, onOpenChange, returnFocusRef }: ContactDialogProps) => {
+  const { t } = useI18n();
+  return (
   <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
     {trigger ? <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger> : null}
     <DialogPrimitive.Portal>
@@ -149,18 +148,18 @@ export const ContactDialog = ({ trigger, open, onOpenChange, returnFocusRef }: C
         >
           <div aria-hidden="true" className="md:hidden absolute top-3 left-1/2 -translate-x-1/2 h-1 w-10 rounded-full bg-neutral-300 dark:bg-neutral-700" />
           <p className="font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400 mb-3">
-            Contact
+            {t.contact.eyebrow}
           </p>
           <DialogPrimitive.Title className="text-heading-2 text-gray-900 dark:text-white">
-            Let&apos;s talk
+            {t.contact.title}
           </DialogPrimitive.Title>
           <DialogPrimitive.Description className="mt-2 mb-8 text-body-sm text-neutral-500 dark:text-neutral-400">
-            {CONTACT_AVAILABILITY}
+            {t.contact.availability}
           </DialogPrimitive.Description>
           <ContactList />
           <DialogPrimitive.Close
             className="touch-no-ring absolute right-4 top-4 md:right-6 md:top-6 p-2 rounded-full text-neutral-500 hover:text-gray-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-volt-ink dark:focus-visible:outline-volt"
-            aria-label="Close"
+            aria-label={t.contact.close}
           >
             <X className="w-5 h-5" strokeWidth={2} aria-hidden="true" />
           </DialogPrimitive.Close>
@@ -168,4 +167,5 @@ export const ContactDialog = ({ trigger, open, onOpenChange, returnFocusRef }: C
       </DialogPrimitive.Overlay>
     </DialogPrimitive.Portal>
   </DialogPrimitive.Root>
-);
+  );
+};

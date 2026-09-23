@@ -10,6 +10,8 @@ import Index from "./pages/Index";
 import ProjectDetail from "./pages/ProjectDetail";
 import { useDynamicFavicon } from "./hooks/useDynamicFavicon";
 import { ThemeProvider } from "./hooks/useTheme";
+import { I18nProvider } from "./i18n/I18nProvider";
+import { localizePath } from "./i18n/locales";
 
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Easter = lazy(() => import("./pages/Easter"));
@@ -24,10 +26,13 @@ const App = () => {
           <BrowserRouter
             basename={import.meta.env.BASE_URL}
           >
+            <I18nProvider>
             <PageTransitionProvider>
               <Routes>
                 <Route path={ROUTES.HOME} element={<Index />} />
                 <Route path={ROUTES.PROJECT_DETAIL} element={<ProjectDetail />} />
+                <Route path={localizePath(ROUTES.HOME, "ru")} element={<Index />} />
+                <Route path={localizePath(ROUTES.PROJECT_DETAIL, "ru")} element={<ProjectDetail />} />
                 <Route
                   path={ROUTES.EASTER}
                   element={
@@ -46,6 +51,7 @@ const App = () => {
                 />
               </Routes>
             </PageTransitionProvider>
+            </I18nProvider>
           </BrowserRouter>
           <SpeedInsights />
         </ErrorBoundary>

@@ -5,9 +5,11 @@ import { ROUTES } from "@/constants/routes";
 import ServerLoader from "@/components/ui/ServerLoader";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { PageSeo } from "@/components/PageSeo";
+import { useI18n } from "@/i18n/useI18n";
 
 const NotFound = () => {
   const location = useLocation();
+  const { t, localize } = useI18n();
 
   useEffect(() => {
     if (import.meta.env.DEV) {
@@ -25,12 +27,12 @@ const NotFound = () => {
       showFooter={false}
       showBackToTop={false}
     >
-      <PageSeo title="Page not found | Akbar Azizov" noIndex />
+      <PageSeo title={t.seo.pageNotFound} noIndex />
       <section className="flex min-h-[calc(100svh-88px)] min-h-[calc(100dvh-88px)] max-w-full items-center justify-center overflow-hidden px-4 py-[clamp(0.75rem,2.2vh,2rem)]">
         <div className="flex w-full max-w-4xl flex-col items-center gap-[clamp(0.75rem,2vh,1.75rem)]">
           {/* MONO/VOLT eyebrow */}
           <p className="font-mono text-caption uppercase tracking-[0.2em] text-volt-ink dark:text-volt">
-            {"// error — page not found"}
+            {t.notFound.eyebrow}
           </p>
 
           {/* 404 - Large background-style text */}
@@ -46,25 +48,25 @@ const NotFound = () => {
           {/* Message */}
           <div className="mt-3 space-y-1 text-center text-gray-500 dark:text-slate-400">
             <p className="mx-auto max-w-[46rem] text-body-lg">
-              I tried really hard to find{" "}
+              {t.notFound.triedBefore}{" "}
               <span className="font-mono text-gray-600 dark:text-slate-300 sm:whitespace-nowrap">
                 "{location.pathname}"
               </span>{" "}
-              but couldn't...
+              {t.notFound.triedAfter}
             </p>
             <p className="mx-auto max-w-[46rem] text-body-base">
-              Maybe check the server above or head back home?
+              {t.notFound.hint}
             </p>
           </div>
 
           {/* Action Button */}
           <Magnetic className="mt-3">
             <Link
-              to={ROUTES.HOME}
+              to={localize(ROUTES.HOME)}
               state={{ scrollTo: "home" }}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-foreground px-6 py-2.5 text-button text-background transition-all duration-300 hover:scale-105 hover:opacity-90 sm:px-8 sm:py-3"
             >
-              Return Home
+              {t.notFound.returnHome}
             </Link>
           </Magnetic>
         </div>

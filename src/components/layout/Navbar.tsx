@@ -10,7 +10,9 @@ import {
 } from "@/components/layout/navbar/navigation";
 import { ROUTES } from "@/constants/routes";
 import { SCROLL_SPY_OFFSET_PX } from "@/constants/ui.constants";
-import { projectsSummary } from "@/data/projectsSummary";
+import { projectsSummaryByLocale } from "@/data/projectsSummary";
+import { useI18n } from "@/i18n/useI18n";
+import { stripLocale } from "@/i18n/locales";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { useBlink } from "@/hooks/useBlink";
 import { useEasterLogo } from "@/hooks/useEasterLogo";
@@ -26,6 +28,8 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
   const isHome = variant === "home";
   const location = useLocation();
   const navigate = useNavigate();
+  const { locale, localize } = useI18n();
+  const homePath = localize(ROUTES.HOME);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileProjectsOpen, setMobileProjectsOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
@@ -40,11 +44,11 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
     offsetPx: SCROLL_SPY_OFFSET_PX,
   });
 
-  const projectsMenu = useProjectsMenu({ projects: projectsSummary });
+  const projectsMenu = useProjectsMenu({ projects: projectsSummaryByLocale[locale] });
 
   const { handleLogoClick } = useEasterLogo({
     pathname: location.pathname,
-    homePath: ROUTES.HOME,
+    homePath,
     easterPath: ROUTES.EASTER,
     navigate,
   });
@@ -64,10 +68,10 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
     setActiveSection(sectionId);
     setMobileMenuOpen(false);
     projectsMenu.closeProjectsMenuNow();
-    if (location.pathname === ROUTES.HOME) {
+    if (stripLocale(location.pathname) === ROUTES.HOME) {
       scrollToSection(sectionId);
     } else {
-      navigate(ROUTES.HOME, { state: { scrollTo: sectionId } });
+      navigate(homePath, { state: { scrollTo: sectionId } });
     }
   };
 
@@ -88,7 +92,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
       <div className="max-w-[86rem] mx-auto px-5 sm:px-6 lg:px-8">
         <div className="relative flex flex-wrap items-center justify-between mx-auto p-4">
           <Link
-            to={ROUTES.HOME}
+            to={homePath}
             state={{ scrollTo: "home" }}
             onClick={handleLogoClick}
             className="relative z-10 flex items-center space-x-3"

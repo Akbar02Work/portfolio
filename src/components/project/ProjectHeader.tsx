@@ -4,12 +4,14 @@ import type { Project } from "@/data/projects";
 import { isAllowedExternalUrl } from "@/lib/externalLinks";
 import { sanitizeUrl } from "@/lib/urlSanitizer";
 import { ViewTransitionLink } from "@/hooks/usePageTransition";
+import { useI18n } from "@/i18n/useI18n";
 
 type ProjectHeaderProps = {
     project: Project;
 };
 
 export const ProjectHeader = ({ project }: ProjectHeaderProps) => {
+    const { t, localize } = useI18n();
     const sanitizedGithubLink = project.links.github
         ? sanitizeUrl(project.links.github)
         : null;
@@ -22,13 +24,13 @@ export const ProjectHeader = ({ project }: ProjectHeaderProps) => {
         <header className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-10 md:pt-14 pb-12 md:pb-16">
             <div className="grid grid-cols-2 items-start gap-x-4 gap-y-8 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)] sm:gap-6">
                 <ViewTransitionLink
-                    to={ROUTES.HOME}
+                    to={localize(ROUTES.HOME)}
                     state={{ scrollTo: "projects" }}
                     className="group inline-flex items-center gap-2 justify-self-start pt-2 font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 transition-colors hover:text-volt-ink dark:text-neutral-400 dark:hover:text-volt"
                 >
                     <ArrowLeft className="w-4 h-4 shrink-0 transition-transform group-hover:-translate-x-1" strokeWidth={2} />
-                    <span className="hidden sm:inline">Back to projects</span>
-                    <span className="sm:hidden">Back</span>
+                    <span className="hidden sm:inline">{t.project.back}</span>
+                    <span className="sm:hidden">{t.project.backShort}</span>
                 </ViewTransitionLink>
 
                 <div className="order-3 col-span-2 min-w-0 text-center sm:order-none sm:col-span-1">

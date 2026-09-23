@@ -1,3 +1,6 @@
+import type { Locale } from "../i18n/locales.ts";
+import { projectTranslationsRu } from "./i18n/projects.ru.ts";
+
 export type ProjectMediaType = "phone" | "browser";
 export type ProjectPlatformId = "android" | "web" | "ios";
 
@@ -53,6 +56,20 @@ export interface ProjectData {
   keyFeatures: string[];
   engineeringNote: string;
 }
+
+/** Localized copy for one project; every field falls back to English. */
+export type ProjectTranslation = Partial<
+  Pick<ProjectData, "description" | "role" | "metrics" | "overview" | "challenge" | "keyFeatures" | "engineeringNote">
+> & {
+  mediaAlt?: string;
+  galleryCaptions?: string[];
+  platforms?: Partial<
+    Record<
+      ProjectPlatformId,
+      Partial<Pick<ProjectPlatformContent, "status" | "summary" | "role" | "metrics" | "overview" | "challenge" | "stack" | "keyFeatures" | "engineeringNote">>
+    >
+  >;
+};
 
 type CatalogProject = ProjectData & {
   id: number;
@@ -372,5 +389,40 @@ export const projectsCatalog: CatalogProject[] = projectDefinitions
 export const publicProjectsCatalog = projectsCatalog.filter(
   (project) => project.published
 );
+
+const translationsByLocale: Record<Locale, Record<string, ProjectTranslation>> = {
+  en: {},
+  ru: projectTranslationsRu,
+};
+
+const localizeProject = (project: CatalogProject, locale: Locale): CatalogProject => {
+  const translation = translationsByLocale[locale][project.slug];
+  if (!translation) return project;
+  const { mediaAlt, galleryCaptions, platforms, ...fields } = translation;
+
+  return {
+    ...project,
+    ...fields,
+    media: { ...project.media, alt: mediaAlt ?? project.media.alt },
+    gallery: project.gallery.map((item, index) => ({
+      ...item,
+      caption: galleryCaptions?.[index] ?? item.caption,
+    })),
+    platforms: project.platforms?.map((platform) => ({
+      ...platform,
+      ...(platforms?.[platform.id] ?? {}),
+    })),
+  };
+};
+
+export const projectsCatalogByLocale: Record<Locale, CatalogProject[]> = {
+  en: projectsCatalog,
+  ru: projectsCatalog.map((project) => localizeProject(project, "ru")),
+};
+
+export const publicProjectsCatalogByLocale: Record<Locale, CatalogProject[]> = {
+  en: publicProjectsCatalog,
+  ru: projectsCatalogByLocale.ru.filter((project) => project.published),
+};
 
 export type ProjectSlug = string;

@@ -4,7 +4,8 @@ import { ANIMATION_DELAYS } from "@/constants/animation.constants";
 import { isAllowedExternalUrl } from "@/lib/externalLinks";
 import { sanitizeUrl } from "@/lib/urlSanitizer";
 import { ArrowUpRight, CircleCheck } from "lucide-react";
-import { CONTACT_AVAILABILITY, CONTACT_EMAIL, contactLinks, footerLinkOrder } from "@/data/contacts";
+import { CONTACT_EMAIL, contactLinks, footerLinkOrder } from "@/data/contacts";
+import { useI18n } from "@/i18n/useI18n";
 
 const EMAIL = CONTACT_EMAIL;
 
@@ -20,6 +21,7 @@ const sanitizeSocialLink = (link: (typeof socialLinks)[number]) => {
 };
 
 export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boolean }) => {
+    const { t } = useI18n();
     const [emailCopied, setEmailCopied] = useState(false);
     const copiedTimeoutRef = useRef<number | null>(null);
 
@@ -62,26 +64,26 @@ export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boole
                     {/* Section header — numbering only on home (01 Works / 02 About / 03 Contact) */}
                     <header className="mb-10 md:mb-14">
                         <p className="font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400 mb-4">
-                            {showSectionNumber ? "03 / Contact" : "Contact"}
+                            {showSectionNumber ? t.footer.eyebrow : t.footer.eyebrowPlain}
                         </p>
-                        <h2 className="text-heading-1 text-gray-900 dark:text-white">Let&apos;s work together</h2>
+                        <h2 className="text-heading-1 text-gray-900 dark:text-white">{t.footer.title}</h2>
                     </header>
 
                     <div className="border-t border-neutral-200 dark:border-neutral-800 pt-12 md:pt-16">
                         <p className="font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400 mb-6">
-                            {CONTACT_AVAILABILITY}
+                            {t.contact.availability}
                         </p>
 
                         {/* Giant email — click copies, Cmd/Ctrl+click opens mailto */}
                         <a
                             href={`mailto:${EMAIL.toLowerCase()}`}
                             onClick={handleEmailClick}
-                            title="Click to copy · ⌘/Ctrl+click to open mail"
+                            title={t.footer.emailHint}
                             className="group inline-flex flex-wrap items-baseline font-semibold text-gray-900 dark:text-white hover:text-volt-ink dark:hover:text-volt transition-colors duration-200 text-[clamp(1.75rem,6vw,4.5rem)] leading-[1.05] tracking-tight"
                         >
                             {emailCopied ? (
                                 <span className="inline-flex items-center gap-3 md:gap-4 whitespace-nowrap text-volt-ink dark:text-volt">
-                                    Copied to clipboard
+                                    {t.footer.copied}
                                     <CircleCheck
                                         className="flex-none w-[0.72em] h-[0.72em] animate-in zoom-in-50 fade-in duration-300"
                                         strokeWidth={2}
@@ -104,7 +106,7 @@ export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boole
                         </a>
 
                         {/* Social pills */}
-                        <nav className="mt-14 md:mt-20 border-t border-neutral-200 dark:border-neutral-800 pt-6 flex flex-wrap items-center gap-4" aria-label="Social links">
+                        <nav className="mt-14 md:mt-20 border-t border-neutral-200 dark:border-neutral-800 pt-6 flex flex-wrap items-center gap-4" aria-label={t.footer.socialLinks}>
                             {safeSocialLinks.map((link) => (
                                 <a
                                     key={link.label}
@@ -123,7 +125,7 @@ export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boole
                 </div>
                 <div className="border-t border-neutral-200 dark:border-neutral-800 py-6">
                     <p className="px-6 text-center font-mono text-caption uppercase tracking-[0.2em] text-neutral-500">
-                        Designed &amp; built by Akbar
+                        {t.footer.credit}
                     </p>
                 </div>
             </footer>

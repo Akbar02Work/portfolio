@@ -1,10 +1,12 @@
 import type { Project } from "@/data/projects";
+import { useI18n } from "@/i18n/useI18n";
 
 type ProjectEngineeringNoteProps = {
     project: Project;
 };
 
 export const ProjectEngineeringNote = ({ project }: ProjectEngineeringNoteProps) => {
+    const { t } = useI18n();
     const role = project.role?.trim();
     const note = project.engineeringNote?.trim();
     if (!role && !note) return null;
@@ -18,7 +20,7 @@ export const ProjectEngineeringNote = ({ project }: ProjectEngineeringNoteProps)
                         aria-hidden="true"
                     />
                     <h2 className="text-heading-2 text-gray-900 dark:text-white">
-                        Engineering note
+                        {t.project.engineeringNote}
                     </h2>
                 </div>
 

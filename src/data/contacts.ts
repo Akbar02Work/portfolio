@@ -1,7 +1,5 @@
 export const CONTACT_EMAIL = "Akbar02work@gmail.com";
 
-export const CONTACT_AVAILABILITY = "Open to remote opportunities — Tashkent, UTC+5";
-
 export type ContactLink = {
   id: "telegram" | "linkedin" | "github";
   label: string;

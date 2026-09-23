@@ -9,7 +9,7 @@ import { allProjects, resolveProjectPlatform } from "@/data/projects";
 // Exercise the prepared case in isolation; the real publication flag stays false.
 vi.mock("@/data/projects", async (importOriginal) => {
   const original = await importOriginal<typeof import("@/data/projects")>();
-  return { ...original, projects: original.allProjects };
+  return { ...original, projects: original.allProjects, projectsByLocale: original.allProjectsByLocale };
 });
 
 const HistoryControls = () => {

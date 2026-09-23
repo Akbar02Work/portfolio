@@ -9,6 +9,7 @@ import type { ProjectPlatformId } from "@/data/projectCatalog";
 import { buildProjectUrl } from "@/constants/routes";
 import ProjectCardMedia from "@/components/project/ProjectCardMedia";
 import { ViewTransitionLink } from "@/hooks/usePageTransition";
+import { useI18n } from "@/i18n/useI18n";
 
 interface EditorialCardProps {
     project: ProjectSummary;
@@ -18,16 +19,17 @@ interface EditorialCardProps {
 }
 
 const EditorialCard = ({ project, index, reversed = false, style }: EditorialCardProps) => {
+    const { t, localize } = useI18n();
     const number = String(index + 1).padStart(2, "0");
     const firstPlatform = project.platformPreviews[0];
     const [activePlatform, setActivePlatform] = useState<ProjectPlatformId>(
         firstPlatform?.id ?? "android"
     );
     const activeProject = resolveProjectSummaryPlatform(project, activePlatform);
-    const href = buildProjectUrl(
+    const href = localize(buildProjectUrl(
         project.slug,
         firstPlatform ? activePlatform : undefined
-    );
+    ));
 
     return (
         <article className="group/card flex min-h-0 flex-col justify-center border-b border-neutral-200 dark:border-neutral-800 py-12 md:min-h-[72svh] md:py-20 last:border-b-0">
@@ -80,7 +82,7 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
                         to={href}
                         className="group/cta mt-1 inline-flex w-fit items-center gap-2 border-b border-volt-ink pb-1.5 text-base font-medium text-volt-ink transition-opacity hover:opacity-75 dark:border-volt dark:text-volt"
                     >
-                        Open case study
+                        {t.projects.openCase}
                         <ArrowUpRight
                             className="h-5 w-5 transition-transform duration-200 group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5"
                             strokeWidth={2}

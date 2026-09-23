@@ -1,17 +1,11 @@
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { ANIMATION_DELAYS } from "@/constants/animation.constants";
-import {
-    aboutBio,
-    aboutMeta,
-    aboutPrinciples,
-    education,
-    experience,
-    type ExperienceEntry,
-} from "@/data/about";
+import { aboutContent, type ExperienceEntry } from "@/data/about";
+import { useI18n } from "@/i18n/useI18n";
 
 const monoLabel = "font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400";
 
-const TimelineRow = ({ entry }: { entry: ExperienceEntry }) => (
+const TimelineRow = ({ entry, ndaTitle }: { entry: ExperienceEntry; ndaTitle: string }) => (
     <li className="grid grid-cols-1 sm:grid-cols-[8.5rem_1fr] gap-x-6 gap-y-1.5 py-5 border-b border-neutral-200 dark:border-neutral-800 last:border-b-0">
         <span className={`${monoLabel} sm:pt-1.5 tabular-nums`}>{entry.period}</span>
         <div className="min-w-0">
@@ -24,7 +18,7 @@ const TimelineRow = ({ entry }: { entry: ExperienceEntry }) => (
                 {entry.badge && (
                     <span
                         className="inline-flex items-center rounded-full border border-neutral-300 dark:border-neutral-700 px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400"
-                        title="Work under a non-disclosure agreement — details on request"
+                        title={ndaTitle}
                     >
                         {entry.badge}
                     </span>
@@ -40,14 +34,16 @@ const TimelineRow = ({ entry }: { entry: ExperienceEntry }) => (
 );
 
 export const About = () => {
+    const { t, locale } = useI18n();
+    const { bio: aboutBio, principles: aboutPrinciples, experience, education, meta: aboutMeta } = aboutContent[locale];
     return (
         <AnimatedSection delay={ANIMATION_DELAYS.ABOUT_SECTION}>
             <section id="about" className="py-16 md:py-20 bg-background">
                 <div className="max-w-[86rem] mx-auto px-6 sm:px-8 lg:px-12">
                     {/* Section header — editorial numbering */}
                     <header className="mb-10 md:mb-14">
-                        <p className={`${monoLabel} mb-4`}>02 / About</p>
-                        <h2 className="text-heading-1 text-gray-900 dark:text-white">About me</h2>
+                        <p className={`${monoLabel} mb-4`}>{t.about.eyebrow}</p>
+                        <h2 className="text-heading-1 text-gray-900 dark:text-white">{t.about.title}</h2>
                     </header>
 
                     <div className="border-t border-neutral-200 dark:border-neutral-800 pt-12 md:pt-16 grid md:grid-cols-2 gap-12 md:gap-14">
@@ -80,18 +76,18 @@ export const About = () => {
                         {/* Experience + education */}
                         <div className="md:border-l md:border-neutral-200 md:dark:border-neutral-800 md:pl-14 space-y-10">
                             <div>
-                                <h3 className={`${monoLabel} mb-1`}>Experience</h3>
+                                <h3 className={`${monoLabel} mb-1`}>{t.about.experience}</h3>
                                 <ol className="list-none">
                                     {experience.map((entry) => (
-                                        <TimelineRow key={`${entry.place}-${entry.role}`} entry={entry} />
+                                        <TimelineRow key={`${entry.place}-${entry.role}`} entry={entry} ndaTitle={t.about.ndaTitle} />
                                     ))}
                                 </ol>
                             </div>
                             <div>
-                                <h3 className={`${monoLabel} mb-1`}>Education</h3>
+                                <h3 className={`${monoLabel} mb-1`}>{t.about.education}</h3>
                                 <ol className="list-none">
                                     {education.map((entry) => (
-                                        <TimelineRow key={`${entry.place}-${entry.role}`} entry={entry} />
+                                        <TimelineRow key={`${entry.place}-${entry.role}`} entry={entry} ndaTitle={t.about.ndaTitle} />
                                     ))}
                                 </ol>
                             </div>

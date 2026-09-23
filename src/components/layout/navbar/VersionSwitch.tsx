@@ -1,16 +1,18 @@
 import { getCreativeUrl } from "@/constants/siteVersions";
+import { useI18n } from "@/i18n/useI18n";
 
 type VersionSwitchProps = {
   className?: string;
 };
 
 export const VersionSwitch = ({ className = "" }: VersionSwitchProps) => {
+  const { t } = useI18n();
   const creativeUrl = getCreativeUrl();
 
   return (
     <div
       role="group"
-      aria-label="Site version"
+      aria-label={t.nav.siteVersion}
       className={`inline-flex items-center gap-0.5 rounded-lg border border-gray-200/90 dark:border-gray-800/90 bg-gray-50/80 dark:bg-slate-900/60 p-0.5 font-mono text-[0.65rem] uppercase tracking-[0.12em] ${className}`}
     >
       <span
