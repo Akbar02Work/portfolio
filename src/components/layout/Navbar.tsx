@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { ContactDialog } from "@/components/contact/ContactDialog";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DesktopNav } from "@/components/layout/navbar/DesktopNav";
 import { MobileMenu } from "@/components/layout/navbar/MobileMenu";
@@ -27,6 +28,8 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileProjectsOpen, setMobileProjectsOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
+  const contactReturnFocusRef = useRef<HTMLElement | null>(null);
 
   const { activeSection, setActiveSection } = useActiveSection<NavLinkId>({
     isHome,
@@ -34,7 +37,6 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
     sectionIds: navSectionIds,
     detailSection: getDetailActiveSection(location.pathname),
     homeSection: "home",
-    bottomSectionId: "contact",
     offsetPx: SCROLL_SPY_OFFSET_PX,
   });
 
@@ -69,6 +71,14 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
     }
   };
 
+  const openContact = (returnFocusTo: HTMLElement | null) => {
+    contactReturnFocusRef.current = returnFocusTo;
+    setMobileMenuOpen(false);
+    setMobileProjectsOpen(false);
+    projectsMenu.closeProjectsMenuNow();
+    setContactOpen(true);
+  };
+
   const navPosition = isHome ? "fixed" : "sticky";
 
   return (
@@ -95,6 +105,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
             handleNavItemClick={handleNavItemClick}
             closeMobileMenu={() => setMobileMenuOpen(false)}
             projectsMenu={projectsMenu}
+            onContactClick={openContact}
           />
 
           <MobileMenu
@@ -107,9 +118,15 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
             mobileProjectsOpen={mobileProjectsOpen}
             setMobileProjectsOpen={setMobileProjectsOpen}
             projectMenu={projectsMenu.projectMenu}
+            onContactClick={openContact}
           />
         </div>
       </div>
+      <ContactDialog
+        open={contactOpen}
+        onOpenChange={setContactOpen}
+        returnFocusRef={contactReturnFocusRef}
+      />
     </nav>
   );
 };

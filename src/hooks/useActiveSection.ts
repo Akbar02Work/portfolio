@@ -6,7 +6,8 @@ type UseActiveSectionOptions<T extends string> = {
   sectionIds: readonly T[];
   detailSection: T | "";
   homeSection: T;
-  bottomSectionId: T;
+  /** Section to force-activate at the very bottom of the page; omit to disable. */
+  bottomSectionId?: T;
   offsetPx: number;
 };
 
@@ -30,6 +31,7 @@ export const useActiveSection = <T extends string>({
 
       let rafId = 0;
       const handleBottomCheck = () => {
+        if (!bottomSectionId) return;
         const bottomSection = document.getElementById(bottomSectionId);
         if (!bottomSection) return;
 
@@ -92,7 +94,7 @@ export const useActiveSection = <T extends string>({
           }
         }
 
-        const bottomSection = document.getElementById(bottomSectionId);
+        const bottomSection = bottomSectionId ? document.getElementById(bottomSectionId) : null;
         const isAtBottom =
           window.scrollY + window.innerHeight >=
           document.documentElement.scrollHeight - 2;
@@ -168,6 +170,7 @@ export const useActiveSection = <T extends string>({
 
     let rafId = 0;
     const handleBottomCheck = () => {
+      if (!bottomSectionId) return;
       const bottomSection = document.getElementById(bottomSectionId);
       if (!bottomSection) return;
       const isAtBottom =

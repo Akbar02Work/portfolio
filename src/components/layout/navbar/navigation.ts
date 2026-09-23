@@ -4,8 +4,10 @@ export const navLinks = [
   { id: "home", label: "Home" },
   { id: "projects", label: "Projects" },
   { id: "about", label: "About" },
-  { id: "contact", label: "Contact" },
 ] as const;
+
+// Contact is an action (opens the contact dialog), not a scroll section.
+export const CONTACT_NAV_LABEL = "Contact";
 
 export type NavLinkId = (typeof navLinks)[number]["id"];
 

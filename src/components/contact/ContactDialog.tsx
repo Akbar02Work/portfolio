@@ -1,6 +1,6 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { ArrowUpRight, Check, Copy, Eye, X } from "lucide-react";
-import { useState, type MouseEvent, type ReactNode } from "react";
+import { useState, type MouseEvent, type ReactNode, type RefObject } from "react";
 import {
   CONTACT_AVAILABILITY,
   CONTACT_EMAIL,
@@ -124,15 +124,27 @@ const ContactList = () => {
 };
 
 type ContactDialogProps = {
-  trigger: ReactNode;
+  /** Uncontrolled usage: the element that opens the dialog. */
+  trigger?: ReactNode;
+  /** Controlled usage (e.g. from the navbar). */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** Where focus goes on close when there is no trigger (controlled usage). */
+  returnFocusRef?: RefObject<HTMLElement | null>;
 };
 
-export const ContactDialog = ({ trigger }: ContactDialogProps) => (
-  <DialogPrimitive.Root>
-    <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger>
+export const ContactDialog = ({ trigger, open, onOpenChange, returnFocusRef }: ContactDialogProps) => (
+  <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
+    {trigger ? <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger> : null}
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay className="fixed inset-0 z-[60] flex items-end md:items-center justify-center md:p-6 bg-black/40 dark:bg-black/60 backdrop-blur-sm data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 motion-reduce:animate-none">
         <DialogPrimitive.Content
+          onCloseAutoFocus={(event) => {
+            const target = returnFocusRef?.current;
+            if (!target?.isConnected) return;
+            event.preventDefault();
+            target.focus();
+          }}
           className="relative w-full md:max-w-lg max-h-[90dvh] overflow-y-auto bg-background border-t md:border border-neutral-200 dark:border-neutral-800 rounded-t-3xl md:rounded-3xl shadow-2xl px-6 pt-8 pb-[max(2rem,env(safe-area-inset-bottom))] md:p-10 data-[state=open]:animate-in data-[state=open]:slide-in-from-bottom-8 md:data-[state=open]:slide-in-from-bottom-0 md:data-[state=open]:zoom-in-95 data-[state=open]:duration-300 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 motion-reduce:animate-none"
         >
           <div aria-hidden="true" className="md:hidden absolute top-3 left-1/2 -translate-x-1/2 h-1 w-10 rounded-full bg-neutral-300 dark:bg-neutral-700" />

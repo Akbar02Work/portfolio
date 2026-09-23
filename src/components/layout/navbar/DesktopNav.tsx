@@ -4,13 +4,14 @@ import { buildProjectUrl } from "@/constants/routes";
 import type { useProjectsMenu } from "@/hooks/useProjectsMenu";
 import { ThemeMenu } from "./ThemeMenu";
 import { VersionSwitch } from "./VersionSwitch";
-import { navLinks, type NavLinkId } from "./navigation";
+import { CONTACT_NAV_LABEL, navLinks, type NavLinkId } from "./navigation";
 
 type DesktopNavProps = {
   activeSection: NavLinkId | "";
   handleNavItemClick: (sectionId: NavLinkId) => void;
   closeMobileMenu: () => void;
   projectsMenu: ReturnType<typeof useProjectsMenu>;
+  onContactClick: (returnFocusTo: HTMLElement | null) => void;
 };
 
 export const DesktopNav = ({
@@ -18,6 +19,7 @@ export const DesktopNav = ({
   handleNavItemClick,
   closeMobileMenu,
   projectsMenu,
+  onContactClick,
 }: DesktopNavProps) => (
   <>
     {/* True center — section links only.
@@ -103,6 +105,16 @@ export const DesktopNav = ({
           </li>
         );
       })}
+      <li className="pointer-events-auto">
+        <button
+          type="button"
+          aria-haspopup="dialog"
+          onClick={(event) => onContactClick(event.currentTarget)}
+          className="relative block py-2 px-3 text-[0.9375rem] text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors"
+        >
+          {CONTACT_NAV_LABEL}
+        </button>
+      </li>
     </ul>
 
     {/* Right utilities */}

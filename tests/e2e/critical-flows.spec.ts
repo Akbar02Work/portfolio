@@ -206,3 +206,40 @@ test("contact dialog becomes a bottom sheet on mobile", async ({ page }) => {
     })
     .toEqual([844, 390]);
 });
+
+test("navbar contact opens the dialog on any page and returns focus to the navbar", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+
+  for (const path of ["/", "/projects/voicenotes"]) {
+    await page.goto(path);
+    const navContact = page.locator("nav").getByRole("button", { name: "Contact", exact: true });
+    await navContact.click();
+
+    const dialog = page.getByRole("dialog", { name: "Let's talk" });
+    await expect(dialog).toBeVisible();
+    await expect(page).toHaveURL(new RegExp(`${path === "/" ? "/$" : path}`));
+
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden();
+    await expect(navContact).toBeFocused();
+  }
+});
+
+test("mobile menu contact closes the menu and opens the dialog", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/projects/voicenotes");
+
+  await page.getByRole("button", { name: "Open menu" }).click();
+  const menu = page.getByRole("dialog", { name: "Menu" });
+  await expect(menu).toBeVisible();
+  await menu.getByRole("button", { name: "Contact", exact: true }).click();
+
+  await expect(menu).toHaveCount(0);
+  const dialog = page.getByRole("dialog", { name: "Let's talk" });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole("link", { name: /telegram/i })).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(page.getByRole("button", { name: "Open menu" })).toBeFocused();
+});

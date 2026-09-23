@@ -17,7 +17,7 @@ import {
 import { ROUTES, buildProjectUrl } from "@/constants/routes";
 import type { ProjectSummary } from "@/data/projectsSummary";
 import { ThemeMenu } from "./ThemeMenu";
-import { navLinks, type NavLinkId } from "./navigation";
+import { CONTACT_NAV_LABEL, navLinks, type NavLinkId } from "./navigation";
 
 type MobileMenuProps = {
   activeSection: NavLinkId | "";
@@ -29,6 +29,7 @@ type MobileMenuProps = {
   mobileProjectsOpen: boolean;
   setMobileProjectsOpen: Dispatch<SetStateAction<boolean>>;
   projectMenu: ProjectSummary[];
+  onContactClick: (returnFocusTo: HTMLElement | null) => void;
 };
 
 export const MobileMenu = ({
@@ -41,6 +42,7 @@ export const MobileMenu = ({
   mobileProjectsOpen,
   setMobileProjectsOpen,
   projectMenu,
+  onContactClick,
 }: MobileMenuProps) => (
   <div className="flex items-center gap-2 min-[901px]:hidden">
     <Sheet open={mobileMenuOpen} onOpenChange={(open) => {
@@ -169,6 +171,19 @@ export const MobileMenu = ({
               </div>
             );
           })}
+          <div>
+            <button
+              type="button"
+              aria-haspopup="dialog"
+              onClick={() =>
+                // Focus returns to the menu button once the sheet is gone.
+                onContactClick(document.querySelector<HTMLElement>('button[aria-label="Open menu"]'))
+              }
+              className="relative flex items-center py-[clamp(0.25rem,1vh,0.75rem)] text-left text-[clamp(1.75rem,5vh,3rem)] font-light text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-300 transition-colors"
+            >
+              {CONTACT_NAV_LABEL}
+            </button>
+          </div>
         </nav>
 
         {/* ── Bottom: Theme ── */}
