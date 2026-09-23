@@ -18,6 +18,7 @@ import { ROUTES, buildProjectUrl } from "@/constants/routes";
 import type { ProjectSummary } from "@/data/projectsSummary";
 import { useI18n } from "@/i18n/useI18n";
 import { LanguageSwitch } from "./LanguageSwitch";
+import { LogoMark } from "./LogoMark";
 import { ThemeMenu } from "./ThemeMenu";
 import { navLinks, type NavLinkId } from "./navigation";
 
@@ -84,11 +85,7 @@ export const MobileMenu = ({
             }}
             className="flex items-center"
           >
-            <span className="font-mono text-[clamp(1rem,2.5vh,1.5rem)] font-bold tracking-wider whitespace-nowrap uppercase text-gray-900 dark:text-white">
-              &lt;Aka
-              <span style={{ opacity: isUnderscoreVisible ? 1 : 0 }}>_</span>
-              /Portfolio/&gt;
-            </span>
+            <LogoMark isUnderscoreVisible={isUnderscoreVisible} size="menu" />
           </Link>
           <SheetClose className="p-[clamp(0.25rem,1vh,0.5rem)] rounded-lg text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
             <X className="w-[clamp(1.25rem,3vh,2rem)] h-[clamp(1.25rem,3vh,2rem)]" />

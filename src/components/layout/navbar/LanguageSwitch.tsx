@@ -9,16 +9,14 @@ const LABELS: Record<Locale, { short: string; full: string }> = {
   ru: { short: "Ru", full: "Русский" },
 };
 
-/** Segment width in px (matches w-10). */
-const SEGMENT = 40;
-const MAX_X = SEGMENT * (LOCALES.length - 1);
+/** Segment width (w-9) plus the gap between segments (gap-0.5), in px. */
+const SEGMENT = 36;
+const GAP = 2;
+const STEP = SEGMENT + GAP;
+const MAX_X = STEP * (LOCALES.length - 1);
 const DRAG_THRESHOLD = 4;
 
-type DragState = {
-  x: number;
-  /** Horizontal stretch from drag velocity (liquid feel). */
-  stretch: number;
-};
+const clamp = (value: number) => Math.min(MAX_X, Math.max(0, value));
 
 type LanguageSwitchProps = {
   className?: string;
@@ -26,9 +24,10 @@ type LanguageSwitchProps = {
 };
 
 /**
- * EN / RU segmented switch with a draggable glass thumb: press and slide it
- * like an iOS liquid-glass control; on release it snaps to the nearest
- * language and applies it. Plain clicks and keyboard use regular links.
+ * EN / RU segmented switch. The highlight can be grabbed and slid between the
+ * segments like an iOS segmented control (hard-bounded to the track); on
+ * release it snaps to the nearest language and applies it. Plain clicks and
+ * keyboard use regular links.
  */
 export const LanguageSwitch = ({ className, onSwitch }: LanguageSwitchProps) => {
   const { locale, t } = useI18n();
@@ -37,13 +36,11 @@ export const LanguageSwitch = ({ className, onSwitch }: LanguageSwitchProps) => 
   const activeIndex = LOCALES.indexOf(locale);
 
   const [pressed, setPressed] = useState(false);
-  const [drag, setDrag] = useState<DragState | null>(null);
+  const [dragX, setDragX] = useState<number | null>(null);
   const gestureRef = useRef<{
     pointerId: number;
     startX: number;
     thumbX: number;
-    lastX: number;
-    lastT: number;
     dragging: boolean;
   } | null>(null);
   const suppressClickRef = useRef(false);
@@ -59,13 +56,10 @@ export const LanguageSwitch = ({ className, onSwitch }: LanguageSwitchProps) => 
 
   const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.button !== 0) return;
-    const now = performance.now();
     gestureRef.current = {
       pointerId: event.pointerId,
       startX: event.clientX,
-      thumbX: activeIndex * SEGMENT,
-      lastX: event.clientX,
-      lastT: now,
+      thumbX: activeIndex * STEP,
       dragging: false,
     };
     setPressed(true);
@@ -82,15 +76,7 @@ export const LanguageSwitch = ({ className, onSwitch }: LanguageSwitchProps) => 
       event.currentTarget.setPointerCapture(event.pointerId);
     }
 
-    const now = performance.now();
-    const velocity = (event.clientX - gesture.lastX) / Math.max(1, now - gesture.lastT);
-    gesture.lastX = event.clientX;
-    gesture.lastT = now;
-
-    const raw = gesture.thumbX + dx;
-    // Soft resistance past the ends, like a rubber band.
-    const x = raw < 0 ? raw * 0.25 : raw > MAX_X ? MAX_X + (raw - MAX_X) * 0.25 : raw;
-    setDrag({ x, stretch: Math.min(0.28, Math.abs(velocity) * 0.18) });
+    setDragX(clamp(gesture.thumbX + dx));
   };
 
   const endGesture = (event: ReactPointerEvent<HTMLDivElement>, cancelled: boolean) => {
@@ -101,21 +87,19 @@ export const LanguageSwitch = ({ className, onSwitch }: LanguageSwitchProps) => 
 
     if (gesture.dragging) {
       suppressClickRef.current = true;
-      const x = drag?.x ?? gesture.thumbX;
-      setDrag(null);
+      const x = dragX ?? gesture.thumbX;
+      setDragX(null);
       if (!cancelled) {
-        const index = Math.round(Math.min(MAX_X, Math.max(0, x)) / SEGMENT);
+        const index = Math.round(clamp(x) / STEP);
         const target = LOCALES[index];
         if (target) commit(target);
       }
     }
   };
 
-  const thumbX = drag ? drag.x : activeIndex * SEGMENT;
-  const stretch = drag?.stretch ?? 0;
-  const lift = pressed ? 1.06 : 1;
-  const progress = Math.min(1, Math.max(0, thumbX / SEGMENT));
-  const visualIndex = Math.round(progress * (LOCALES.length - 1));
+  const dragging = dragX !== null;
+  const thumbX = dragging ? dragX : activeIndex * STEP;
+  const visualIndex = Math.round(thumbX / STEP);
 
   return (
     <div
@@ -132,35 +116,30 @@ export const LanguageSwitch = ({ className, onSwitch }: LanguageSwitchProps) => 
         event.stopPropagation();
       }}
       className={cn(
-        "relative inline-flex items-center rounded-full p-[3px] select-none touch-pan-y",
-        "border border-gray-200/90 dark:border-gray-800/90 bg-gray-100/70 dark:bg-slate-900/60",
-        pressed ? "cursor-grabbing" : "cursor-grab",
+        "relative inline-flex items-center gap-0.5 rounded-lg border border-gray-200/90 dark:border-gray-800/90 bg-gray-50/80 dark:bg-slate-900/60 p-0.5",
+        "font-mono text-[0.65rem] uppercase tracking-[0.12em] select-none touch-pan-y",
+        pressed && "cursor-grabbing",
         className
       )}
     >
       <span
         aria-hidden="true"
         className={cn(
-          "pointer-events-none absolute left-[3px] top-[3px] h-7 w-10 rounded-full",
-          "bg-white/75 dark:bg-white/[0.14] backdrop-blur-md",
-          "shadow-[0_1px_3px_rgba(0,0,0,0.12),0_6px_16px_-6px_rgba(0,0,0,0.18),inset_0_1px_0_rgba(255,255,255,0.9)]",
-          "dark:shadow-[0_1px_3px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.18)]",
-          "ring-1 ring-black/[0.04] dark:ring-white/10",
-          drag
+          "pointer-events-none absolute left-0.5 top-0.5 bottom-0.5 w-9 rounded-md bg-white dark:bg-black shadow-sm shadow-black/5",
+          dragging
             ? "transition-none"
-            : "transition-transform duration-[420ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:transition-none"
+            : "transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
         )}
-        style={{
-          transform: `translate3d(${thumbX}px, 0, 0) scale(${(lift + stretch).toFixed(3)}, ${(lift - stretch * 0.45).toFixed(3)})`,
-        }}
+        style={{ transform: `translate3d(${thumbX}px, 0, 0)` }}
       />
       {LOCALES.map((target, index) => {
         const isActive = target === locale;
         const isVisual = index === visualIndex;
         const label = LABELS[target];
         const labelClass = cn(
-          "relative z-10 flex h-7 w-10 items-center justify-center rounded-full font-mono text-[0.65rem] uppercase tracking-[0.12em] transition-colors",
-          isVisual ? "text-gray-900 dark:text-white font-semibold" : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white"
+          "relative z-10 flex w-9 items-center justify-center rounded-md py-1.5 transition-colors",
+          isVisual ? "text-gray-900 dark:text-white font-semibold" : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white",
+          !isActive && "cursor-pointer"
         );
         return isActive ? (
           <span key={target} aria-current="true" lang={target} title={label.full} className={labelClass}>

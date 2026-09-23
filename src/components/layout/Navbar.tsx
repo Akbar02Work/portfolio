@@ -13,6 +13,8 @@ import { SCROLL_SPY_OFFSET_PX } from "@/constants/ui.constants";
 import { projectsSummaryByLocale } from "@/data/projectsSummary";
 import { useI18n } from "@/i18n/useI18n";
 import { stripLocale } from "@/i18n/locales";
+import { getCreativeUrl } from "@/constants/siteVersions";
+import { LogoMark } from "@/components/layout/navbar/LogoMark";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { useBlink } from "@/hooks/useBlink";
 import { useEasterLogo } from "@/hooks/useEasterLogo";
@@ -49,9 +51,8 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
   const { handleLogoClick } = useEasterLogo({
     pathname: location.pathname,
     homePath,
-    easterPath: localize(ROUTES.EASTER),
-    clicksRequired: 3,
-    navigate,
+    // Three clicks on the logo open Creative mode (a separate app).
+    onUnlock: () => window.location.assign(getCreativeUrl()),
   });
 
   const scrollToSection = (sectionId: string) => {
@@ -98,11 +99,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
             onClick={handleLogoClick}
             className="relative z-10 flex items-center space-x-3"
           >
-            <span className="self-center font-mono text-lg font-bold tracking-wider whitespace-nowrap uppercase text-gray-900 dark:text-white">
-              &lt;Aka
-              <span style={{ opacity: isUnderscoreVisible ? 1 : 0 }}>_</span>
-              /Portfolio/&gt;
-            </span>
+            <LogoMark isUnderscoreVisible={isUnderscoreVisible} size="nav" />
           </Link>
 
           <DesktopNav

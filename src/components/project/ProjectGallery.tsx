@@ -18,8 +18,15 @@ interface ProjectGalleryProps {
 /** Three copies: [A][B][C] — viewport stays in B; A/C are teleport buffers */
 const LOOP_COPIES = 3;
 
-/** Ease-out expo — soft landing after flicks */
-const easeOutExpo = (t: number) => (t >= 1 ? 1 : 1 - 2 ** (-10 * t));
+/**
+ * Ease-out cubic: starts at ~3× average speed (expo started at ~7×, which read
+ * as a jolt) and lands softly; also keeps motion continuous when a new step
+ * re-targets an animation that is still running.
+ */
+const easeOutCubic = (t: number) => (t >= 1 ? 1 : 1 - (1 - t) ** 3);
+
+/** Duration grows gently with distance so long hops don't feel rushed. */
+const stepDuration = (distance: number) => Math.min(780, Math.max(460, 380 + distance * 0.55));
 
 const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
     const { t } = useI18n();
@@ -99,7 +106,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
             const startTime = performance.now();
             const tick = (now: number) => {
                 const t = Math.min(1, (now - startTime) / duration);
-                el.scrollLeft = startLeft + delta * easeOutExpo(t);
+                el.scrollLeft = startLeft + delta * easeOutCubic(t);
                 if (t < 1) {
                     scrollAnimFrameRef.current = requestAnimationFrame(tick);
                     return;
@@ -204,7 +211,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
             runEasedScroll(
                 el,
                 nextLeft,
-                Math.min(720, Math.max(360, Math.abs(nextLeft - el.scrollLeft) * 0.7)),
+                stepDuration(Math.abs(nextLeft - el.scrollLeft)),
                 () => {
                     const middle = toMiddleLoopIndex(loopIndex);
                     if (middle === loopIndex) return;
@@ -229,6 +236,31 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
             toMiddleLoopIndex,
             withFrozenTransitions,
         ]
+    );
+
+    /**
+     * Moves the viewport from a buffer copy to the same spot in the middle copy
+     * without any visible change (keeps the current sub-item offset).
+     */
+    const rebaseToMiddle = useCallback(
+        (loopIndex: number) => {
+            const el = scrollerRef.current;
+            const middle = toMiddleLoopIndex(loopIndex);
+            if (!el || middle === loopIndex) return middle;
+            const from = getCenteredScrollLeft(loopIndex);
+            const to = getCenteredScrollLeft(middle);
+            if (from == null || to == null) return middle;
+            isJumpingRef.current = true;
+            withFrozenTransitions(el, () => {
+                el.scrollLeft += to - from;
+                applyActive(middle);
+            });
+            requestAnimationFrame(() => {
+                isJumpingRef.current = false;
+            });
+            return middle;
+        },
+        [applyActive, getCenteredScrollLeft, toMiddleLoopIndex, withFrozenTransitions]
     );
 
     const findClosestLoopIndexRef = useRef<() => number>(() => middleStart);
@@ -281,7 +313,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
             runEasedScroll(
                 el,
                 nextLeft,
-                Math.min(720, Math.max(360, Math.abs(nextLeft - el.scrollLeft) * 0.7))
+                stepDuration(Math.abs(nextLeft - el.scrollLeft))
             );
         },
         [
@@ -461,23 +493,18 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
     ]);
 
     const step = (direction: -1 | 1) => {
-        if (total === 0 || isJumpingRef.current) return;
-        if (animatingToRef.current != null) return;
+        if (total === 0) return;
+        if (total === 1) return;
 
-        const closest = toMiddleLoopIndex(findClosestLoopIndex());
-        const realIndex = ((closest % total) + total) % total;
-        const wraps =
-            (direction === 1 && realIndex === total - 1) ||
-            (direction === -1 && realIndex === 0);
-
-        if (wraps && total > 1) {
-            // Settle exactly on the middle copy first, then ease one step out.
-            jumpToLoopIndex(closest);
-            animateThroughBuffer(closest + direction);
-            return;
-        }
-
-        animateToLoopIndex(closest + direction);
+        // Rapid presses re-target the running animation instead of being
+        // ignored: continue from where it is heading, not from where it is.
+        const base = animatingToRef.current ?? findClosestLoopIndex();
+        cancelScheduledSettle();
+        cancelScrollAnimation();
+        const middle = rebaseToMiddle(base);
+        // The neighbour may sit in a buffer copy (6 → 1); it is re-centred on
+        // the middle copy once the animation lands.
+        animateThroughBuffer(middle + direction);
     };
 
     const focusLoopIndex = (loopIndex: number) => {

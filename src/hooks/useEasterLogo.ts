@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useRef, type MouseEvent } from "react";
-import type { NavigateFunction } from "react-router-dom";
 import { scrollBehavior } from "@/lib/motion";
 
 type UseEasterLogoOptions = {
   pathname: string;
   homePath: string;
-  easterPath: string;
-  navigate: NavigateFunction;
+  /** Called when the logo has been clicked `clicksRequired` times. */
+  onUnlock: () => void;
   clicksRequired?: number;
   clickWindowMs?: number;
 };
@@ -14,9 +13,8 @@ type UseEasterLogoOptions = {
 export const useEasterLogo = ({
   pathname,
   homePath,
-  easterPath,
-  navigate,
-  clicksRequired = 5,
+  onUnlock,
+  clicksRequired = 3,
   clickWindowMs = 1600,
 }: UseEasterLogoOptions) => {
   const easterClickCountRef = useRef(0);
@@ -49,7 +47,7 @@ export const useEasterLogo = ({
 
       if (easterClickCountRef.current >= clicksRequired) {
         resetEasterSequence();
-        navigate(easterPath);
+        onUnlock();
         return;
       }
 
@@ -58,9 +56,8 @@ export const useEasterLogo = ({
     },
     [
       clicksRequired,
-      easterPath,
       homePath,
-      navigate,
+      onUnlock,
       pathname,
       resetEasterSequence,
       scheduleEasterReset,

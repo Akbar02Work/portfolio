@@ -12,8 +12,8 @@ type CopySwapProps = {
 };
 
 /**
- * Blur cross-fade between two faces (as in Creative mode's email) plus an
- * elastic "rubber" bounce on each copy. Both faces share one grid cell, so
+ * Blur morph between two faces (as in Creative mode's email) plus a
+ * spring "rubber" bounce on each copy. Both faces share one grid cell, so
  * the element keeps the width of the wider face and never jumps.
  */
 export const CopySwap = ({ active, idle, done, pulse = 0, className }: CopySwapProps) => {
@@ -29,10 +29,10 @@ export const CopySwap = ({ active, idle, done, pulse = 0, className }: CopySwapP
 
   return (
     <span ref={ref} className={cn("copy-swap", className)}>
-      <span className="copy-swap__face" data-active={!active} aria-hidden={active || undefined}>
+      <span className="copy-swap__face" data-face="idle" data-active={!active} aria-hidden={active || undefined}>
         {idle}
       </span>
-      <span className="copy-swap__face" data-active={active} aria-hidden={!active || undefined}>
+      <span className="copy-swap__face" data-face="done" data-active={active} aria-hidden={!active || undefined}>
         {done}
       </span>
     </span>

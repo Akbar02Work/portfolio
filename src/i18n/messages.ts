@@ -101,14 +101,6 @@ const en = {
     } as Record<string, string>,
     stackRoleFallback: "module",
   },
-  easter: {
-    eyebrow: "// easter egg — you found it",
-    text: "The same engineer, read differently: motion, atmosphere and personality instead of a résumé.",
-    enter: "Enter Creative mode",
-    back: "Back to the site",
-    desktopOnly: "Creative mode is built for desktop screens",
-    seoTitle: "Creative mode | Akbar Azizov",
-  },
   notFound: {
     eyebrow: "// error — page not found",
     triedBefore: "I tried really hard to find",
@@ -241,14 +233,6 @@ const ru: Messages = {
       Hilt: "di",
     },
     stackRoleFallback: "модуль",
-  },
-  easter: {
-    eyebrow: "// пасхалка — вы её нашли",
-    text: "Тот же разработчик, но с другой стороны: движение, атмосфера и характер вместо резюме.",
-    enter: "Открыть Creative mode",
-    back: "Вернуться на сайт",
-    desktopOnly: "Creative mode сделан для экрана компьютера",
-    seoTitle: "Creative mode | Akbar Azizov",
   },
   notFound: {
     eyebrow: "// ошибка — страница не найдена",

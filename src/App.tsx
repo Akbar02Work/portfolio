@@ -12,9 +12,11 @@ import { useDynamicFavicon } from "./hooks/useDynamicFavicon";
 import { ThemeProvider } from "./hooks/useTheme";
 import { I18nProvider } from "./i18n/I18nProvider";
 import { localizePath } from "./i18n/locales";
+import { designPreviewEnabled } from "./dev/designPreviewStore";
 
 const NotFound = lazy(() => import("./pages/NotFound"));
-const Easter = lazy(() => import("./pages/Easter"));
+// TEMPORARY: design preview panel, only with ?design=1 (separate chunk).
+const DesignPreview = lazy(() => import("./dev/DesignPreview"));
 
 const App = () => {
   useDynamicFavicon();
@@ -33,17 +35,6 @@ const App = () => {
                 <Route path={ROUTES.PROJECT_DETAIL} element={<ProjectDetail />} />
                 <Route path={localizePath(ROUTES.HOME, "ru")} element={<Index />} />
                 <Route path={localizePath(ROUTES.PROJECT_DETAIL, "ru")} element={<ProjectDetail />} />
-                {[ROUTES.EASTER, localizePath(ROUTES.EASTER, "ru")].map((path) => (
-                  <Route
-                    key={path}
-                    path={path}
-                    element={
-                      <Suspense fallback={<PageLoader />}>
-                        <Easter />
-                      </Suspense>
-                    }
-                  />
-                ))}
                 <Route
                   path="*"
                   element={
@@ -57,6 +48,11 @@ const App = () => {
             </I18nProvider>
           </BrowserRouter>
           <SpeedInsights />
+          {designPreviewEnabled && (
+            <Suspense fallback={null}>
+              <DesignPreview />
+            </Suspense>
+          )}
         </ErrorBoundary>
       </HelmetProvider>
     </ThemeProvider>
