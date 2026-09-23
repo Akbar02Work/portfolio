@@ -11,12 +11,23 @@ const output = path.join(creative, "dist");
 const destination = path.join(root, "public", "creative");
 const check = process.argv.includes("--check");
 
+// On Windows `npm` is a .cmd shim that execFileSync cannot start directly.
+// Under `npm run`, npm_execpath points at npm's JS entry, so run it with Node.
+const npm = (args, options) => {
+  const npmCli = process.env.npm_execpath;
+  if (npmCli && /\.[cm]?js$/i.test(npmCli)) {
+    return execFileSync(process.execPath, [npmCli, ...args], options);
+  }
+  // Arguments are fixed literals, so the Windows shell fallback is safe.
+  return execFileSync("npm", args, { ...options, shell: process.platform === "win32" });
+};
+
 if (!existsSync(path.join(creative, "node_modules", ".bin", "tsc"))) {
   console.log("Installing Creative dependencies from its lockfile …");
-  execFileSync("npm", ["ci"], { cwd: creative, stdio: "inherit" });
+  npm(["ci"], { cwd: creative, stdio: "inherit" });
 }
 
-execFileSync("npm", ["run", "build"], {
+npm(["run", "build"], {
   cwd: creative,
   stdio: "inherit",
   env: { ...process.env, VITE_BASE_URL: "/creative/", VITE_BUSINESS_URL: "/" },
