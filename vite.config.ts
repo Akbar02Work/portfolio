@@ -18,7 +18,7 @@ const alternatesFor = (neutralPath: string) => [
 
 const localeRouteFields = (locale: Locale, neutralPath: string) => ({
   path: localizePath(neutralPath, locale),
-  preloadFonts: locale === "ru" ? ["/fonts/Inter-cyrillic.woff2"] : undefined,
+  preloadFonts: locale === "ru" ? ["/fonts/Geist-cyrillic.woff2", "/fonts/GeistMono-cyrillic.woff2"] : undefined,
   lang: HTML_LANG[locale],
   ogLocale: OG_LOCALE[locale],
   siteName: messages[locale].seo.siteName,

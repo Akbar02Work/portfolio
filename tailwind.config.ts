@@ -15,7 +15,7 @@ export default {
 		},
 		fontFamily: {
 			sans: [
-				'Inter',
+				'Geist',
 				'ui-sans-serif',
 				'system-ui',
 				'-apple-system',
@@ -28,7 +28,7 @@ export default {
 				'sans-serif'
 			],
 			mono: [
-				'JetBrains Mono',
+				'Geist Mono',
 				'ui-monospace',
 				'SFMono-Regular',
 				'SF Mono',

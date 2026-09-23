@@ -12,11 +12,8 @@ import { useDynamicFavicon } from "./hooks/useDynamicFavicon";
 import { ThemeProvider } from "./hooks/useTheme";
 import { I18nProvider } from "./i18n/I18nProvider";
 import { localizePath } from "./i18n/locales";
-import { designPreviewEnabled } from "./dev/designPreviewStore";
 
 const NotFound = lazy(() => import("./pages/NotFound"));
-// TEMPORARY: design preview panel, only with ?design=1 (separate chunk).
-const DesignPreview = lazy(() => import("./dev/DesignPreview"));
 
 const App = () => {
   useDynamicFavicon();
@@ -48,11 +45,6 @@ const App = () => {
             </I18nProvider>
           </BrowserRouter>
           <SpeedInsights />
-          {designPreviewEnabled && (
-            <Suspense fallback={null}>
-              <DesignPreview />
-            </Suspense>
-          )}
         </ErrorBoundary>
       </HelmetProvider>
     </ThemeProvider>

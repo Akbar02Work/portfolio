@@ -26,6 +26,3 @@ test-results
 *.njsproj
 *.sln
 *.sw?
-
-# TEMPORARY: font candidates for the local design preview (?design=1)
-public/fonts/preview/
