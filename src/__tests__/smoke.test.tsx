@@ -14,8 +14,8 @@ describe("smoke", () => {
 
     expect(screen.getByRole("heading", { level: 1, name: /android engineer/i })).toBeTruthy();
     expect(screen.getByRole("heading", { level: 2, name: /about me/i })).toBeTruthy();
-    expect(screen.getByRole("heading", { level: 2, name: "Selected Works" })).toBeTruthy();
-    expect(screen.queryByRole("heading", { name: "Lumingo" })).toBeNull();
+    expect(screen.getByRole("heading", { level: 2, name: "Selected Projects" })).toBeTruthy();
+    expect(screen.queryByRole("heading", { name: "Lumingo", level: 3 })).toBeNull();
     expect(screen.getAllByRole("link", { name: "Open case study" }).length).toBeGreaterThan(0);
   });
 
@@ -23,7 +23,7 @@ describe("smoke", () => {
     window.history.replaceState({}, "", "/projects/voicenotes");
     render(<App />);
 
-    expect(await screen.findByRole("heading", { level: 1, name: "VoiceNotes" })).toBeTruthy();
+    expect(await screen.findByRole("heading", { level: 1, name: "AI Voice Notes" })).toBeTruthy();
     expect(screen.getByRole("heading", { level: 2, name: "Screens" })).toBeTruthy();
     expect(screen.getByRole("heading", { level: 2, name: "Engineering note" })).toBeTruthy();
     expect(screen.getByRole("heading", { level: 2, name: "Overview" })).toBeTruthy();

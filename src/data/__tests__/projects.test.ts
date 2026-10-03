@@ -73,7 +73,7 @@ describe("project data model", () => {
     }
   });
 
-  it("exposes VoiceNotes screenshots for the editorial gallery", () => {
+  it("exposes AI Voice Notes screenshots for the editorial gallery", () => {
     const voiceNotes = projects.find((project) => project.slug === "voicenotes");
     expect(voiceNotes).toBeDefined();
     expect(voiceNotes?.image).toBe("/projects/voicenotes/screen-01.png");
@@ -167,7 +167,7 @@ describe("project data model", () => {
       "Ktor",
       "Hilt",
     ]);
-    expect(android.summary).toMatch(/native Android client/i);
+    expect(android.summary).toMatch(/language-learning app for Android/i);
 
     const web = resolveProjectPlatform(lumingo!, "web");
     expect(web.technologies).toEqual([
@@ -180,7 +180,7 @@ describe("project data model", () => {
       "Upstash",
       "PostHog",
     ]);
-    expect(web.summary).toMatch(/live web product/i);
+    expect(web.summary).toMatch(/web app for language learning/i);
     expect(web.challenge).not.toBe(android.challenge);
 
     const ios = resolveProjectPlatform(lumingo!, "ios");

@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 type CopySwapProps = {
@@ -6,29 +6,16 @@ type CopySwapProps = {
   active: boolean;
   idle: ReactNode;
   done: ReactNode;
-  /** Increment on every successful copy to replay the rubber bounce. */
-  pulse?: number;
   className?: string;
 };
 
 /**
- * Blur cross-fade between two faces (as in Creative mode's email) plus an
- * elastic "rubber" bounce on each copy. Both faces share one grid cell, so
- * the element keeps the width of the wider face and never jumps.
+ * Blur cross-fade between two faces (as in Creative mode's email). Both faces
+ * share one grid cell, so the element keeps the width of the wider face.
  */
-export const CopySwap = ({ active, idle, done, pulse = 0, className }: CopySwapProps) => {
-  const ref = useRef<HTMLSpanElement | null>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || pulse === 0) return;
-    el.classList.remove("copy-rubber");
-    void el.offsetWidth; // restart the animation
-    el.classList.add("copy-rubber");
-  }, [pulse]);
-
+export const CopySwap = ({ active, idle, done, className }: CopySwapProps) => {
   return (
-    <span ref={ref} className={cn("copy-swap", className)}>
+    <span className={cn("copy-swap", className)}>
       <span className="copy-swap__face" data-active={!active} aria-hidden={active || undefined}>
         {idle}
       </span>

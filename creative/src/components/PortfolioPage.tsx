@@ -322,7 +322,7 @@ export function PortfolioPage({
                   release validation.
                 </p>
                 <p>
-                  I also founded Lumingo and built VoiceNotes, combining hands-on
+                  I also founded Lumingo and built AI Voice Notes, combining hands-on
                   engineering with end-to-end product ownership and practical AI
                   integration.
                 </p>
@@ -338,7 +338,7 @@ export function PortfolioPage({
                 </li>
                 <li>
                   <span className="about__metric-value">Solo build</span>
-                  <span className="about__metric-label">VoiceNotes</span>
+                  <span className="about__metric-label">AI Voice Notes</span>
                 </li>
               </ul>
             </div>

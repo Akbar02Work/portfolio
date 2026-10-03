@@ -64,6 +64,50 @@ describe("ContactDialog", () => {
     expect(screen.getByText("Email copied to clipboard")).toBeTruthy();
   });
 
+  it.each(["denied", "unavailable"])("reports %s clipboard access and recovers on retry", async (failure) => {
+    if (failure === "denied") {
+      writeText.mockRejectedValueOnce(new DOMException("Clipboard denied", "NotAllowedError"));
+    } else {
+      Object.defineProperty(navigator, "clipboard", { configurable: true, value: undefined });
+    }
+    renderDialog();
+    const dialog = openDialog();
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "Show and copy phone number" }));
+    });
+
+    expect(screen.getByRole("alert").textContent).toContain("Couldn't copy the number. Select it and copy it manually.");
+    expect(dialog.textContent).toContain("+998 90 964 67 69");
+    expect(screen.queryByText("Phone number copied to clipboard")).toBeNull();
+    expect(dialog.querySelector('[data-active="true"] .lucide-check')).toBeNull();
+
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: /Phone .* — copy number/ }));
+    });
+
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(screen.getByText("Phone number copied to clipboard")).toBeTruthy();
+  });
+
+  it("removes an earlier success indication when the next copy fails", async () => {
+    renderDialog();
+    openDialog();
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "Show and copy phone number" }));
+    });
+    expect(screen.getByText("Phone number copied to clipboard")).toBeTruthy();
+
+    writeText.mockRejectedValueOnce(new DOMException("Clipboard denied", "NotAllowedError"));
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: /Phone .* — copy number/ }));
+    });
+
+    expect(screen.getByRole("alert")).toBeTruthy();
+    expect(screen.queryByText("Phone number copied to clipboard")).toBeNull();
+  });
+
   it("clears the copied state after a short delay", async () => {
     vi.useFakeTimers();
     renderDialog();

@@ -17,13 +17,13 @@ const PROJECT_CATALOG = [
   {
     id: "voicenotes",
     index: "02",
-    name: "VoiceNotes",
-    glyph: "VN",
+    name: "AI Voice Notes",
+    glyph: "AI",
     year: "2026",
     role: "Solo Android Engineer",
     desc: "A native Android voice-to-notes system — cloud providers when useful, verified on-device Russian transcription when privacy matters.",
     tags: ["Kotlin", "Compose", "Gemini", "Groq", "sherpa-onnx"],
-    href: "https://github.com/Akbar02Work/VoiceNotes",
+    href: "https://github.com/Akbar02Work/AI-Voice-Notes",
   },
   {
     id: "signal",

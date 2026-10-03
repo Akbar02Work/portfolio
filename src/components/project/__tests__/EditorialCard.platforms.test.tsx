@@ -23,15 +23,16 @@ describe("EditorialCard platform content", () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/native Android client/i)).toBeTruthy();
-    expect(screen.getByText(/Kotlin · Jetpack Compose · Convex/i)).toBeTruthy();
+    expect(screen.getByText(/language-learning app for Android/i)).toBeTruthy();
+    expect(screen.getByText("RC")).toBeTruthy();
 
     fireEvent.click(screen.getByRole("tab", { name: "Web — Public beta" }));
 
-    expect(screen.getByText(/live web product/i)).toBeTruthy();
+    expect(screen.getByText(/web app for language learning/i)).toBeTruthy();
     expect(screen.getByText("Live")).toBeTruthy();
-    expect(screen.getByText(/TypeScript · Next\.js · React/i)).toBeTruthy();
-    expect(screen.queryByText(/native Android client/i)).toBeNull();
+    expect(screen.getByText("Adaptive")).toBeTruthy();
+    expect(screen.queryByText(/language-learning app for Android/i)).toBeNull();
+    expect(screen.queryByText("RC")).toBeNull();
 
     const projectLinks = screen.getAllByRole("link");
     expect(projectLinks).toHaveLength(3);

@@ -1,179 +1,65 @@
-# Lumingo Portfolio Design
+# Lumingo: platform-aware case contract
 
-## Goal
+Updated against the working tree on 2026-10-03. The platform model is implemented;
+this describes current behavior, not an outstanding implementation plan.
+Lumingo remains in development and unpublished by the owner's choice.
 
-Present Lumingo as the primary portfolio case and let visitors inspect Android,
-Web, and iOS as distinct engineering surfaces of one product. Platform selection
-must change the complete case-study narrative, not only the screenshot.
+## Publication and identity
 
-## Project Order
+- `src/data/projectCatalog.ts` owns identity, order, English content and publication.
+  Russian content lives in `src/data/i18n/projects.ru.ts`.
+- `published: false` excludes Lumingo from public Business collections, navigation,
+  route HTML, sitemap and Creative. Production direct URLs return 404.
+- DEV previews: `/projects/lumingo?preview=1` and `/ru/projects/lumingo?preview=1`;
+  append `&platform=web` or `&platform=ios` as needed.
+- Catalog order is Lumingo → AI Voice Notes. Only published projects receive public
+  sequence numbers; AI Voice Notes is currently the first visible case.
+- The product link is `https://lumingo.me`. Lumingo has no GitHub link; shared
+  components treat project links as optional.
+- Project colors belong in media. Portfolio controls, focus and navigation use the
+  shared accent; there is no per-project UI accent contract.
 
-- Lumingo is project `01`.
-- VoiceNotes is project `02`.
-- The order is shared by the Business home page, Creative work list, project IDs,
-  and next-project navigation.
+## Platform views
 
-## Temporary Visibility
+The catalog currently labels Android **Release candidate**, Web **Public beta**,
+and iOS **In development**. Review these case-copy values before publication;
+they do not mean every client has shipped. Swift/SwiftUI are explicitly planned.
+Stacks and narratives live in the data files rather than being repeated here.
 
-- Lumingo remains complete in the repository but is marked `published: false`.
-- Public Business and Creative collections, navigation, sitemap, prerendering,
-  and direct routes exclude it until final screenshots and presentation are ready.
-- Restoring the case requires changing the single publication flag.
+Each platform resolves its summary, role, metrics, overview, challenge,
+technologies, key features, engineering note and gallery. The common title and
+product identity stay the same.
 
-## Project Colors
+- Home-card selection, when public, updates media, copy and destination URLs.
+- Detail selection comes from the `platform` query. Missing or invalid values fall
+  back to the first configured platform, currently Android.
+- Selecting a tab updates the URL and all case sections; history restores selection.
+- The gallery resets to the first matching screen when the platform changes.
+- Tabs sit between the title/product link and summary. The separate Product surfaces
+  block is gone; status remains in the tab's accessible label.
+- Preserve keyboard arrows, Home/End and visible focus; do not add timed autoplay.
 
-- Project brand colors stay inside screenshots and media.
-- Portfolio navigation, controls, headings, and interaction states use the
-  shared site accent so every case remains part of one editorial system.
-- No project-specific color token is exposed to the portfolio UI.
+## Media and Creative
 
-## Positioning
+`public/projects/lumingo/*.svg` contains draft illustrations: three Android screens,
+three Web screens and one iOS development image. Android uses phone framing, Web
+browser framing. Prepare actual screenshots or clearly identify mockups before
+enabling the case; the current hidden state is intentional.
 
-Lumingo remains one founder-led product with three platform views:
+Creative keeps its presentation in `creative/src/siteData.ts` and links to the
+Business case. Public visibility/order are injected from the catalog at build
+time. Publication changes require refreshing the embedded Creative output with
+`npm run build:creative` on Linux/macOS.
 
-- Android: native release candidate.
-- Web: live public beta.
-- iOS: native client in development.
+## Future publication check
 
-AI-assisted implementation is described accurately without weakening product
-ownership. Product direction, architecture choices, validation, and release
-acceptance remain Akbar's responsibility.
+Publication requires a new request from the owner. Before changing the flag:
 
-## Platform Content
+1. Confirm media, platform status and EN/RU claims.
+2. Check direct platform URLs, invalid-query fallback, tab/history synchronization
+   and the single-platform AI Voice Notes case.
+3. Rebuild Creative, run relevant project tests and the release checks from the
+   [root README](../../README.md#checks).
+4. Confirm EN/RU routes, navigation, Creative and sitemap include the intended case.
 
-Each Lumingo platform owns a complete content record:
-
-- summary;
-- role;
-- metrics;
-- overview;
-- challenge;
-- technologies;
-- key features;
-- engineering note;
-- media type and screenshots.
-
-The platform records use verified current technology:
-
-### Android
-
-- Kotlin
-- Jetpack Compose
-- Convex
-- Clerk
-- Ktor
-- Hilt
-
-The narrative focuses on native client architecture, Web-to-Android product
-parity, mobile state handling, authentication, and LLM-backed operations.
-
-### Web
-
-- TypeScript
-- Next.js
-- React
-- Convex
-- Clerk
-- OpenAI
-- Upstash
-- PostHog
-
-The narrative focuses on the live product, adaptive learning workflow, identity,
-backend state, AI operations, localization, analytics, and public-beta delivery.
-
-### iOS
-
-- Swift — `Planned`
-- SwiftUI — `Planned`
-
-The platform remains selectable and visibly labeled `In development`. Its copy
-describes the planned native client, shared product contracts, and intended
-platform experience. It must not imply that implementation or release is
-complete.
-
-## Home Card
-
-- The Lumingo card defaults to Android.
-- Selecting Android, Web, or iOS changes:
-  - preview media;
-  - description;
-  - metrics;
-  - displayed technologies.
-- The project title, CTA, and preview link include the selected platform:
-  - `/projects/lumingo?platform=android`
-  - `/projects/lumingo?platform=web`
-  - `/projects/lumingo?platform=ios`
-- VoiceNotes keeps its existing single-surface behavior.
-
-## Case Study
-
-`ProjectDetail` owns one active-platform state. The header, gallery, engineering
-note, Overview, Challenge, Stack, and Key Features all receive the same resolved
-platform view.
-
-- The initial state comes from the `platform` query parameter.
-- Missing or invalid platform values fall back to Android.
-- Selecting a tab updates the query parameter without leaving the page.
-- Direct and shared URLs reopen the matching platform.
-- Back and forward navigation restore the platform represented by the URL.
-- The gallery resets to the first matching screenshot when the platform changes.
-
-## Links
-
-- Lumingo has no GitHub link because its source repository is not part of the
-  public case.
-- VoiceNotes retains its GitHub link.
-- Project links therefore treat GitHub as optional rather than using an empty or
-  placeholder URL.
-
-## Creative Version
-
-- Lumingo appears before VoiceNotes.
-- Creative continues linking to the Business case rather than duplicating the
-  platform selector.
-- Its Lumingo link opens the default Android case unless a platform is explicitly
-  encoded later.
-
-## Accessibility
-
-- The platform selector retains `tablist`, `tab`, `aria-selected`, readable
-  statuses, and visible keyboard focus.
-- Platform changes are expressed in text as well as media.
-- No timed autoplay is introduced.
-
-## Data Flow
-
-1. The project catalog stores common project identity and optional platform
-   content.
-2. Summary and detail adapters expose a resolved platform view without duplicating
-   transformation logic in UI components.
-3. The home card owns its local platform selection and builds a platform-aware
-   destination URL.
-4. The detail route resolves its platform from the URL and passes one consistent
-   view to all sections.
-
-## Testing
-
-- Data tests verify Lumingo-first order, exact platform stacks, iOS planned
-  labels, and the absence of a Lumingo GitHub URL.
-- Card tests verify that selection changes copy, metrics, technologies, media, and
-  destination URLs.
-- Detail tests verify query initialization, invalid-value fallback, URL updates,
-  and synchronized content.
-- Existing VoiceNotes and Creative behavior remain covered.
-- Style tests verify the exact project color tokens and their use by shared
-  project components.
-- Final verification includes lint, cycle detection, TypeScript, unit tests,
-  production builds, bundle budget, Playwright tests, and desktop/mobile visual
-  inspection.
-
-## Success Criteria
-
-1. Lumingo is displayed before VoiceNotes everywhere projects are ordered.
-2. Platform selection changes all Lumingo-specific content and screenshots.
-3. A platform selected on the home card opens the same platform in the case study.
-4. Direct platform URLs and browser history resolve consistently.
-5. iOS is ambitious but explicitly planned and in development.
-6. Lumingo exposes no GitHub link.
-7. VoiceNotes remains functionally unchanged.
-8. All automated and visual checks pass.
+The CV links to this hidden case are deliberately retained until publication.

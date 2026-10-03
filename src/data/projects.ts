@@ -6,6 +6,7 @@ import {
   publicProjectsCatalogByLocale,
 } from "./projectCatalog";
 import type {
+  ProjectFeatureCopy,
   ProjectMediaType,
   ProjectMetric,
   ProjectPlatform,
@@ -61,9 +62,13 @@ export interface Project {
   screens: ProjectScreen[];
   links: {
     github?: string;
+    website?: string;
   };
   engineeringNote: string;
 }
+
+const toFeature = (feature: ProjectFeatureCopy): ProjectFeature =>
+  typeof feature === "string" ? { title: feature } : feature;
 
 const toProject = (project: (typeof projectsCatalog)[number]): Project => ({
   id: project.id,
@@ -85,16 +90,14 @@ const toProject = (project: (typeof projectsCatalog)[number]): Project => ({
     overview: platform.overview,
     technologies: platform.stack,
     challenge: platform.challenge,
-    features: platform.keyFeatures.map((feature) => ({ title: feature })),
+    features: platform.keyFeatures.map(toFeature),
     engineeringNote: platform.engineeringNote,
   })),
   overview: project.overview,
   image: project.coverImage ?? project.gallery[0]?.imageUrl ?? "",
   technologies: project.stackAndArchitecture.stack,
   challenge: project.challenge,
-  features: project.keyFeatures.map((feature) => ({
-    title: feature,
-  })),
+  features: project.keyFeatures.map(toFeature),
   screens: project.gallery.map((screen, index) => ({
     id: `${project.slug}-${index + 1}`,
     title: screen.caption,
@@ -105,6 +108,7 @@ const toProject = (project: (typeof projectsCatalog)[number]): Project => ({
   })),
   links: {
     github: project.links.github,
+    website: project.links.website,
   },
   engineeringNote: project.engineeringNote,
 });

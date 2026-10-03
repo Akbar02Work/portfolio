@@ -50,9 +50,13 @@ export const aboutContent: Record<Locale, AboutContent> = {
     ],
     education: [
       { period: "2025 — now", role: "Master's degree", place: "BSUIR" },
-      { period: "2023 — 2025", role: "Bachelor's degree", place: "BSUIR" },
+      {
+        period: "2021 — 2025",
+        role: "Bachelor's degree",
+        place: "TUIT → BSUIR",
+      },
     ],
-    meta: ["Tashkent", "UTC+5", "RU · EN · UZ"],
+    meta: ["Open to remote opportunities", "Tashkent", "UTC+5"],
   },
   ru: {
     bio: [
@@ -81,8 +85,12 @@ export const aboutContent: Record<Locale, AboutContent> = {
     ],
     education: [
       { period: "2025 — сейчас", role: "Магистратура", place: "БГУИР" },
-      { period: "2023 — 2025", role: "Бакалавриат", place: "БГУИР" },
+      {
+        period: "2021 — 2025",
+        role: "Бакалавриат",
+        place: "ТАТУ → БГУИР",
+      },
     ],
-    meta: ["Ташкент", "UTC+5", "RU · EN · UZ"],
+    meta: ["Открыт к удалённой работе", "Ташкент", "UTC+5"],
   },
 };

@@ -29,7 +29,6 @@ export type ProjectSummary = {
   platforms: ProjectPlatformView[];
   platformPreviews: ProjectPlatformPreview[];
   image: string;
-  technologies: string[];
 };
 
 const toProjectSummary = (project: (typeof projects)[number]): ProjectSummary => ({
@@ -54,7 +53,6 @@ const toProjectSummary = (project: (typeof projects)[number]): ProjectSummary =>
     ];
   }),
   image: toWebpPath(project.image),
-  technologies: project.technologies,
 });
 
 export const allProjectsSummary: ProjectSummary[] =
@@ -87,6 +85,5 @@ export const resolveProjectSummaryPlatform = (
       alt: platform.alt,
     },
     image: platform.image,
-    technologies: platform.technologies,
   };
 };

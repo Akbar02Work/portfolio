@@ -7,7 +7,7 @@ const ru = messages.ru;
 test("serves prerendered Russian routes with language metadata", async ({ request }) => {
   for (const [path, title] of [
     ["/ru", ru.seo.homeTitle],
-    ["/ru/projects/voicenotes", ru.seo.projectTitle("VoiceNotes")],
+    ["/ru/projects/voicenotes", ru.seo.projectTitle("AI Voice Notes")],
   ] as const) {
     const response = await request.get(path);
     expect(response.status(), path).toBe(200);
@@ -43,11 +43,11 @@ test("renders the Russian site and keeps navigation inside the locale", async ({
   await expect(page.getByRole("heading", { level: 2, name: ru.projects.title })).toBeVisible();
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `${SITE_URL}/ru`);
 
-  await page.getByRole("link", { name: ru.projects.openCase, exact: true }).click();
+  await page.locator('a[href="/ru/projects/voicenotes"]').filter({ hasText: ru.projects.openCase }).click();
   await expect(page).toHaveURL(/\/ru\/projects\/voicenotes/);
   await expect(page.getByRole("heading", { level: 2, name: ru.project.overview })).toBeVisible();
   await expect(page.getByText("Задача была не просто вызвать AI API", { exact: false })).toBeVisible();
-  await expect(page.getByRole("figure", { name: "Архитектура обработки VoiceNotes" })).toBeVisible();
+  await expect(page.getByRole("figure", { name: "Архитектура обработки AI Voice Notes" })).toBeVisible();
 
   await page.getByRole("link", { name: ru.project.back, exact: true }).click();
   await expect(page).toHaveURL(/\/ru$/);

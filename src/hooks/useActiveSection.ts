@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { scrollBehavior } from "@/lib/motion";
 
 type UseActiveSectionOptions<T extends string> = {
   isHome: boolean;
@@ -23,11 +24,85 @@ export const useActiveSection = <T extends string>({
   const [activeSection, setActiveSection] = useState<T | "">(
     isHome ? homeSection : detailSection
   );
+  const observedSectionRef = useRef(activeSection);
+  const scrollCleanupRef = useRef<(() => void) | null>(null);
+
+  const updateActiveSection = useCallback((nextSection: T | "") => {
+    observedSectionRef.current = nextSection;
+    if (scrollCleanupRef.current) return;
+    setActiveSection((previous) => previous === nextSection ? previous : nextSection);
+  }, []);
+
+  const scrollToSection = useCallback((sectionId: T) => {
+    const section = document.getElementById(sectionId);
+    if (sectionId !== homeSection && !section) return;
+
+    scrollCleanupRef.current?.();
+    setActiveSection(sectionId);
+    let settleTimer: number;
+
+    function finishScroll() {
+      window.clearTimeout(settleTimer);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("wheel", interruptScroll);
+      window.removeEventListener("touchstart", interruptScroll);
+      window.removeEventListener("touchmove", interruptScroll);
+      window.removeEventListener("pointerdown", interruptScroll);
+      window.removeEventListener("keydown", onKeyDown);
+      scrollCleanupRef.current = null;
+    }
+
+    function resumeTracking() {
+      finishScroll();
+      setActiveSection(observedSectionRef.current);
+    }
+
+    function interruptScroll(event?: Event) {
+      // A new section click replaces the target without flashing the section
+      // currently passing beneath the header between pointerdown and click.
+      if ((event?.type === "pointerdown" || event?.type === "touchstart") &&
+        event.target instanceof Element && event.target.closest("[data-nav-section]")) return;
+      finishScroll();
+      window.scrollTo({ top: window.scrollY, behavior: "instant" });
+      setActiveSection(observedSectionRef.current);
+    }
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.defaultPrevented) return;
+      if (["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "].includes(event.key)) {
+        interruptScroll();
+      }
+    }
+
+    // Wait for scrolling to settle, including browsers without scrollend support.
+    // Each new click replaces the previous target and its listeners.
+    function onScroll() {
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(resumeTracking, 160);
+    }
+
+    scrollCleanupRef.current = finishScroll;
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("wheel", interruptScroll, { passive: true });
+    window.addEventListener("touchstart", interruptScroll, { passive: true });
+    window.addEventListener("touchmove", interruptScroll, { passive: true });
+    window.addEventListener("pointerdown", interruptScroll, { passive: true });
+    window.addEventListener("keydown", onKeyDown);
+    onScroll();
+
+    if (sectionId === homeSection) {
+      window.scrollTo({ top: 0, behavior: scrollBehavior() });
+    } else {
+      section?.scrollIntoView({ behavior: scrollBehavior() });
+    }
+  }, [homeSection]);
+
+  useEffect(() => () => scrollCleanupRef.current?.(), [isHome, pathname]);
 
   useEffect(() => {
     if (!isHome) {
       const detailDefault = detailSection;
-      setActiveSection(detailDefault);
+      updateActiveSection(detailDefault);
 
       let rafId = 0;
       const handleBottomCheck = () => {
@@ -40,13 +115,9 @@ export const useActiveSection = <T extends string>({
           document.documentElement.scrollHeight - 50;
 
         if (isAtBottom) {
-          setActiveSection((prev) =>
-            prev === bottomSectionId ? prev : bottomSectionId
-          );
+          updateActiveSection(bottomSectionId);
         } else {
-          setActiveSection((prev) =>
-            prev === detailDefault ? prev : detailDefault
-          );
+          updateActiveSection(detailDefault);
         }
       };
 
@@ -80,7 +151,7 @@ export const useActiveSection = <T extends string>({
     if (typeof IntersectionObserver === "undefined") {
       let rafId = 0;
 
-      const updateActiveSection = () => {
+      const updateFromPosition = () => {
         let closest = sections[0]!;
         let minDistance = Number.POSITIVE_INFINITY;
 
@@ -103,18 +174,18 @@ export const useActiveSection = <T extends string>({
         }
 
         const nextId = closest.id as T;
-        setActiveSection((prev) => (prev === nextId ? prev : nextId));
+        updateActiveSection(nextId);
       };
 
       const onScroll = () => {
         if (rafId) return;
         rafId = window.requestAnimationFrame(() => {
           rafId = 0;
-          updateActiveSection();
+          updateFromPosition();
         });
       };
 
-      updateActiveSection();
+      updateFromPosition();
       window.addEventListener("scroll", onScroll, { passive: true });
       window.addEventListener("resize", onScroll);
 
@@ -152,7 +223,7 @@ export const useActiveSection = <T extends string>({
         );
 
         const nextId = visibleSections[0]![0] as T;
-        setActiveSection((prev) => (prev === nextId ? prev : nextId));
+        updateActiveSection(nextId);
       },
       {
         rootMargin: `-${offsetPx}px 0px -20% 0px`,
@@ -177,7 +248,7 @@ export const useActiveSection = <T extends string>({
         window.scrollY + window.innerHeight >=
         document.documentElement.scrollHeight - 50;
       if (isAtBottom) {
-        setActiveSection((prev) => (prev === bottomSectionId ? prev : bottomSectionId));
+        updateActiveSection(bottomSectionId);
       }
     };
 
@@ -209,10 +280,12 @@ export const useActiveSection = <T extends string>({
     offsetPx,
     pathname,
     sectionIds,
+    updateActiveSection,
   ]);
 
   return {
     activeSection,
     setActiveSection,
+    scrollToSection,
   };
 };

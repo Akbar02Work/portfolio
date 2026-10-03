@@ -32,7 +32,7 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
     ));
 
     return (
-        <article className="group/card flex min-h-0 flex-col justify-center border-b border-neutral-200 dark:border-neutral-800 py-12 md:min-h-[72svh] md:py-20 last:border-b-0">
+        <article className="group/card flex min-h-0 flex-col justify-center border-b border-neutral-200 dark:border-neutral-800 py-12 first:pt-6 last:pb-10 md:min-h-[72svh] md:py-20 md:first:pt-10 md:last:pb-12 last:border-b-0">
             <div className="grid md:grid-cols-12 gap-12 md:gap-16 items-center">
                 {/* Text block */}
                 <div className={`flex flex-col gap-6 md:gap-7 md:col-span-6 ${reversed ? "md:order-2" : ""}`}>
@@ -49,7 +49,7 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
                         >
                             {project.title}
                             <ArrowUpRight
-                                className="relative top-[0.08em] h-[0.55em] w-[0.55em] shrink-0 opacity-0 -translate-x-1 translate-y-1 transition-all duration-300 group-hover/card:opacity-100 group-hover/card:translate-x-0 group-hover/card:translate-y-0"
+                                className="relative top-[0.08em] h-[0.7em] w-[0.7em] shrink-0 opacity-0 -translate-x-1 translate-y-1 transition-all duration-300 group-hover/card:opacity-100 group-hover/card:translate-x-0 group-hover/card:translate-y-0"
                                 strokeWidth={2}
                                 aria-hidden="true"
                             />
@@ -73,10 +73,6 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
                             </div>
                         ))}
                     </dl>
-
-                    <p className="font-mono text-sm text-neutral-500 dark:text-neutral-400">
-                        {activeProject.technologies.join(" · ")}
-                    </p>
 
                     <ViewTransitionLink
                         to={href}

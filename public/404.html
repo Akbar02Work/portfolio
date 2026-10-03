@@ -5,13 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#0A0A0A" />
-  <title>Page not found | Akbar Azizov</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <title data-ru="Страница не найдена | Akbar Azizov">Page not found | Akbar Azizov</title>
+  <script src="/scripts/theme-init.js"></script>
+  <script src="/scripts/not-found-init.js" defer></script>
   <style>
     :root {
-      color-scheme: dark;
+      color-scheme: light;
       font-family: Inter, system-ui, sans-serif;
-      background: #0a0a0a;
-      color: #fafaf8;
+      --background: #fafaf8;
+      --foreground: #0a0a0a;
+      --muted: #525252;
+      --number: #d4d4d4;
+      --accent: #49760a;
+      background: var(--background);
+      color: var(--foreground);
+    }
+    :root.dark {
+      color-scheme: dark;
+      --background: #0a0a0a;
+      --foreground: #fafaf8;
+      --muted: #a3a3a3;
+      --number: #262626;
+      --accent: #bfff3c;
     }
     * { box-sizing: border-box; }
     body {
@@ -20,35 +36,40 @@
       display: grid;
       place-items: center;
       padding: 1.5rem;
+      background: var(--background);
     }
     main { max-width: 42rem; text-align: center; }
     p {
       margin: 0 0 1rem;
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      color: #a3a3a3;
+      color: var(--muted);
     }
     h1 {
       margin: 0;
       font-size: clamp(7rem, 38vw, 15rem);
       line-height: .85;
       letter-spacing: -.04em;
-      color: #262626;
+      color: var(--number);
     }
     a {
       display: inline-block;
       margin-top: 2rem;
-      border-bottom: 1px solid #bfff3c;
+      border-bottom: 1px solid var(--accent);
       padding-bottom: .3rem;
-      color: #bfff3c;
+      color: var(--accent);
       text-decoration: none;
+    }
+    a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 6px;
     }
   </style>
 </head>
 <body>
   <main>
-    <p>// error — page not found</p>
+    <p data-ru="// ошибка — страница не найдена">// error — page not found</p>
     <h1>404</h1>
-    <a href="/">Return home</a>
+    <a href="/" data-home-link data-ru="На главную">Return home</a>
   </main>
 </body>
 </html>

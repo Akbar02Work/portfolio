@@ -1,4 +1,5 @@
 import { ChevronDown } from "lucide-react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { buildProjectUrl } from "@/constants/routes";
 import type { useProjectsMenu } from "@/hooks/useProjectsMenu";
@@ -6,6 +7,9 @@ import { useI18n } from "@/i18n/useI18n";
 import { LanguageSwitch } from "./LanguageSwitch";
 import { ThemeMenu } from "./ThemeMenu";
 import { navLinks, type NavLinkId } from "./navigation";
+
+const sectionTransition = "[transition-duration:350ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none";
+const navFocus = "focus-visible:outline focus-visible:outline-2 focus-visible:outline-volt-ink dark:focus-visible:outline-volt";
 
 type DesktopNavProps = {
   activeSection: NavLinkId | "";
@@ -22,13 +26,58 @@ export const DesktopNav = ({
   projectsMenu,
   onContactClick,
 }: DesktopNavProps) => {
-  const { t, localize } = useI18n();
+  const { t, localize, locale } = useI18n();
+  const navRef = useRef<HTMLDivElement>(null);
+  const [indicator, setIndicator] = useState<{ left: number; width: number } | null>(null);
+
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    const activeButton = nav?.querySelector<HTMLButtonElement>(`[data-nav-section="${activeSection}"]`);
+    if (!nav || !activeButton) {
+      setIndicator(null);
+      return;
+    }
+
+    const updateIndicator = () => {
+      const navBounds = nav.getBoundingClientRect();
+      const buttonBounds = activeButton.getBoundingClientRect();
+      if (!buttonBounds.width) return;
+
+      const buttonStyle = window.getComputedStyle(activeButton);
+      const paddingLeft = parseFloat(buttonStyle.paddingLeft);
+      const paddingRight = parseFloat(buttonStyle.paddingRight);
+      const left = buttonBounds.left - navBounds.left + paddingLeft;
+      const width = buttonBounds.width - paddingLeft - paddingRight;
+      setIndicator((previous) => previous?.left === left && previous.width === width
+        ? previous
+        : { left, width });
+    };
+
+    updateIndicator();
+    const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(updateIndicator);
+    observer?.observe(nav);
+    nav.querySelectorAll("[data-nav-section]").forEach((button) => observer?.observe(button));
+    window.addEventListener("resize", updateIndicator);
+
+    let disposed = false;
+    void document.fonts?.ready.then(() => {
+      if (!disposed) updateIndicator();
+    });
+
+    return () => {
+      disposed = true;
+      observer?.disconnect();
+      window.removeEventListener("resize", updateIndicator);
+    };
+  }, [activeSection, locale]);
+
   return (
   <>
     {/* True center — section links only.
         pointer-events-none on the absolute shell so it can't steal hits from
         right-side utilities (theme / version) when the centered row is wide. */}
-    <ul className="pointer-events-none hidden min-[901px]:flex absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 flex-row items-center space-x-8">
+    <div ref={navRef} className="pointer-events-none hidden min-[901px]:flex absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
+    <ul className="flex flex-row items-center space-x-8">
       {navLinks.map((link) => {
         const isActive = activeSection === link.id;
         if (link.id === "projects") {
@@ -38,24 +87,32 @@ export const DesktopNav = ({
               className="pointer-events-auto relative group after:content-[''] after:absolute after:left-0 after:right-0 after:top-full after:h-6"
               onMouseEnter={projectsMenu.openProjectsMenu}
               onMouseLeave={projectsMenu.scheduleCloseProjectsMenu}
-              onFocus={projectsMenu.openProjectsMenu}
+              onFocus={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                  projectsMenu.openProjectsMenu();
+                }
+              }}
               onBlur={projectsMenu.handleProjectsBlur}
             >
               <button
                 type="button"
+                data-nav-section={link.id}
                 onClick={() => handleNavItemClick(link.id)}
                 onKeyDown={projectsMenu.handleProjectsKeyDown}
                 ref={projectsMenu.projectsTriggerRef}
                 aria-haspopup="menu"
                 aria-expanded={projectsMenu.isProjectsMenuOpen}
                 aria-controls="projects-menu"
-                className={`relative block py-2 px-3 transition-colors inline-flex items-center gap-1 after:content-[''] after:absolute after:left-3 after:right-3 after:bottom-0.5 after:h-[2px] after:rounded-full after:bg-volt-ink dark:after:bg-volt after:transition-transform after:duration-300 after:ease-out after:origin-left ${isActive
-                  ? "text-[0.9375rem] font-semibold text-black dark:text-white after:scale-x-100"
-                  : "text-[0.9375rem] text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white after:scale-x-0"
+                className={`relative block py-2 px-3 text-[0.9375rem] font-normal transition-colors ${sectionTransition} ${navFocus} focus-visible:outline-offset-2 inline-flex items-center gap-1 ${isActive
+                  ? "text-black dark:text-white"
+                  : "text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
                   }`}
               >
                 {t.nav[link.id]}
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown
+                  aria-hidden="true"
+                  className={`w-4 h-4 transition-transform [transition-duration:420ms] [transition-timing-function:cubic-bezier(0.45,0,0.55,1)] motion-reduce:transition-none ${projectsMenu.isProjectsMenuOpen ? "rotate-180" : "rotate-0"}`}
+                />
               </button>
               <div
                 id="projects-menu"
@@ -82,7 +139,7 @@ export const DesktopNav = ({
                       }}
                       role="menuitem"
                       tabIndex={projectsMenu.isProjectsMenuOpen ? 0 : -1}
-                      className="block whitespace-nowrap px-3.5 py-2.5 text-body-sm text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white hover:bg-gray-100/70 dark:hover:bg-slate-800/70 transition-colors first:pt-3 last:pb-3"
+                      className={`block whitespace-nowrap px-3.5 py-2.5 text-body-sm text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white hover:bg-gray-100/70 dark:hover:bg-slate-800/70 transition-colors first:pt-3 last:pb-3 ${navFocus} focus-visible:-outline-offset-2`}
                     >
                       {project.title}
                     </Link>
@@ -97,10 +154,11 @@ export const DesktopNav = ({
           <li key={link.id} className="pointer-events-auto">
             <button
               type="button"
+              data-nav-section={link.id}
               onClick={() => handleNavItemClick(link.id)}
-              className={`relative block py-2 px-3 transition-colors after:content-[''] after:absolute after:left-3 after:right-3 after:bottom-0.5 after:h-[2px] after:rounded-full after:bg-volt-ink dark:after:bg-volt after:transition-transform after:duration-300 after:ease-out after:origin-left ${isActive
-                ? "text-[0.9375rem] font-semibold text-black dark:text-white after:scale-x-100"
-                : "text-[0.9375rem] text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white after:scale-x-0"
+              className={`relative block py-2 px-3 text-[0.9375rem] font-normal transition-colors ${sectionTransition} ${navFocus} focus-visible:outline-offset-2 ${isActive
+                ? "text-black dark:text-white"
+                : "text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
                 }`}
             >
               {t.nav[link.id]}
@@ -113,12 +171,21 @@ export const DesktopNav = ({
           type="button"
           aria-haspopup="dialog"
           onClick={(event) => onContactClick(event.currentTarget)}
-          className="relative block py-2 px-3 text-[0.9375rem] text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors"
+          className={`relative block py-2 px-3 text-[0.9375rem] text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors ${navFocus} focus-visible:outline-offset-2`}
         >
           {t.nav.contact}
         </button>
       </li>
     </ul>
+    {indicator && (
+      <span
+        aria-hidden="true"
+        data-nav-indicator=""
+        className={`pointer-events-none absolute left-0 bottom-0.5 h-[2px] rounded-full bg-volt-ink dark:bg-volt transition-[transform,width] ${sectionTransition}`}
+        style={{ width: indicator.width, transform: `translateX(${indicator.left}px)` }}
+      />
+    )}
+    </div>
 
     {/* Right utilities */}
     <div className="relative z-20 hidden min-[901px]:flex items-center gap-3 ml-auto">

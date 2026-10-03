@@ -190,7 +190,6 @@ export const prerenderRoutes = ({ siteUrl, routes }: PrerenderOptions): Plugin =
             `  </url>`,
           ].join("\n")
         ),
-        `  <url>\n    <loc>${toUrl("/creative/")}</loc>\n  </url>`,
       ];
       await writeFile(
         path.join(outDir, "sitemap.xml"),

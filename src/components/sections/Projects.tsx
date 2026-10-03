@@ -13,7 +13,7 @@ export const Projects = ({ projects }: ProjectsProps) => {
     const { t } = useI18n();
     return (
         <AnimatedSection delay={ANIMATION_DELAYS.PROJECTS_SECTION}>
-            <section id="projects" className="py-24 bg-background">
+            <section id="projects" className="pt-24 pb-12 bg-background">
                 <div className="max-w-[86rem] mx-auto px-6 sm:px-8 lg:px-12">
                     {/* Section header — editorial numbering */}
                     <header className="mb-6 md:mb-10">
@@ -24,7 +24,7 @@ export const Projects = ({ projects }: ProjectsProps) => {
                     </header>
 
                     {/* Numbered editorial list */}
-                    <div className="border-t border-neutral-200 dark:border-neutral-800">
+                    <div>
                         {projects.map((project, index) => (
                             <EditorialCard
                                 key={project.id}

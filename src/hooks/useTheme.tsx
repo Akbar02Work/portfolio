@@ -5,6 +5,8 @@ type ThemeMode = "light" | "dark" | "system";
 type ResolvedTheme = "light" | "dark";
 
 const THEME_STORAGE_KEY = "theme-mode";
+/** Must match public/scripts/theme-init.js and the critical CSS in index.html. */
+const ROOT_BACKGROUND: Record<ResolvedTheme, string> = { light: "#FAFAF8", dark: "#0A0A0A" };
 
 const getSystemTheme = (): ResolvedTheme => {
     if (typeof window === "undefined" || typeof window.matchMedia !== "function") return "light";
@@ -67,6 +69,10 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const root = document.documentElement;
         root.classList.toggle("dark", resolvedTheme === "dark");
+        // Keep the inline styles set by public/scripts/theme-init.js in sync;
+        // they outrank the html.dark rules otherwise.
+        root.style.colorScheme = resolvedTheme;
+        root.style.backgroundColor = ROOT_BACKGROUND[resolvedTheme];
     }, [resolvedTheme]);
 
     const value = useMemo(

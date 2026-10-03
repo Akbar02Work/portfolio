@@ -1,0 +1,26 @@
+.archive-return {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 100;
+  max-width: calc(100vw - 2rem);
+  padding: .75rem 1rem;
+  border: 1px solid #64748b;
+  border-radius: 999px;
+  background: #0f172a;
+  color: #f8fafc;
+  font: 600 .875rem/1.5 system-ui, sans-serif;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 20%);
+}
+
+.archive-return:hover {
+  background: #1e293b;
+  color: #fff;
+}
+
+.archive-return:focus-visible {
+  outline: 3px solid #84cc16;
+  outline-offset: 3px;
+}

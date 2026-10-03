@@ -11,12 +11,12 @@ test("follows the editorial project detail flow", async ({ page }) => {
 
   const detailFlow = page.locator("[data-project-detail]");
   await expect(
-    detailFlow.locator(":scope > header").getByRole("heading", { level: 1, name: "VoiceNotes" })
+    detailFlow.locator(":scope > header").getByRole("heading", { level: 1, name: "AI Voice Notes" })
   ).toBeVisible();
 
   const detailSections = detailFlow.locator(":scope > section");
   await expect(detailSections.nth(0).getByText("Screens", { exact: true })).toBeVisible();
-  await expect(detailSections.nth(2).getByRole("heading", { level: 2, name: "Overview" })).toBeVisible();
+  await expect(detailSections.nth(1).getByRole("heading", { level: 2, name: "Overview" })).toBeVisible();
 });
 
 test("keeps hidden Lumingo content out of public routes", async ({ page }) => {
@@ -149,7 +149,7 @@ test("anchor navigation leaves section headings below the navbar", async ({ page
   expect(sectionTop).toBeGreaterThanOrEqual(navBottom - 1);
 
   const headingTop = await page
-    .getByRole("heading", { level: 2, name: "Selected Works" })
+    .getByRole("heading", { level: 2, name: "Selected Projects" })
     .evaluate((heading) => heading.getBoundingClientRect().top);
   expect(headingTop).toBeGreaterThan(navBottom);
 });
@@ -178,6 +178,7 @@ test("hero contact dialog opens, reveals the phone on request and returns focus"
 
   const dialog = page.getByRole("dialog", { name: "Let's talk" });
   await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole("link", { name: /telegram/i })).toBeFocused();
   await expect(dialog.getByRole("link", { name: /telegram/i })).toHaveAttribute("href", "https://t.me/Akbar02Work");
   await expect(dialog).not.toContainText("964");
 

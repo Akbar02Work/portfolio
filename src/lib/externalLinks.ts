@@ -3,6 +3,7 @@ const ALLOWED_DOMAINS = [
   "linkedin.com",
   "www.linkedin.com",
   "t.me",
+  "lumingo.me",
 ];
 
 export const isAllowedExternalUrl = (url: string): boolean => {

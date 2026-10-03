@@ -13,13 +13,12 @@ import { SCROLL_SPY_OFFSET_PX } from "@/constants/ui.constants";
 import { projectsSummaryByLocale } from "@/data/projectsSummary";
 import { useI18n } from "@/i18n/useI18n";
 import { stripLocale } from "@/i18n/locales";
-import { getCreativeUrl } from "@/constants/siteVersions";
+import { HiddenVersionsDialog } from "@/components/layout/navbar/HiddenVersionsDialog";
 import { LogoMark } from "@/components/layout/navbar/LogoMark";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { useBlink } from "@/hooks/useBlink";
 import { useEasterLogo } from "@/hooks/useEasterLogo";
 import { useProjectsMenu } from "@/hooks/useProjectsMenu";
-import { scrollBehavior } from "@/lib/motion";
 
 type NavbarProps = {
   variant?: "home" | "detail";
@@ -36,8 +35,10 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
   const [mobileProjectsOpen, setMobileProjectsOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const contactReturnFocusRef = useRef<HTMLElement | null>(null);
+  const [hiddenVersionsOpen, setHiddenVersionsOpen] = useState(false);
+  const logoRef = useRef<HTMLAnchorElement | null>(null);
 
-  const { activeSection, setActiveSection } = useActiveSection<NavLinkId>({
+  const { activeSection, setActiveSection, scrollToSection } = useActiveSection<NavLinkId>({
     isHome,
     pathname: location.pathname,
     sectionIds: navSectionIds,
@@ -51,28 +52,21 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
   const { handleLogoClick } = useEasterLogo({
     pathname: location.pathname,
     homePath,
-    // Three clicks on the logo open Creative mode (a separate app).
-    onUnlock: () => window.location.assign(getCreativeUrl()),
+    onUnlock: () => {
+      setMobileMenuOpen(false);
+      setMobileProjectsOpen(false);
+      projectsMenu.closeProjectsMenuNow();
+      setHiddenVersionsOpen(true);
+    },
   });
 
-  const scrollToSection = (sectionId: string) => {
-    if (sectionId === "home") {
-      window.scrollTo({ top: 0, behavior: scrollBehavior() });
-      return;
-    }
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: scrollBehavior() });
-    }
-  };
-
   const handleNavItemClick = (sectionId: NavLinkId) => {
-    setActiveSection(sectionId);
     setMobileMenuOpen(false);
     projectsMenu.closeProjectsMenuNow();
     if (stripLocale(location.pathname) === ROUTES.HOME) {
       scrollToSection(sectionId);
     } else {
+      setActiveSection(sectionId);
       navigate(homePath, { state: { scrollTo: sectionId } });
     }
   };
@@ -91,15 +85,16 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
     <nav
       className={`${navPosition} w-full z-50 top-0 start-0 bg-background/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800`}
     >
-      <div className="max-w-[86rem] mx-auto px-5 sm:px-6 lg:px-8">
-        <div className="relative flex flex-wrap items-center justify-between mx-auto p-4">
+      <div className="max-w-[86rem] mx-auto px-6 sm:px-8 lg:px-12">
+        <div className="relative flex flex-wrap items-center justify-between mx-auto py-4">
           <Link
+            ref={logoRef}
             to={homePath}
             state={{ scrollTo: "home" }}
             onClick={handleLogoClick}
             className="relative z-10 flex items-center space-x-3"
           >
-            <LogoMark isUnderscoreVisible={isUnderscoreVisible} size="nav" />
+            <LogoMark isUnderscoreVisible={isUnderscoreVisible} />
           </Link>
 
           <DesktopNav
@@ -128,6 +123,11 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
         open={contactOpen}
         onOpenChange={setContactOpen}
         returnFocusRef={contactReturnFocusRef}
+      />
+      <HiddenVersionsDialog
+        open={hiddenVersionsOpen}
+        onOpenChange={setHiddenVersionsOpen}
+        returnFocusRef={logoRef}
       />
     </nav>
   );

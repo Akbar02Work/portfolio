@@ -7,10 +7,3 @@ export const withBase = (path: string) => {
   }
   return `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
 };
-
-export const toAbsoluteUrl = (path: string) => {
-  if (typeof window === "undefined") {
-    return withBase(path);
-  }
-  return new URL(withBase(path), window.location.origin).toString();
-};

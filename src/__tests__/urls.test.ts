@@ -1,6 +1,22 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { withBase, toAbsoluteUrl } from "../lib/urls";
+import { describe, it, expect, vi } from "vitest";
+import { withBase } from "../lib/urls";
 import { buildProjectUrl } from "@/constants/routes";
+import { getCreativeUrl } from "@/constants/siteVersions";
+
+describe("Creative entry", () => {
+    it("requests the intro when entering through the hidden version chooser", () => {
+        expect(new URL(getCreativeUrl()).searchParams.get("intro")).toBe("1");
+    });
+
+    it("preserves an overridden destination's query and section", () => {
+        vi.stubEnv("VITE_CREATIVE_URL", "https://creative.example/lab?view=demo#works");
+        try {
+            expect(getCreativeUrl()).toBe("https://creative.example/lab/?view=demo&intro=1#works");
+        } finally {
+            vi.unstubAllEnvs();
+        }
+    });
+});
 
 describe("buildProjectUrl", () => {
     it("adds a selected platform without changing single-surface project URLs", () => {
@@ -30,36 +46,5 @@ describe("withBase", () => {
 
     it("removes leading slash from relative paths before prepending", () => {
         expect(withBase("/assets/logo.png")).toBe("/assets/logo.png");
-    });
-});
-
-describe("toAbsoluteUrl", () => {
-    const originalLocation = window.location;
-
-    beforeEach(() => {
-        // Mock window.location.origin
-        Object.defineProperty(window, "location", {
-            value: { origin: "https://mysite.com" },
-            writable: true,
-        });
-    });
-
-    afterEach(() => {
-        Object.defineProperty(window, "location", {
-            value: originalLocation,
-            writable: true,
-        });
-    });
-
-    it("converts relative path to full URL", () => {
-        expect(toAbsoluteUrl("images/photo.jpg")).toBe("https://mysite.com/images/photo.jpg");
-    });
-
-    it("converts path with leading slash to full URL", () => {
-        expect(toAbsoluteUrl("/assets/logo.png")).toBe("https://mysite.com/assets/logo.png");
-    });
-
-    it("returns absolute URLs unchanged", () => {
-        expect(toAbsoluteUrl("https://other.com/file.js")).toBe("https://other.com/file.js");
     });
 });

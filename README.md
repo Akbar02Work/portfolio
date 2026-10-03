@@ -11,97 +11,36 @@
   </a>
 </p>
 
-**One portfolio, two ways to read the same engineer.**
+One portfolio, two interfaces: [Business](https://www.akbar02work.xyz) presents
+projects and engineering decisions; [Creative](https://www.akbar02work.xyz/creative/)
+presents motion, atmosphere and personality. Both ship from one repository.
+Business supports English and [Russian](https://www.akbar02work.xyz/ru). Creative's
+desktop content is English; below 901 px it shows a Russian gate and a Business link.
 
-[Business](https://www.akbar02work.xyz) is the direct version: work, decisions, and
-evidence. [Creative](https://www.akbar02work.xyz/creative/) is the expressive
-version: motion, atmosphere, and personality. They are intentionally different
-interfaces, but they ship from one repository and one release pipeline.
-Creative is intentionally a desktop-only experience: below 901 px it shows an
-access gate and keeps its desktop interactions out of the mobile runtime.
-Business is available in English and [Russian](https://www.akbar02work.xyz/ru);
-Creative stays English.
-
-## Why two versions?
-
-Most portfolios force engineering credibility and creative identity into the same
-layout. This one keeps the tension visible.
-
-| Business | Creative |
-| --- | --- |
-| Editorial and restrained | Kinetic and cinematic |
-| Optimized for scanning | Designed for exploration |
-| Project evidence first | Personality and atmosphere first |
-| React app at the repository root | Independent React app in [`creative/`](creative/) |
-
-The switch between them is part of the product idea—not a theme toggle. Each
-version answers a different question: “Can this person build the work?” and “What
-does it feel like to work with this person?”
-
-## The engineering behind the presentation
-
-This repository is more than a generated landing page. Its difficult parts live
-at the seams:
-
-- **Two applications, one deploy.** The Creative app is built independently,
-  embedded at `/creative/`, and checked for output drift before CI can pass.
-- **A case study, not a card grid.** Project data is modeled once and transformed
-  into summaries, detail pages, metrics, galleries, and navigation without
-  duplicating editorial content.
-- **Motion with an exit path.** WebGL, scroll choreography, view transitions, and
-  desktop interaction add character while reduced-motion behavior, keyboard
-  navigation, semantic markup, and a conventional Business version keep the site
-  usable.
-- **Static hosting without static UX.** Client-side routes, direct project URLs,
-  `/creative/`, `/old/`, metadata, and 404 behavior are prepared for a single
-  Vercel deployment.
-- **Two languages without a runtime framework.** A typed EN/RU dictionary with a
-  parity test, locale-prefixed routes (`/ru/...`) prerendered with `lang`,
-  hreflang alternates and sitemap entries, and Cyrillic font subsets that load
-  only when Cyrillic text renders.
-- **Privacy as a release constraint.** Public media is deliberately curated;
-  project screenshots, the downloadable CV, claims, and external links are
-  reviewed as publishable product data rather than copied into `public/`
-  indiscriminately.
-- **Quality gates that match the architecture.** Linting, cycle detection,
-  TypeScript, unit tests, production builds, bundle budgets, Creative embed drift,
-  and Playwright browser tests run as one CI contract.
-
-The currently published case is:
-
-- [VoiceNotes](https://www.akbar02work.xyz/projects/voicenotes), a native Android
-  voice-to-notes system that turns short recordings into searchable notes through
-  cloud providers or a verified on-device Russian transcription path.
-
-Lumingo's Android, Web, and iOS case data remains in the repository with
-`published: false`. The catalog in `src/data/projectCatalog.ts` controls public
-Business routes, summaries, navigation, the generated sitemap, and Creative case
-visibility. Creative retains its own presentation and the local “This Lab” card.
-
-## Human direction, AI-assisted execution
-
-AI tools were used as accelerators for exploration, implementation passes,
-debugging, review, and documentation. They did not choose the product direction
-or publish the result.
-
-I remained responsible for the architecture, visual direction, project claims,
-source selection, privacy review, trade-offs, and final release acceptance.
-That boundary matters here: generated output is input to an engineering process,
-not evidence of completion.
+The public case is **AI Voice Notes** (`voicenotes`). **Lumingo is in development
+and unpublished** (`published: false`); its DEV-only preview uses `?preview=1`.
+The catalog controls public routes, cards, navigation, sitemap and Creative
+visibility. Both EN/RU CV files are available; their links to the hidden Lumingo
+case are intentionally retained by the owner.
 
 ## Repository map
 
-```text
-src/                 Business portfolio and case-study system
-src/i18n/            Locale routing and EN/RU interface copy
-creative/            Creative portfolio application
-public/creative/     Generated Creative embed shipped by the root app
-scripts/             Build integration, route, image, cycle, and bundle checks
-tests/               Browser-level release checks
-docs/history/        Archived design and audit context
-```
+| Location | Purpose |
+| --- | --- |
+| `src/` | Business: React 18, TypeScript, Tailwind, React Router |
+| `src/data/`, `src/i18n/` | Project content, publication, EN/RU copy and locale routes |
+| `creative/` | Independent React 19 app with GSAP, Lenis and WebGL |
+| `public/creative/` | Generated Creative embed included in the root build |
+| `public/old/` | Intentional public archive, excluded from indexing |
+| `scripts/`, `tests/e2e/` | Build integration, static release checks and profiling |
+| [docs/HANDOFF.md](docs/HANDOFF.md) | Current context, owner decisions and code map |
+| [Lumingo contract](docs/specs/2026-08-07-lumingo-portfolio-design.md) | Platform behavior and future publication |
+| [Performance notes](docs/audits/2026-09-05-performance-optimization.md) | Lab usage and historical measurements |
 
-For a local review, use Node.js 24:
+## Local development
+
+Use Node.js 24 and npm, matching [CI](.github/workflows/ci.yml). Install each app
+from its lockfile:
 
 ```bash
 npm ci
@@ -109,66 +48,97 @@ npm --prefix creative ci
 npm run dev:pair
 ```
 
-`dev:pair` uses ports 5173 and 5174. An occupied port causes startup to fail without
-stopping its owner. `npm run dev:pair:stop` stops only this checkout's supervisor
-and its children.
+The pair supervisor runs Business at `http://127.0.0.1:5173/` and Creative at
+`https://127.0.0.1:5174/` (local HTTPS). It uses POSIX process groups and is intended
+for Linux/macOS. Occupied ports cause startup to fail without stopping their owner.
+`npm run dev:pair:stop` stops only this checkout's supervisor and children.
 
-`npm run build` builds Business with the committed Creative embed, so local builds
-(including on Windows, where Creative's bundle hashes differ) leave `public/creative/`
-untouched. `npm run build:all` rebuilds Creative first.
+For Business alone use `npm run dev`; for Creative alone use
+`npm --prefix creative run dev`. Three quick logo clicks on the Business home
+page open a chooser for Creative and Old. Creative's Business link returns to
+the main site.
 
-After changing Creative source or project publication, run `npm run build:creative`
-on Linux/macOS (or let CI's drift check tell you) and include the resulting
-`public/creative/` output with the source change.
-`npm run check:creative-drift` rebuilds Creative and compares files byte for byte;
-it never refreshes the embed during the check.
+## Build and embed
 
-`npm run ci` checks both applications, script regressions, the Creative embed,
-and gzip budgets (Business initial JS/CSS and all Creative JS/CSS, each 150 KiB).
-It also builds Business route HTML (English and `/ru`) and `dist/sitemap.xml`
-from the public catalog.
-`npm run ci:full` adds Chromium E2E; first install it with
-`npx playwright install chromium`. To check other engines, install `firefox webkit`
-and run `npx playwright test --browser=firefox` and `--browser=webkit` after a build.
+| Command | Behavior |
+| --- | --- |
+| `npm run build` | Builds Business and copies the saved `public/creative/` embed into `dist/` |
+| `npm run build:creative` | Builds Creative with `/creative/` base and replaces `public/creative/` |
+| `npm run build:all` | Refreshes Creative, then builds Business |
+| `npm run check:creative-drift` | Rebuilds Creative and compares the embed byte for byte without updating it |
+| `npm run preview` | Standard Vite preview; does not validate production 404/header behavior |
 
-`npm run test:e2e` builds both applications before running browser checks. Tests
-serve `dist/` using `scripts/serve-static.mjs` and the routing/header rules from
-`vercel.json`, including static 404 responses. This bounded local server is not a
-Vercel emulator; production edge behavior still needs a deployment smoke check.
-`npm run preview` remains the standard Vite preview for interactive development.
+After Creative source or catalog publication changes, refresh the embed on
+Linux/macOS and include its output with the change. Windows output hashes may
+differ: use the ordinary Business build with the saved embed there. The embed
+script can install Creative dependencies if they are missing; install them
+explicitly first when preparing a reproducible build.
 
-For reproducible performance measurements, build first, then run these **serially**
-from the repository root with other browser tests stopped:
+Business builds route-specific EN/RU metadata and `dist/sitemap.xml` from the
+public catalog. This is metadata prerendering, not full React SSR. Unknown and
+hidden routes return static 404s; the error page selects EN/RU from its URL and
+uses the saved theme. Localization of the static fallback requires JavaScript.
+
+## Checks
+
+Choose focused checks for the files changed. Existing commands include `npm test`,
+`npm run typecheck`, `npm run lint:all`, and `npm run test:scripts`.
+
+For a release:
 
 ```bash
-node scripts/profile-performance.mjs before
-node scripts/profile-interactions.mjs before
-node scripts/profile-navigation.mjs before
+npx playwright install chromium
+npm run ci:full
 ```
 
-Repeat with `after` following a change. The load and navigation labs use Chromium,
-4× CPU slowdown, 150 ms latency, and 1.6 Mbps download; the interaction profiler
-uses unthrottled networking and exports CPU profiles and call counts. Reports go
-to ignored `logs/performance/<label>/`; `PERF_OUTPUT_DIR` overrides the report root.
-Use `PERF_RUNS` for load/navigation repetitions, `PERF_SCENARIOS` for load scenario
-names, and `PERF_ROUTES` for interaction routes. `PORTFOLIO_DIST_DIR` and
-`PORTFOLIO_CONFIG` select saved build/config snapshots for an A/B check. Lab ports
-are 4180, 4181, and 4182. Gzip delivery is enabled only for these lab servers.
-`PERF_FLOW=projects node scripts/profile-navigation.mjs after` measures opening
-the case study and returning to the list, including completion of the curtain.
+`npm run ci` checks both apps: Creative lint/build/drift/budget, Business lint,
+cycles, TypeScript, unit tests, script tests, build and budget. `ci:full` adds
+Chromium E2E. Gzip limits are 150 KiB for Business initial JS/CSS and 150 KiB for
+all Creative JS/CSS. Test counts and current sizes come from command output.
 
-These are local comparisons, not Lighthouse scores or real-device INP/FPS.
-The [performance report](docs/audits/2026-09-05-performance-optimization.md)
-defines the metrics, trade-offs, and measured before/after results.
+`npm run test:e2e` builds **Business with the saved Creative embed**, then runs
+Playwright. Its server reads `vercel.json` through `scripts/serve-static.mjs` and
+checks real 404 responses locally. It is a bounded server, not a Vercel emulator.
+For other engines, install them with `npx playwright install firefox webkit`, then
+run `npx playwright test --browser=firefox` or `--browser=webkit` after a build.
 
-Critical images are preloaded by route using the same responsive portrait sizes
-as the React view. The phone bezel has a 512 px WebP variant; regenerate it with
-`npm run optimize:images -- --phone-frame`. Vercel caches unversioned fonts,
-portraits, project images, and mockups for one day (rename an asset for an immediate refresh), while hashed
-JS/CSS retain their immutable cache policy. HTML receives no long-lived override.
+## Configuration and release
 
-## License
+| Variable | Use |
+| --- | --- |
+| `VITE_SENTRY_DSN` | Optional Business error monitoring, enabled only in production |
+| `VITE_SOURCEMAP=true` | Enables production source maps; CI sets it for verification |
+| `VITE_BASE_URL` | Vite base path; root defaults to `/`, embedded Creative uses `/creative/` |
+| `VITE_CREATIVE_URL` / `VITE_BUSINESS_URL` | Overrides cross-app destinations in Business / Creative |
+| `VITE_DEV_HOST` / `VITE_DEV_PORT` | Business dev host/port; default port is 5173 |
+| `ANALYZE=true` | Bundle visualization via `npm run analyze` |
 
-The source code is available under the MIT License. The portfolio's visual
-identity, written content, personal brand, CV, photographs, and project media are
-not licensed for reuse. See [LICENSE](LICENSE) for the exact boundary.
+`VITE_*` values are build-time client configuration, not a place for private keys.
+Business includes Vercel Speed Insights; actual telemetry configuration is checked
+on the deployment. Production cross-app links default to the current origin.
+
+Hosting is configured for Vercel with `dist/` output and `vercel.json` routing,
+CSP and cache rules. Fonts, portraits, project images and mockups cache for one day;
+hashed JS/CSS cache for one year, immutable. HTML has no long-lived override.
+Rename unversioned assets when an immediate refresh is needed.
+
+Before publishing, run release checks and verify the candidate deployment:
+EN/RU direct routes and reload, 404, CV, contacts, gallery, language/theme,
+Business–Creative transitions, metadata and asset loading. Confirm the deployment
+branch and previous-deployment rollback in Vercel rather than relying on an old
+handoff. Publishing is a separate owner-authorized action.
+
+## Images and performance
+
+`npm run optimize:images` creates raster derivatives; `-- --phone-frame` rebuilds
+only the phone bezel variant. These commands write public assets. Route preloads
+share responsive portrait sizes with React and select existing project covers.
+Profiling commands and measurement limits are in the
+[performance notes](docs/audits/2026-09-05-performance-optimization.md).
+
+## Ownership and license
+
+AI tools assisted implementation, review and documentation. Product direction,
+project claims and release acceptance remain the owner's responsibility.
+The implementation code uses MIT; visual identity, written content, CV, photos
+and project media are excluded from reuse. See [LICENSE](LICENSE).

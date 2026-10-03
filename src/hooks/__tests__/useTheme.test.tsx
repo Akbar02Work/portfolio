@@ -124,4 +124,24 @@ describe("useTheme", () => {
     });
     expect(document.documentElement.classList.contains("dark")).toBe(true);
   });
+
+  it("replaces the inline color scheme left by the theme init script", async () => {
+    mockMatchMedia(false);
+    const root = document.documentElement;
+    root.classList.add("dark");
+    root.style.colorScheme = "dark";
+    root.style.backgroundColor = "#0A0A0A";
+    window.localStorage.setItem("theme-mode", "dark");
+    const { result } = renderHook(() => useTheme(), { wrapper });
+
+    act(() => {
+      result.current.setTheme("light");
+    });
+
+    await waitFor(() => {
+      expect(root.classList.contains("dark")).toBe(false);
+      expect(root.style.colorScheme).toBe("light");
+      expect(root.style.backgroundColor).toBe("rgb(250, 250, 248)");
+    });
+  });
 });

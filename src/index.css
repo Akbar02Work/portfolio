@@ -79,7 +79,7 @@
 
     /* MONO/VOLT signature accent */
     --volt: 80 100% 62%; /* #BFFF3C */
-    --volt-ink: 85 85% 35%; /* #65A30D — volt for text on white */
+    --volt-ink: 85 85% 25%; /* #49760A — volt for text on white (≥4.5:1 on the background) */
 
     --radius: 1rem;
 
@@ -361,14 +361,15 @@
     box-shadow: none !important;
   }
 
-  /* Copy feedback — blur cross-fade + elastic bounce (shared with Creative's email). */
+  /* Copy feedback — blur cross-fade (shared with Creative's email). */
   .copy-swap {
     display: inline-grid;
-    transform-origin: var(--copy-origin, center);
   }
 
   .copy-swap__face {
     grid-area: 1 / 1;
+    display: flex;
+    align-items: center;
     transition:
       opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
       filter 0.5s cubic-bezier(0.22, 1, 0.36, 1);
@@ -386,27 +387,10 @@
     filter: blur(0);
   }
 
-  @keyframes copy-rubber {
-    0% { transform: scale3d(1, 1, 1); }
-    28% { transform: scale3d(1.07, 0.93, 1); }
-    44% { transform: scale3d(0.95, 1.05, 1); }
-    60% { transform: scale3d(1.025, 0.975, 1); }
-    76% { transform: scale3d(0.992, 1.008, 1); }
-    100% { transform: scale3d(1, 1, 1); }
-  }
-
-  .copy-rubber {
-    animation: copy-rubber 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .copy-swap__face {
       transition: opacity 0.2s linear;
       filter: none !important;
-    }
-
-    .copy-rubber {
-      animation: none;
     }
   }
 
@@ -571,7 +555,7 @@ html.dark {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #65a30d;
+  background-color: #49760a;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {

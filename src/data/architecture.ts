@@ -22,7 +22,7 @@ export type ArchitectureDiagram = {
 export const architectureBySlug: Record<string, Record<Locale, ArchitectureDiagram>> = {
   voicenotes: {
     en: {
-      label: "VoiceNotes processing architecture",
+      label: "AI Voice Notes processing architecture",
       before: [
         { step: "01 · Capture", title: "Recording", detail: "AAC in app-private storage" },
         { step: "02 · Route", title: "Processing router", detail: "Picks a strategy per note" },
@@ -38,7 +38,7 @@ export const architectureBySlug: Record<string, Record<Locale, ArchitectureDiagr
       ],
     },
     ru: {
-      label: "Архитектура обработки VoiceNotes",
+      label: "Архитектура обработки AI Voice Notes",
       before: [
         { step: "01 · Запись", title: "Запись", detail: "AAC в приватной папке приложения" },
         { step: "02 · Маршрут", title: "Роутер обработки", detail: "Выбирает стратегию для заметки" },

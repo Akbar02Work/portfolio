@@ -35,7 +35,8 @@ const NameStroke = () => (
 );
 
 const HeroText = () => {
-    const { t } = useI18n();
+    const { t, locale } = useI18n();
+    const cvLanguage = locale.toUpperCase();
     return (
     <div className="flex-1 space-y-7 text-center md:text-left">
         <div className="hero-reveal" style={{ animationDelay: "0ms" }}>
@@ -70,8 +71,8 @@ const HeroText = () => {
                     }
                 />
                 <a
-                    href={withBase("/CV_Akbar_Azizov_Kotlin&Compose_EN.pdf")}
-                    download="Akbar_Azizov_CV.pdf"
+                    href={withBase(`/CV_Akbar_Azizov_Kotlin&Compose_${cvLanguage}.pdf`)}
+                    download={`Akbar_Azizov_CV_${cvLanguage}.pdf`}
                     className={`${ctaBase} border border-gray-300 dark:border-slate-600 text-gray-900 dark:text-slate-200 hover:border-volt-ink dark:hover:border-volt hover:text-volt-ink dark:hover:text-volt`}
                 >
                     {t.hero.downloadCv}
@@ -134,7 +135,7 @@ export const Hero = () => {
     return (
         <section id="home" className="hero-section relative overflow-hidden dark:bg-background">
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background pointer-events-none" />
-            <div className="hero-content w-full max-w-[86rem] mx-auto px-5 sm:px-6 lg:px-8 relative z-10 py-20 md:py-0">
+            <div className="hero-content w-full max-w-[86rem] mx-auto px-6 sm:px-8 lg:px-12 relative z-10 py-20 md:py-0">
                 <div className="hero-layout flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
                     <HeroText />
                     <HeroPortrait />

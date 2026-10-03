@@ -1,10 +1,11 @@
 import { PROJECT_DETAIL_PREFIX } from "@/constants/routes";
 import { stripLocale } from "@/i18n/locales";
 
+/** Labels live in the i18n dictionary under `nav[id]`. */
 export const navLinks = [
-  { id: "home", label: "Home" },
-  { id: "projects", label: "Projects" },
-  { id: "about", label: "About" },
+  { id: "home" },
+  { id: "projects" },
+  { id: "about" },
 ] as const;
 
 export type NavLinkId = (typeof navLinks)[number]["id"];

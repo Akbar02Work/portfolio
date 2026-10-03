@@ -7,6 +7,7 @@ type ProjectPlatformTabsProps = {
   onSelect: (platform: ProjectPlatformId) => void;
   label: string;
   className?: string;
+  showStatus?: boolean;
 };
 
 export const ProjectPlatformTabs = ({
@@ -15,6 +16,7 @@ export const ProjectPlatformTabs = ({
   onSelect,
   label,
   className,
+  showStatus = true,
 }: ProjectPlatformTabsProps) => {
   const active = platforms.find((platform) => platform.id === activePlatform);
 
@@ -63,7 +65,7 @@ export const ProjectPlatformTabs = ({
         })}
       </div>
 
-      {active ? (
+      {showStatus && active ? (
         <p
           aria-live="polite"
           className="font-mono text-[11px] uppercase tracking-[0.12em] text-neutral-500 dark:text-neutral-400"

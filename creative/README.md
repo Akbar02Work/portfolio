@@ -1,47 +1,49 @@
 # Akbar — Signal Lab
 
-Experimental wow-portfolio maintained as the `creative/` app inside the main
-portfolio repository. Its source stays isolated from the Business app while both
-ship from one clone.
+Creative is the independent React 19 / Vite / TypeScript app in this repository.
+It uses GSAP ScrollTrigger, Lenis and a custom WebGL fragment shader. Business
+provides the conventional portfolio; Creative presents the same engineer through
+motion and atmosphere.
 
-Creative is desktop-only. On viewports below 901 px, the app shows an access gate
-instead of mounting the desktop experience, effects, or navigation.
-The desktop module is loaded lazily, so mobile visitors also skip GSAP, Lenis,
-and WebGL code. Reduced motion uses a vertical case list and disables the shader,
-custom cursor, smooth scrolling, and animated reveals, including live preference
-changes.
+## Experience
 
-## Why this exists
+- Desktop starts at 901 px. Below it, a Russian access gate links back to Business.
+  The lazy desktop module, GSAP, Lenis and WebGL are not loaded by the mobile gate.
+- Desktop content is English. Reduced motion uses a vertical case list and disables
+  the shader, custom cursor, smooth scrolling and animated reveals; live preference
+  changes are handled too.
+- Three quick logo clicks on the Business home page open the Creative/Old chooser.
+  Production links use the current origin; dev uses Business port 5173 and
+  Creative HTTPS port 5174.
+- Visual references: [specia1ne](https://specia1ne.com/),
+  [stabondar](https://www.stabondar.com/), [otsuka-air](https://otsuka-air.jp/).
 
-A cinematic craft prototype inspired by:
-- [specia1ne.com](https://specia1ne.com/) — typographic restraint + reveal systems
-- [stabondar.com](https://www.stabondar.com/) — loader, Lenis, page energy
-- [otsuka-air.jp](https://otsuka-air.jp/) — WebGL atmosphere
+## Develop and release
 
-## Stack
-
-- React + Vite + TypeScript
-- GSAP ScrollTrigger
-- Lenis smooth scroll
-- Custom WebGL fragment shader (no Three.js)
-
-## Run
+Use Node.js 24. From the repository root:
 
 ```bash
-npm install
-npm run dev
+npm --prefix creative ci
+npm --prefix creative run dev
 ```
 
-Open the local URL and scroll slowly. Desktop hits hardest (custom cursor + pin scrub).
+`npm run dev:pair` runs both apps on Linux/macOS. Build or lint Creative alone with
+`npm --prefix creative run build` / `npm --prefix creative run lint`; a standalone
+build does not refresh the root embed.
 
-## Shared release
+For deployment, run `npm run build:creative` from the root on Linux/macOS. It builds
+with `VITE_BASE_URL=/creative/` and `VITE_BUSINESS_URL=/`, then replaces
+`public/creative/`. Include that output with its source changes. Root
+`check:creative-drift` rebuilds and compares without refreshing the embed.
+See the [root build and checks](../README.md#build-and-embed) for the full pipeline.
 
-Run `npm run build:creative` from the repository root to refresh `public/creative/`.
-The root CI checks this generated output without overwriting it. Production
-switches use `/` and `/creative/` on the current origin; development URLs and
-explicit environment overrides remain supported.
+## Data and configuration
 
-Public project slugs are derived at build time from the Business catalog's
-`published` flags. `src/siteData.ts` owns Creative copy and local cards. Adding a
-new case requires Creative presentation data as well as a catalog entry; the
-build-time slug list controls visibility and order, not editorial content.
+`creative/vite.config.ts` injects public project slugs/order from the Business
+catalog at build time. `src/siteData.ts` owns Creative presentation and local cards
+such as This Lab. New public cases need both a catalog entry and Creative copy;
+changing publication requires rebuilding the embed. Lumingo is currently hidden.
+
+`VITE_BUSINESS_URL` overrides the return destination; `VITE_BASE_URL` controls the
+asset base. Their defaults and deployment limits are in the
+[root README](../README.md#configuration-and-release).

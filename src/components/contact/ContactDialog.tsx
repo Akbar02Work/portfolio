@@ -19,8 +19,8 @@ const RowLabel = ({ children }: { children: ReactNode }) => (
   </span>
 );
 
-const RowValue = ({ children }: { children: ReactNode }) => (
-  <span className="min-w-0 truncate px-0.5 -mx-0.5 py-0.5 -my-0.5 text-base sm:text-lg font-medium text-gray-900 dark:text-white group-hover:text-volt-ink dark:group-hover:text-volt transition-colors">
+const RowValue = ({ children, wrap = false }: { children: ReactNode; wrap?: boolean }) => (
+  <span className={`${wrap ? "whitespace-normal break-words" : "truncate"} min-w-0 px-0.5 -mx-0.5 py-0.5 -my-0.5 text-base sm:text-lg font-medium text-gray-900 dark:text-white group-hover:text-volt-ink dark:group-hover:text-volt transition-colors`}>
     {children}
   </span>
 );
@@ -39,11 +39,15 @@ const safeLinks = contactLinks.flatMap((link) => {
   return href && isAllowedExternalUrl(href) ? [{ ...link, href }] : [];
 });
 
+const EMAIL_AT = CONTACT_EMAIL.indexOf("@");
+const EMAIL_USER = CONTACT_EMAIL.slice(0, EMAIL_AT);
+const EMAIL_DOMAIN = CONTACT_EMAIL.slice(EMAIL_AT);
+
 const ContactList = () => {
   const { t } = useI18n();
-  const { copiedKey, copy, pulse } = useCopyFeedback<CopyKey>();
-  const pulseFor = (key: CopyKey) => (copiedKey === key ? pulse : 0);
+  const { copiedKey, copy } = useCopyFeedback<CopyKey>();
   const [phone, setPhone] = useState<ReturnType<typeof revealPhone> | null>(null);
+  const [phoneCopyFailed, setPhoneCopyFailed] = useState(false);
 
   const handleEmail = async (event: MouseEvent<HTMLAnchorElement>) => {
     // Cmd/Ctrl+click keeps the default mailto behaviour.
@@ -53,10 +57,12 @@ const ContactList = () => {
     if (!copied) window.location.href = `mailto:${CONTACT_EMAIL.toLowerCase()}`;
   };
 
-  const handlePhone = () => {
+  const handlePhone = async () => {
     const next = phone ?? revealPhone();
     setPhone(next);
-    void copy("phone", next.value);
+    setPhoneCopyFailed(false);
+    const copied = await copy("phone", next.value);
+    setPhoneCopyFailed(!copied);
   };
 
   const [telegram, ...otherLinks] = safeLinks;
@@ -83,14 +89,12 @@ const ContactList = () => {
             aria-label={t.contact.emailAria(CONTACT_EMAIL)}
           >
             <RowLabel>{t.contact.email}</RowLabel>
-            <RowValue>
-              <CopySwap
-                active={false}
-                pulse={pulseFor("email")}
-                className="[--copy-origin:left_center]"
-                idle={CONTACT_EMAIL}
-                done={null}
-              />
+            <RowValue wrap>
+              {/* Wraps only at "@" on narrow screens. */}
+              <span className="flex flex-wrap">
+                <span>{EMAIL_USER}</span>
+                <span className="whitespace-nowrap">{EMAIL_DOMAIN}</span>
+              </span>
             </RowValue>
             <CopySwap
               active={copiedKey === "email"}
@@ -111,14 +115,12 @@ const ContactList = () => {
             <RowValue>
               <CopySwap
                 active={Boolean(phone)}
-                pulse={pulseFor("phone")}
-                className="[--copy-origin:left_center]"
                 idle={
                   <span className="text-neutral-500 dark:text-neutral-400 group-hover:text-volt-ink dark:group-hover:text-volt">
                     {t.contact.showNumber}
                   </span>
                 }
-                done={phone ? <span className="tabular-nums">{phone.display}</span> : null}
+                done={phone ? <span className="select-text tabular-nums">{phone.display}</span> : null}
               />
             </RowValue>
             <CopySwap
@@ -134,6 +136,11 @@ const ContactList = () => {
               done={<CopiedMark label={t.contact.copied} />}
             />
           </button>
+          {phoneCopyFailed ? (
+            <p role="alert" className="pb-4 text-body-sm text-gray-600 dark:text-slate-300">
+              {t.contact.phoneCopyFailed}
+            </p>
+          ) : null}
         </li>
         {otherLinks.map(renderLink)}
       </ul>
@@ -162,13 +169,23 @@ export const ContactDialog = ({ trigger, open, onOpenChange, returnFocusRef }: C
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay className="fixed inset-0 z-[60] flex items-end md:items-center justify-center md:p-6 bg-black/40 dark:bg-black/60 backdrop-blur-sm data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 motion-reduce:animate-none">
         <DialogPrimitive.Content
+          onOpenAutoFocus={(event) => {
+            // Radix skips links when auto-focusing, which lands on the phone row;
+            // start from the first contact row (Telegram) instead.
+            const firstRow = event.target instanceof HTMLElement
+              ? event.target.querySelector<HTMLElement>("li > a, li > button")
+              : null;
+            if (!firstRow) return;
+            event.preventDefault();
+            firstRow.focus();
+          }}
           onCloseAutoFocus={(event) => {
             const target = returnFocusRef?.current;
             if (!target?.isConnected) return;
             event.preventDefault();
             target.focus();
           }}
-          className="relative w-full md:max-w-lg max-h-[90dvh] overflow-y-auto bg-background border-t md:border border-neutral-200 dark:border-neutral-800 rounded-t-3xl md:rounded-3xl shadow-2xl px-6 pt-8 pb-[max(2rem,env(safe-area-inset-bottom))] md:p-10 data-[state=open]:animate-in data-[state=open]:slide-in-from-bottom-8 md:data-[state=open]:slide-in-from-bottom-0 md:data-[state=open]:zoom-in-95 data-[state=open]:duration-300 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 motion-reduce:animate-none"
+          className="relative w-full md:max-w-[38rem] max-h-[90dvh] overflow-y-auto bg-background border-t md:border border-neutral-200 dark:border-neutral-800 rounded-t-3xl md:rounded-3xl shadow-2xl px-6 pt-8 pb-[max(2rem,env(safe-area-inset-bottom))] md:p-10 data-[state=open]:animate-in data-[state=open]:slide-in-from-bottom-8 md:data-[state=open]:slide-in-from-bottom-0 md:data-[state=open]:zoom-in-95 data-[state=open]:duration-300 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 motion-reduce:animate-none"
         >
           <div aria-hidden="true" className="md:hidden absolute top-3 left-1/2 -translate-x-1/2 h-1 w-10 rounded-full bg-neutral-300 dark:bg-neutral-700" />
           <p className="font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400 mb-3">
@@ -182,7 +199,7 @@ export const ContactDialog = ({ trigger, open, onOpenChange, returnFocusRef }: C
           </DialogPrimitive.Description>
           <ContactList />
           <DialogPrimitive.Close
-            className="touch-no-ring absolute right-4 top-4 md:right-6 md:top-6 p-2 rounded-full text-neutral-500 hover:text-gray-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-volt-ink dark:focus-visible:outline-volt"
+            className="touch-no-ring absolute right-4 top-4 md:right-6 md:top-6 translate-y-1.5 p-2 rounded-full text-neutral-500 hover:text-gray-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-volt-ink dark:focus-visible:outline-volt"
             aria-label={t.contact.close}
           >
             <X className="w-5 h-5" strokeWidth={2} aria-hidden="true" />

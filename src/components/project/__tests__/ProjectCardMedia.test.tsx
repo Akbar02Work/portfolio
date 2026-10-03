@@ -26,7 +26,7 @@ describe("ProjectCardMedia", () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByRole("img", { name: /Web landing/i })).toBeTruthy();
+    expect(screen.getByRole("img", { name: /Web — the public-beta landing/i })).toBeTruthy();
 
     fireEvent.click(screen.getByRole("tab", { name: "iOS — In development" }));
     expect(onPlatformChange).toHaveBeenCalledWith("ios");

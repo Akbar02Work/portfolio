@@ -16,10 +16,7 @@ const TimelineRow = ({ entry, ndaTitle }: { entry: ExperienceEntry; ndaTitle: st
                     {entry.place}
                 </span>
                 {entry.badge && (
-                    <span
-                        className="inline-flex items-center rounded-full border border-neutral-300 dark:border-neutral-700 px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400"
-                        title={ndaTitle}
-                    >
+                    <span className={monoLabel} title={ndaTitle}>
                         {entry.badge}
                     </span>
                 )}
@@ -38,7 +35,7 @@ export const About = () => {
     const { bio: aboutBio, principles: aboutPrinciples, experience, education, meta: aboutMeta } = aboutContent[locale];
     return (
         <AnimatedSection delay={ANIMATION_DELAYS.ABOUT_SECTION}>
-            <section id="about" className="py-16 md:py-20 bg-background">
+            <section id="about" className="pt-10 pb-16 md:pt-12 md:pb-20 bg-background border-t border-neutral-200 dark:border-neutral-800">
                 <div className="max-w-[86rem] mx-auto px-6 sm:px-8 lg:px-12">
                     {/* Section header — editorial numbering */}
                     <header className="mb-10 md:mb-14">
@@ -46,13 +43,23 @@ export const About = () => {
                         <h2 className="text-heading-1 text-gray-900 dark:text-white">{t.about.title}</h2>
                     </header>
 
-                    <div className="border-t border-neutral-200 dark:border-neutral-800 pt-12 md:pt-16 grid md:grid-cols-2 gap-12 md:gap-14">
+                    <div className="grid md:grid-cols-2 gap-12 md:gap-14">
                         {/* Bio + principles */}
                         <div className="space-y-10 max-w-[65ch]">
-                            <div className="space-y-6 text-body-lg md:text-xl leading-[1.7] font-light text-gray-700 dark:text-slate-300">
-                                {aboutBio.map((paragraph) => (
-                                    <p key={paragraph}>{paragraph}</p>
-                                ))}
+                            <div className="space-y-6">
+                                <p className="flex flex-wrap gap-x-3 gap-y-1 font-mono text-sm uppercase tracking-[0.1em] text-neutral-600 dark:text-neutral-300">
+                                    {aboutMeta.map((item, index) => (
+                                        <span key={item} className={`inline-flex items-center gap-3 ${index === 0 ? "basis-full text-volt-ink dark:text-volt" : ""}`}>
+                                            {index > 1 && <span aria-hidden="true" className="text-neutral-300 dark:text-neutral-600">/</span>}
+                                            {item}
+                                        </span>
+                                    ))}
+                                </p>
+                                <div className="space-y-6 text-body-lg md:text-xl leading-[1.7] font-light text-gray-700 dark:text-slate-300">
+                                    {aboutBio.map((paragraph) => (
+                                        <p key={paragraph}>{paragraph}</p>
+                                    ))}
+                                </div>
                             </div>
 
                             <ol className="list-none border-t border-neutral-200 dark:border-neutral-800">
@@ -74,7 +81,7 @@ export const About = () => {
                         </div>
 
                         {/* Experience + education */}
-                        <div className="md:border-l md:border-neutral-200 md:dark:border-neutral-800 md:pl-14 space-y-10">
+                        <div className="md:border-l md:border-neutral-200 md:dark:border-neutral-800 md:pl-14 space-y-12">
                             <div>
                                 <h3 className={`${monoLabel} mb-1`}>{t.about.experience}</h3>
                                 <ol className="list-none">
@@ -91,14 +98,6 @@ export const About = () => {
                                     ))}
                                 </ol>
                             </div>
-                            <p className={`${monoLabel} flex flex-wrap gap-x-3 gap-y-1 pt-2`}>
-                                {aboutMeta.map((item, index) => (
-                                    <span key={item} className="inline-flex items-center gap-3">
-                                        {index > 0 && <span aria-hidden="true" className="text-neutral-300 dark:text-neutral-600">/</span>}
-                                        {item}
-                                    </span>
-                                ))}
-                            </p>
                         </div>
                     </div>
                 </div>

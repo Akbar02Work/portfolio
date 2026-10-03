@@ -1,5 +1,28 @@
 import { expect, test } from "@playwright/test";
 
+test("replays the intro on a new entry and consumes the request before a reload", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.addInitScript(() => sessionStorage.setItem("signal-preloader-seen", "1"));
+  for (let entry = 0; entry < 2; entry += 1) {
+    await page.goto("/creative/?intro=1#works");
+    await expect(page.locator(".preloader")).toBeVisible();
+    await expect(page).toHaveURL("http://127.0.0.1:4173/creative/#works");
+    await expect(page.locator(".preloader")).toHaveCount(0);
+    await page.reload();
+    await expect(page.locator(".preloader")).toHaveCount(0);
+    await expect(page.locator(".hero__title")).toBeVisible();
+  }
+});
+
+test("honours reduced motion even when the entry requests a full intro", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/creative/?intro=1");
+  await expect(page.locator(".preloader")).toHaveCount(0);
+  await expect(page.locator(".hero__title")).toBeVisible();
+  await expect(page).toHaveURL("http://127.0.0.1:4173/creative/");
+});
+
 test("blocks Creative on mobile and skips the desktop experience", async ({ page }) => {
   const requestedScripts: string[] = [];
   page.on("request", (request) => {
@@ -34,7 +57,7 @@ test("renders the Creative experience on desktop", async ({ page }) => {
   ).toBeVisible({ timeout: 10_000 });
   await expect(page.locator(".site")).toBeVisible();
   await expect(page.locator(".work-card").first().getByRole("heading")).toHaveText(
-    "VoiceNotes",
+    "AI Voice Notes",
   );
   await expect(page.getByRole("heading", { name: "Lumingo" })).toHaveCount(0);
 });

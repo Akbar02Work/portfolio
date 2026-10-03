@@ -5,19 +5,22 @@ import { isAllowedExternalUrl } from "@/lib/externalLinks";
 import { sanitizeUrl } from "@/lib/urlSanitizer";
 import { ViewTransitionLink } from "@/hooks/usePageTransition";
 import { useI18n } from "@/i18n/useI18n";
+import { ProjectPlatformTabs } from "@/components/project/ProjectPlatformTabs";
+import type { ProjectPlatformId } from "@/data/projectCatalog";
 
 type ProjectHeaderProps = {
     project: Project;
+    activePlatform?: ProjectPlatformId;
+    onPlatformChange?: (platform: ProjectPlatformId) => void;
 };
 
-export const ProjectHeader = ({ project }: ProjectHeaderProps) => {
+export const ProjectHeader = ({ project, activePlatform, onPlatformChange }: ProjectHeaderProps) => {
     const { t, localize } = useI18n();
-    const sanitizedGithubLink = project.links.github
-        ? sanitizeUrl(project.links.github)
-        : null;
-    const githubHref =
-        sanitizedGithubLink && isAllowedExternalUrl(sanitizedGithubLink)
-            ? sanitizedGithubLink
+    const projectLink = project.links.website ?? project.links.github;
+    const sanitizedLink = projectLink ? sanitizeUrl(projectLink) : null;
+    const projectHref =
+        sanitizedLink && isAllowedExternalUrl(sanitizedLink)
+            ? sanitizedLink
             : null;
 
     return (
@@ -37,19 +40,31 @@ export const ProjectHeader = ({ project }: ProjectHeaderProps) => {
                     <h1 className="text-heading-1 text-gray-900 dark:text-white">
                         {project.title}
                     </h1>
+                    {project.platforms.length > 0 && activePlatform && onPlatformChange ? (
+                        <ProjectPlatformTabs
+                            platforms={project.platforms}
+                            activePlatform={activePlatform}
+                            onSelect={onPlatformChange}
+                            label={t.projects.choosePlatform(project.title)}
+                            className="mt-5 justify-center"
+                            showStatus={false}
+                        />
+                    ) : null}
                     <p className="text-body-lg text-gray-600 dark:text-slate-300 mt-4 max-w-xl mx-auto">
                         {project.summary}
                     </p>
                 </div>
 
-                {githubHref ? (
+                {projectHref ? (
                     <a
-                        href={githubHref}
+                        href={projectHref}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group inline-flex items-center gap-1.5 justify-self-end pt-2 font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 transition-colors hover:text-volt-ink dark:text-neutral-400 dark:hover:text-volt"
+                        className="group inline-flex items-center gap-1.5 justify-self-end pt-2 font-mono text-caption uppercase tracking-[0.14em] text-volt-ink transition-opacity hover:opacity-75 dark:text-volt"
                     >
-                        GitHub
+                        <span className="underline decoration-volt-ink/40 decoration-1 underline-offset-[5px] transition-[text-decoration-color] group-hover:decoration-volt-ink dark:decoration-volt/40 dark:group-hover:decoration-volt">
+                            {project.links.website ? t.project.website : "GitHub"}
+                        </span>
                         <ArrowUpRight
                             className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                             strokeWidth={2}

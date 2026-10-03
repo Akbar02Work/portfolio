@@ -21,7 +21,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const ref = process.argv[2] || "c148376";
+const frozenSnapshotRef = "c148376";
+const ref = process.argv[2] || frozenSnapshotRef;
 // Resolve a commit before creating or deleting anything. Refs are arguments, never shell code.
 const commit = execFileSync("git", ["rev-parse", "--verify", "--end-of-options", `${ref}^{commit}`], {
   cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "inherit"],
@@ -43,7 +44,22 @@ try {
 
   rmSync(dest, { recursive: true, force: true });
   mkdirSync(path.dirname(dest), { recursive: true });
-  cpSync(path.join(worktree, "dist"), dest, { recursive: true });
+  const output = path.join(worktree, "dist");
+  // These copied assets are unused in the frozen snapshot. Preserve other refs.
+  const excludedFiles = new Set(
+    (commit.startsWith(frozenSnapshotRef) ? [
+      "sitemap.xml",
+      "android-chrome-192x192.png",
+      "android-chrome-512x512.png",
+      "projects/money-manager/placeholder.png",
+      "projects/quiz-learnwords/placeholder.png",
+      "projects/loyalist/placeholder.png",
+    ] : []).map((file) => path.join(output, file))
+  );
+  cpSync(output, dest, {
+    recursive: true,
+    filter: (source) => !excludedFiles.has(source),
+  });
 
   writeFileSync(
     path.join(dest, "robots.txt"),
@@ -72,7 +88,9 @@ try {
       .replaceAll(
         'content="https://www.akbar02work.xyz/og-image.png"',
         'content="https://www.akbar02work.xyz/old/og-image.png"'
-      );
+      )
+      .replace("</head>", '  <link rel="stylesheet" href="/styles/archive-return.css" />\n</head>')
+      .replace("</body>", '  <a class="archive-return" href="/">← Return to the current portfolio</a>\n</body>');
     writeFileSync(indexPath, html);
   }
 

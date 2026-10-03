@@ -33,8 +33,16 @@ export function Preloader({ onReady, onReveal, onExitComplete }: Props) {
   const fillRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const doneRef = useRef(false);
+  // Keep the entry request through StrictMode's effect replay, but consume it
+  // from the address so an ordinary reload keeps the session's skip behaviour.
+  const replayIntroRef = useRef(new URLSearchParams(window.location.search).get("intro") === "1");
 
   useEffect(() => {
+    if (replayIntroRef.current) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("intro");
+      window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
+    }
     document.body.classList.add("is-loading");
     const updateCount = (value: number) => {
       const text = String(Math.round(value)).padStart(2, "0");
@@ -43,7 +51,7 @@ export function Preloader({ onReady, onReveal, onExitComplete }: Props) {
     };
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced || hasSeenPreloader()) {
+    if (reduced || (!replayIntroRef.current && hasSeenPreloader())) {
       updateCount(100);
       document.body.classList.remove("is-loading");
       document.getElementById("boot-curtain")?.remove();

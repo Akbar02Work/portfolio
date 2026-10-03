@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from "vite";
+import { defineConfig, loadEnv, type ViteDevServer } from "vite";
 import react from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
 import path from "path";
@@ -109,6 +109,30 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       react(),
+      {
+        name: "old-archive-dev-routes",
+        apply: "serve",
+        configureServer(server: ViteDevServer) {
+          server.middlewares.use((req, res, next) => {
+            const url = new URL(req.url ?? "/", "http://localhost");
+            const archivePath = `${server.config.base}old`;
+            if (url.pathname === archivePath) {
+              res.writeHead(307, { Location: `${archivePath}/${url.search}` });
+              res.end();
+              return;
+            }
+            if (
+              url.pathname === `${archivePath}/` ||
+              url.pathname === `${archivePath}/projects` ||
+              url.pathname.startsWith(`${archivePath}/projects/`) ||
+              url.pathname === `${archivePath}/easter`
+            ) {
+              req.url = `${archivePath}/index.html${url.search}`;
+            }
+            next();
+          });
+        },
+      },
       prerenderRoutes({ siteUrl: SITE_URL, routes }),
       ...(shouldAnalyze
         ? [

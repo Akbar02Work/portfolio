@@ -59,6 +59,6 @@ describe("published platform routing", () => {
     fireEvent.keyDown(screen.getByRole("tab", { selected: true }), { key: "ArrowRight" });
     expect(screen.getByRole("tab", { selected: true }).textContent).toBe("iOS");
     expect(screen.queryByRole("button", { name: "Next screen" })).toBeNull();
-    expect(screen.getAllByRole("img", { name: /iOS client/ })).toHaveLength(1);
+    expect(screen.getAllByRole("img", { name: /iOS — native client/ })).toHaveLength(1);
   });
 });

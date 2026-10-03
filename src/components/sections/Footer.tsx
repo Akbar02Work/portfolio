@@ -5,7 +5,7 @@ import { useCopyFeedback } from "@/hooks/useCopyFeedback";
 import { ANIMATION_DELAYS } from "@/constants/animation.constants";
 import { isAllowedExternalUrl } from "@/lib/externalLinks";
 import { sanitizeUrl } from "@/lib/urlSanitizer";
-import { ArrowUpRight, CircleCheck } from "lucide-react";
+import { ArrowUpRight, CircleCheck, Copy } from "lucide-react";
 import { CONTACT_EMAIL, contactLinks, footerLinkOrder } from "@/data/contacts";
 import { useI18n } from "@/i18n/useI18n";
 
@@ -24,7 +24,7 @@ const sanitizeSocialLink = (link: (typeof socialLinks)[number]) => {
 
 export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boolean }) => {
     const { t } = useI18n();
-    const { copiedKey, copy, pulse } = useCopyFeedback<"email">();
+    const { copiedKey, copy } = useCopyFeedback<"email">();
     const emailCopied = copiedKey === "email";
 
     const safeSocialLinks = socialLinks
@@ -43,20 +43,15 @@ export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boole
     return (
         <AnimatedSection delay={ANIMATION_DELAYS.CONTACT_SECTION}>
             <footer id="contact" className="bg-background border-t border-neutral-200 dark:border-neutral-800">
-                <div className="max-w-[86rem] mx-auto px-6 sm:px-8 lg:px-12 py-24">
-                    {/* Section header — numbering only on home (01 Works / 02 About / 03 Contact) */}
-                    <header className="mb-10 md:mb-14">
-                        <p className="font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400 mb-4">
+                <div className="max-w-[86rem] mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-10 md:pb-12">
+                    {/* Section header — numbering only on home (01 Projects / 02 About / 03 Contact) */}
+                    <header className="mb-8 md:mb-10">
+                        <h2 className="font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400">
                             {showSectionNumber ? t.footer.eyebrow : t.footer.eyebrowPlain}
-                        </p>
-                        <h2 className="text-heading-1 text-gray-900 dark:text-white">{t.footer.title}</h2>
+                        </h2>
                     </header>
 
-                    <div className="border-t border-neutral-200 dark:border-neutral-800 pt-12 md:pt-16">
-                        <p className="font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400 mb-6">
-                            {t.contact.availability}
-                        </p>
-
+                    <div>
                         {/* Giant email — click copies, Cmd/Ctrl+click opens mailto */}
                         <a
                             href={`mailto:${EMAIL.toLowerCase()}`}
@@ -66,15 +61,14 @@ export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boole
                         >
                             <CopySwap
                                 active={emailCopied}
-                                pulse={pulse}
-                                className="[--copy-origin:left_center] text-left"
+                                className="text-left"
                                 idle={
                                     <span className="inline-flex flex-wrap items-baseline">
                                         <span className="whitespace-nowrap">Akbar02work</span>
                                         <span className="inline-flex items-center gap-2 md:gap-4 whitespace-nowrap">
                                             @gmail.com
-                                            <ArrowUpRight
-                                                className="flex-none w-[0.6em] h-[0.6em] text-volt-ink dark:text-volt transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1"
+                                            <Copy
+                                                className="flex-none w-[0.6em] h-[0.6em] translate-y-[0.06em] text-volt-ink dark:text-volt"
                                                 strokeWidth={2}
                                                 aria-hidden="true"
                                             />
@@ -94,7 +88,7 @@ export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boole
                         </span>
 
                         {/* Social pills */}
-                        <nav className="mt-14 md:mt-20 border-t border-neutral-200 dark:border-neutral-800 pt-6 flex flex-wrap items-center gap-4" aria-label={t.footer.socialLinks}>
+                        <nav className="mt-8 md:mt-10 flex flex-wrap items-center gap-4" aria-label={t.footer.socialLinks}>
                             {safeSocialLinks.map((link) => (
                                 <a
                                     key={link.label}

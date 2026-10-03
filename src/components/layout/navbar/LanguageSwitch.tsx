@@ -56,6 +56,9 @@ export const LanguageSwitch = ({ className, onSwitch }: LanguageSwitchProps) => 
 
   const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.button !== 0) return;
+    // A touch drag is often not followed by a click, so a stale flag would
+    // swallow the next real click.
+    suppressClickRef.current = false;
     gestureRef.current = {
       pointerId: event.pointerId,
       startX: event.clientX,
@@ -128,7 +131,7 @@ export const LanguageSwitch = ({ className, onSwitch }: LanguageSwitchProps) => 
           "pointer-events-none absolute left-0.5 top-0.5 bottom-0.5 w-9 rounded-md bg-white dark:bg-black shadow-sm shadow-black/5",
           dragging
             ? "transition-none"
-            : "transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
+            : "transition-transform duration-300 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
         )}
         style={{ transform: `translate3d(${thumbX}px, 0, 0)` }}
       />

@@ -11,6 +11,9 @@ export interface ProjectPlatform {
   mediaType: ProjectMediaType;
 }
 
+/** A case feature: a plain line, or a short title with one sentence of detail. */
+export type ProjectFeatureCopy = string | { title: string; description: string };
+
 export interface ProjectMetric {
   value: string;
   label: string;
@@ -23,12 +26,14 @@ export interface ProjectPlatformContent extends ProjectPlatform {
   overview: string;
   challenge: string;
   stack: string[];
-  keyFeatures: string[];
+  keyFeatures: ProjectFeatureCopy[];
   engineeringNote: string;
 }
 
 export interface ProjectData {
   published: boolean;
+  /** Stable public identifier when the display title changes. */
+  slug?: string;
   title: string;
   description: string;
   role: string;
@@ -41,6 +46,7 @@ export interface ProjectData {
   platforms?: ProjectPlatformContent[];
   links: {
     github?: string;
+    website?: string;
   };
   gallery: Array<{
     imageUrl: string;
@@ -53,7 +59,7 @@ export interface ProjectData {
   stackAndArchitecture: {
     stack: string[];
   };
-  keyFeatures: string[];
+  keyFeatures: ProjectFeatureCopy[];
   engineeringNote: string;
 }
 
@@ -99,7 +105,8 @@ const toProjectSlug = (title: string): string =>
 
 const projectDefinitions = [
   createProject({
-    title: "VoiceNotes",
+    slug: "voicenotes",
+    title: "AI Voice Notes",
     description:
       "Native Android voice notes that turn short recordings into searchable notes — cloud AI when useful, private on-device transcription when it matters.",
     role: "Product design & Android engineering — solo build",
@@ -117,21 +124,21 @@ const projectDefinitions = [
     //     (or the download size shown in Play Console for an AAB).
     // Russian labels live in src/data/i18n/projects.ru.ts (same order).
     metrics: [
-      { value: "4 modes", label: "cloud + local processing" },
-      { value: "BYOK", label: "encrypted on-device keys" },
-      { value: "Room", label: "persistent notes + audio" },
+      { value: "Offline", label: "Russian ASR on device" },
+      { value: "Resume", label: "verified model downloads" },
+      { value: "Keys", label: "encrypted on device" },
     ],
     media: {
       type: "phone",
-      alt: "VoiceNotes notes list with generated titles, summaries, and one-tap recording",
+      alt: "AI Voice Notes notes list with generated titles, summaries, and one-tap recording",
     },
     links: {
-      github: "https://github.com/Akbar02Work/VoiceNotes",
+      github: "https://github.com/Akbar02Work/AI-Voice-Notes",
     },
     gallery: [
       {
         imageUrl: "/projects/voicenotes/screen-01.png",
-        caption: "Notes list — structured AI summaries with one-tap record FAB.",
+        caption: "Notes list — structured AI summaries and a one-tap record button.",
       },
       {
         imageUrl: "/projects/voicenotes/screen-02.png",
@@ -155,7 +162,7 @@ const projectDefinitions = [
       },
     ],
     overview:
-      "VoiceNotes turns a short recording into a durable note: playable audio, transcription, generated title, and summary, all kept in a searchable Room-backed library. Cloud processing uses the provider selected by the user; the on-device path keeps Russian transcription on the phone after its model is installed.",
+      "AI Voice Notes turns a short recording into a durable note: playable audio, transcription, generated title, and summary, all kept in a searchable Room-backed library. Cloud processing uses the provider selected by the user; the on-device path keeps Russian transcription on the phone after its model is installed.",
     challenge:
       "The product challenge was not simply calling an AI API. It was designing one reliable flow across recording, processing, failure, retry, provider and model selection, and offline inference—without making privacy or network availability an afterthought.",
     stackAndArchitecture: {
@@ -172,22 +179,35 @@ const projectDefinitions = [
       ],
     },
     keyFeatures: [
-      "One-tap AAC recording with visible recording, processing, draft, failure, and retry states",
-      "Cloud processing through Gemini, OpenAI, or Groq with separate transcription and summary models",
-      "Checksum-verified on-device Russian transcription with sherpa-onnx Zipformer models",
-      "Resumable model downloads with size checks, SHA-256 verification, and atomic activation",
-      "Room-backed notes with pinned items, searchable summaries, and playable original audio",
-      "API keys stored in encrypted preferences and excluded from backup",
-      "English and Russian localization with Material 3 dynamic theming",
+      {
+        title: "Nothing is lost without a network",
+        description:
+          "Every recording is saved before processing starts. A network failure leaves a draft that reprocesses itself when the connection returns; any other error keeps the audio with a one-tap retry.",
+      },
+      {
+        title: "Fully on-device mode",
+        description:
+          "Russian speech is transcribed on the phone by an INT8 Zipformer model through sherpa-onnx, and the title and summary are extracted locally. Once the model is installed, no network is needed.",
+      },
+      {
+        title: "Model downloads that cannot break the app",
+        description:
+          "Downloads resume with HTTP Range requests, every file is checked against its SHA-256, and a new model replaces the old one only after it fully verifies.",
+      },
+      {
+        title: "Bring your own provider",
+        description:
+          "Gemini, OpenAI or Groq: the app validates the key, finds compatible models and keeps transcription and summary models separate. Keys are encrypted and excluded from backup.",
+      },
     ],
     engineeringNote:
-      "The processing router keeps cloud providers and local sherpa-onnx inference as separate strategies behind one structured note pipeline. Cloud mode validates the user's key and discovers transcription and summary models; local mode activates only checksum-verified model files. Room persists the note while the original recording stays in the app-private files directory.",
+      "Recording, processing and storage are separate stages. The processing router picks a strategy for each note — a cloud provider or local sherpa-onnx inference — and every strategy returns the same structured result: title, summary and transcript. Room stores that result while the original audio stays in app-private storage, so a failed note can always be reprocessed from its source file.",
   }),
   createProject({
     title: "Lumingo",
     published: false,
     description:
-      "An adaptive language-learning product delivered through a live web experience and a native Android client — with iOS now in development.",
+      "Language learning built around your goal, level, and available time — with a personal learning path and guidance from Lumi.",
     role: "Founder · Product direction · Android & Web development",
     year: 2026,
     metrics: [
@@ -206,7 +226,7 @@ const projectDefinitions = [
         status: "Release candidate",
         mediaType: "phone",
         summary:
-          "A native Android client that brings Lumingo's adaptive paths, daily learning flow, and Lumi guidance into a mobile-first experience.",
+          "A language-learning app for Android with a personal learning path, daily activities, and guidance from Lumi.",
         role: "Founder · Product direction · Android engineering",
         metrics: [
           { value: "Native", label: "Kotlin client" },
@@ -214,9 +234,9 @@ const projectDefinitions = [
           { value: "Shared", label: "identity + learning state" },
         ],
         overview:
-          "Lumingo for Android translates the live product into a native learning client rather than wrapping the website. Learners move through goals, roadmaps, daily activities, Lumi, profile, and settings with the same account and learning state used by the web product.",
+          "Learners follow a plan built around their goal, level, and available time. The native Android client brings together daily activities, reviews, and Lumi guidance, using the same account and learning progress as the web product. The interface is available in English and Russian.",
         challenge:
-          "The Android challenge is preserving product parity without copying web implementation details. Authentication, Convex state, LLM-backed operations, navigation, recovery, and duplicate-action protection all need native lifecycle-aware behavior.",
+          "Bring the web product's learning flow to Android while handling the app lifecycle, loading failures, and repeated actions. Account access, progress, and AI operations need to stay consistent across both clients.",
         stack: [
           "Kotlin",
           "Jetpack Compose",
@@ -226,14 +246,29 @@ const projectDefinitions = [
           "Hilt",
         ],
         keyFeatures: [
-          "Native Compose flows for goals, adaptive roadmaps, learning days, Lumi, profile, and settings",
-          "Shared Clerk identity and Convex learning state across Android and Web",
-          "Ktor access to mobile-compatible LLM operations behind explicit API contracts",
-          "Lifecycle-aware loading, retry, recovery, and duplicate-action guards",
-          "English and Russian experiences aligned with the shared Lumingo design system",
+          {
+            title: "A clear daily plan",
+            description:
+              "Goals, weekly roadmaps, daily activities, and reviews form one learning flow in the native Compose interface.",
+          },
+          {
+            title: "Lumi in context",
+            description:
+              "Lumi's guidance stays connected to the learner's active goal and learning progress.",
+          },
+          {
+            title: "One account across clients",
+            description:
+              "Android and Web share the same account and learning state through Clerk and Convex.",
+          },
+          {
+            title: "Recovery when something fails",
+            description:
+              "Loading, retries, and recovery respect the Android lifecycle, with guards against duplicate actions.",
+          },
         ],
         engineeringNote:
-          "The Android client uses Convex directly for product data and reserves Ktor-backed routes for LLM operations. Web behavior is mapped into explicit mobile contracts before it reaches Compose, keeping native navigation and state ownership independent from the web implementation.",
+          "Compose owns native navigation and screen state. The client uses Convex directly for learning data, Clerk for identity, and Ktor routes for LLM operations. Explicit mobile API contracts keep shared product behavior separate from the web implementation.",
       },
       {
         id: "web",
@@ -241,7 +276,7 @@ const projectDefinitions = [
         status: "Public beta",
         mediaType: "browser",
         summary:
-          "The live web product turns a learner's goal, level, and available time into an adaptive language-learning path with Lumi guidance.",
+          "A web app for language learning with a plan tailored to your goal, level, and available time, plus guidance from Lumi.",
         role: "Founder · Product direction · Web development",
         metrics: [
           { value: "Live", label: "public beta" },
@@ -249,9 +284,9 @@ const projectDefinitions = [
           { value: "Adaptive", label: "goal-based roadmap" },
         ],
         overview:
-          "Lumingo Web is the live product surface: onboarding captures a learner's objective and constraints, then the application builds an adaptive roadmap, organizes daily learning, and keeps Lumi connected to the active goal and progress.",
+          "The web product is available in public beta. Onboarding captures the learner's goal, level, and schedule, then builds an adaptive roadmap with daily activities and reviews. Lumi provides guidance connected to that plan. The interface is available in English and Russian.",
         challenge:
-          "The web challenge is coordinating identity, adaptive product state, AI operations, localization, analytics, and rate-limited public delivery as one understandable learning flow. The interface must stay responsive while backend work remains observable and recoverable.",
+          "Turn onboarding, an adaptive roadmap, and AI guidance into one clear learning flow. The interface needs to stay responsive while backend operations are validated, rate-limited, and observable during the public beta.",
         stack: [
           "TypeScript",
           "Next.js",
@@ -263,15 +298,29 @@ const projectDefinitions = [
           "PostHog",
         ],
         keyFeatures: [
-          "Goal onboarding based on intent, current level, pace, and realistic availability",
-          "Adaptive roadmaps with weeks, daily nodes, reviews, and visible phase progression",
-          "Lumi guidance connected to the learner's active goal and product state",
-          "Clerk identity with Convex-backed learning data and reactive product updates",
-          "English and Russian localization across the public and authenticated experience",
-          "Rate-limited AI operations, product analytics, and production performance telemetry",
+          {
+            title: "A plan around your goal",
+            description:
+              "Onboarding uses the learner's goal, current level, pace, and available time to shape the learning path.",
+          },
+          {
+            title: "A clear daily plan",
+            description:
+              "The adaptive roadmap organizes weeks, daily activities, and reviews, with visible progress between phases.",
+          },
+          {
+            title: "Lumi in context",
+            description:
+              "Lumi's guidance stays connected to the learner's active goal and learning progress.",
+          },
+          {
+            title: "One account across clients",
+            description:
+              "Clerk and Convex keep identity and learning state shared with Android, while reactive updates keep the web interface current.",
+          },
         ],
         engineeringNote:
-          "The web product uses Next.js and React for the product surface, Convex for reactive application state, and Clerk for identity. OpenAI-backed operations are protected by explicit validation and Upstash rate limits, while PostHog and production telemetry support release decisions.",
+          "Next.js and React render the interface, Convex manages reactive learning state, and Clerk handles identity. OpenAI operations use explicit validation and Upstash rate limits. PostHog and performance telemetry help evaluate the public beta.",
       },
       {
         id: "ios",
@@ -279,7 +328,7 @@ const projectDefinitions = [
         status: "In development",
         mediaType: "phone",
         summary:
-          "Lumingo for iOS is in development as the next native client, planned around shared product contracts and an experience designed for Apple platforms.",
+          "A native iOS client in development, planned to bring Lumingo's learning paths and Lumi guidance to Apple devices.",
         role: "Founder · Product direction · iOS planning",
         metrics: [
           { value: "Next", label: "native client" },
@@ -287,73 +336,90 @@ const projectDefinitions = [
           { value: "Shared", label: "product contracts" },
         ],
         overview:
-          "The planned iOS client will extend the same Lumingo account, learning state, adaptive roadmap, and Lumi workflows to Apple devices while treating iOS as a native product surface rather than a visual copy of Android.",
+          "The planned iOS client will bring goals, roadmaps, daily activities, and Lumi to Apple devices. It will use the same account and learning state as Web and Android, with navigation and interactions designed for iOS.",
         challenge:
-          "The iOS challenge is still ahead: reuse product and API contracts without pretending Compose architecture transfers directly to SwiftUI. Navigation, state ownership, platform conventions, and release validation must be designed natively.",
+          "Reuse shared product and API contracts while designing navigation, state ownership, and interactions for SwiftUI. Implementation and release validation are still ahead.",
         stack: [
           "Swift · Planned",
           "SwiftUI · Planned",
         ],
         keyFeatures: [
-          "Planned native SwiftUI experience for the core learning loop",
-          "Shared identity, learning state, and mobile API contracts",
-          "Apple-platform navigation and interaction designed independently from Compose",
-          "Release scope gated by Android stabilization and verified product parity",
+          {
+            title: "Daily learning",
+            description:
+              "Goals, roadmaps, daily activities, and Lumi guidance are planned for the native SwiftUI client.",
+          },
+          {
+            title: "A shared account",
+            description:
+              "The client is planned to use the existing identity, learning state, and mobile API contracts.",
+          },
+          {
+            title: "Native iOS interactions",
+            description:
+              "Navigation and screen state will be designed around Apple platform conventions and SwiftUI.",
+          },
+          {
+            title: "Release readiness",
+            description:
+              "Implementation will begin after the Android release candidate is stabilized. Product parity will need to be verified before an iOS release.",
+          },
         ],
         engineeringNote:
-          "iOS is planned, not released. The current foundation is the shared product contract: identity, learning state, design tokens, and mobile-compatible APIs. Swift and SwiftUI implementation will begin after the Android release candidate is stabilized.",
+          "Swift and SwiftUI are the planned stack. Existing identity, learning state, design tokens, and mobile API contracts provide the foundation. Native implementation is scheduled after Android stabilization; the iOS client has not been released.",
       },
     ],
     links: {
+      website: "https://lumingo.me",
     },
     gallery: [
       {
         imageUrl: "/projects/lumingo/android-01.svg",
-        caption: "Android goals — the learner's active paths and next action.",
+        caption: "Android — active goals and the next learning activity.",
         platform: "android",
         mediaType: "phone",
       },
       {
         imageUrl: "/projects/lumingo/android-02.svg",
-        caption: "Android roadmap — a structured week instead of disconnected lessons.",
+        caption: "Android — the weekly roadmap and daily activities.",
         platform: "android",
         mediaType: "phone",
       },
       {
         imageUrl: "/projects/lumingo/android-03.svg",
-        caption: "Lumi on Android — guidance that stays connected to the learner's goal.",
+        caption: "Android — Lumi guidance connected to the learner's goal.",
         platform: "android",
         mediaType: "phone",
       },
       {
         imageUrl: "/projects/lumingo/web-01.svg",
-        caption: "Web landing — the public-beta product proposition.",
+        caption: "Web — the public-beta landing page.",
         platform: "web",
         mediaType: "browser",
       },
       {
         imageUrl: "/projects/lumingo/web-02.svg",
-        caption: "Web goal setup — turning intent, level, and available time into constraints.",
+        caption: "Web — setting a goal, level, and learning schedule.",
         platform: "web",
         mediaType: "browser",
       },
       {
         imageUrl: "/projects/lumingo/web-03.svg",
-        caption: "Web roadmap — the adaptive path and current learning week.",
+        caption: "Web — the adaptive roadmap and current learning week.",
         platform: "web",
         mediaType: "browser",
       },
       {
         imageUrl: "/projects/lumingo/ios-in-development.svg",
-        caption: "iOS client — native product experience in development.",
+        caption: "iOS — native client in development; final screens are still ahead.",
         platform: "ios",
         mediaType: "phone",
       },
     ],
     overview:
-      "Lumingo turns a learner's goal, current level, and realistic weekly availability into one adaptive language-learning path. The web product is live in public beta, while the native Android client brings the same goals, roadmap, daily learning flow, and Lumi guidance into a mobile-first experience.",
+      "Lumingo turns a learner's goal, level, and weekly availability into an adaptive plan with daily activities, reviews, and Lumi guidance. Web and Android share the same account and learning progress. The web product is in public beta, Android is a release candidate, and iOS is in development.",
     challenge:
-      "The challenge is maintaining one coherent product across clients without reducing the native app to a web wrapper. Shared product rules, identity, learning state, and AI workflows must stay aligned while Web, Android, and the upcoming iOS client each respect their platform.",
+      "Keep learning rules, account access, progress, and AI workflows consistent across clients while giving each platform its own navigation, state handling, and recovery behavior.",
     stackAndArchitecture: {
       stack: [
         "Kotlin",
@@ -366,16 +432,29 @@ const projectDefinitions = [
       ],
     },
     keyFeatures: [
-      "Goal onboarding that captures intent, current level, pace, and real weekly availability",
-      "Adaptive roadmaps with explicit weeks, daily nodes, reviews, and phase transitions",
-      "Native Android client for goals, learning days, Lumi, profile, and settings",
-      "Shared identity and learning state across Web and Android",
-      "Resilient mobile states for recovery, retries, duplicate-action guards, and offline-aware errors",
-      "English and Russian product experiences built from one design and content system",
-      "Visible iOS expansion path without presenting unfinished work as released",
+      {
+        title: "A plan around your goal",
+        description:
+          "The learner's goal, level, pace, and available time shape a roadmap with weekly activities and reviews.",
+      },
+      {
+        title: "Lumi in context",
+        description:
+          "Lumi's guidance stays connected to the learner's active goal and learning progress.",
+      },
+      {
+        title: "One account across clients",
+        description:
+          "Web and Android share identity and learning state, with interfaces available in English and Russian.",
+      },
+      {
+        title: "Native learning on Android",
+        description:
+          "Compose brings goals, daily activities, and Lumi into a native client with retry, recovery, and duplicate-action guards.",
+      },
     ],
     engineeringNote:
-      "Lumingo is one product system with multiple clients. The web experience owns public discovery and the full beta workflow; native Android uses Clerk and Convex for identity and product state, with Ktor routes for LLM-backed operations. AI assisted implementation and review, while product direction, architecture choices, validation, and release acceptance remain my responsibility. iOS is the next native client and is currently in development.",
+      "Web and Android share Clerk identity and Convex learning data. Android uses Ktor routes for LLM operations and owns its Compose navigation and screen state. AI assisted implementation and review; I own product direction, architecture, validation, and release decisions. iOS is the next planned native client.",
   }),
 ] as const;
 
@@ -385,7 +464,7 @@ export const projectsCatalog: CatalogProject[] = projectDefinitions
   .map((project) => ({
     ...project,
     id: 0,
-    slug: toProjectSlug(project.title),
+    slug: project.slug ?? toProjectSlug(project.title),
     coverImage: project.gallery[0]?.imageUrl ?? "",
   }))
   .sort(
@@ -436,5 +515,3 @@ export const publicProjectsCatalogByLocale: Record<Locale, CatalogProject[]> = {
   en: publicProjectsCatalog,
   ru: projectsCatalogByLocale.ru.filter((project) => project.published),
 };
-
-export type ProjectSlug = string;

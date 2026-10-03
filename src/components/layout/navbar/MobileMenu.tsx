@@ -67,34 +67,34 @@ export const MobileMenu = ({
       </SheetTrigger>
       <SheetContent
         side="right"
-        className="!w-full !max-w-full !inset-0 bg-white dark:bg-slate-950 border-none flex flex-col [&>button:last-child]:hidden"
+        className="!w-full !max-w-full !inset-0 !p-0 bg-white dark:bg-slate-950 border-none flex flex-col [&>button:last-child]:hidden"
       >
         <SheetHeader className="sr-only">
           <SheetTitle>{t.nav.menuTitle}</SheetTitle>
           <SheetDescription>{t.nav.menuDescription}</SheetDescription>
         </SheetHeader>
 
-        {/* ── Header: Logo + Close ── */}
-        <div className="flex items-center justify-between px-6 pt-[clamp(1rem,3vh,2rem)] pb-2">
+        {/* ── Header: Logo + Close — mirrors the navbar row so nothing moves on open ── */}
+        <div className="flex items-center justify-between px-6 sm:px-8 py-4">
           <Link
             to={localize(ROUTES.HOME)}
             state={{ scrollTo: "home" }}
             onClick={(e) => {
               handleLogoClick(e);
-              setMobileMenuOpen(false);
+              if (!e.defaultPrevented) setMobileMenuOpen(false);
             }}
             className="flex items-center"
           >
-            <LogoMark isUnderscoreVisible={isUnderscoreVisible} size="menu" />
+            <LogoMark isUnderscoreVisible={isUnderscoreVisible} />
           </Link>
-          <SheetClose className="p-[clamp(0.25rem,1vh,0.5rem)] rounded-lg text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
-            <X className="w-[clamp(1.25rem,3vh,2rem)] h-[clamp(1.25rem,3vh,2rem)]" />
+          <SheetClose className="text-gray-500 dark:text-slate-400 p-2 w-10 h-10 inline-flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+            <X className="w-5 h-5" />
             <span className="sr-only">{t.nav.closeMenu}</span>
           </SheetClose>
         </div>
 
         {/* ── Nav Links ── */}
-        <nav className="flex-1 flex flex-col justify-center px-10 gap-[clamp(0.25rem,1.5vh,1rem)]">
+        <nav className="flex-1 flex flex-col justify-center px-16 gap-[clamp(0.25rem,1.5vh,1rem)]">
           {navLinks.map((link) => {
             const isActive = activeSection === link.id;
             const isProjects = link.id === "projects";
@@ -189,7 +189,7 @@ export const MobileMenu = ({
         </nav>
 
         {/* ── Bottom: Theme ── */}
-        <div className="px-6 pb-[clamp(1rem,4vh,2rem)] pt-[clamp(0.5rem,2vh,1.5rem)]">
+        <div className="px-12 pb-[calc(clamp(1rem,4vh,2rem)+1.5rem)] pt-[clamp(0.5rem,2vh,1.5rem)]">
           <div className="flex items-center justify-between gap-3">
             <LanguageSwitch onSwitch={() => setMobileMenuOpen(false)} />
             <ThemeMenu direction="up" />
