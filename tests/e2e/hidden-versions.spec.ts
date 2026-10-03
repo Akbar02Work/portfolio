@@ -37,22 +37,34 @@ for (const [route, locale, width] of [["/", "en", 1440], ["/ru", "ru", 320]] as 
   });
 }
 
-test("opens hidden versions from the mobile menu without leaving another modal open", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/ru");
-  await page.getByRole("button", { name: messages.ru.nav.openMenu }).click();
-  const menu = page.getByRole("dialog", { name: messages.ru.nav.menuTitle, exact: true });
-  const menuLogo = menu.getByRole("link").first();
-  for (let click = 0; click < 3; click += 1) await menuLogo.click();
-  const dialog = page.getByRole("dialog", { name: messages.ru.hiddenVersions.title });
-  await expect(dialog).toBeVisible();
-  await expect(menu).toHaveCount(0);
-  await expect(dialog.getByRole("link", { name: /^Creative/ })).toBeFocused();
-  await dialog.getByRole("button", { name: messages.ru.nav.closeMenu }).click();
-  await expect(dialog).toHaveCount(0);
-  await expect(page.locator("nav").getByRole("link").first()).toBeFocused();
-});
+for (const [route, locale] of [["/", "en"], ["/ru", "ru"]] as const) {
+  for (const reducedMotion of ["reduce", "no-preference"] as const) {
+    test(`opens ${locale} hidden versions from the mobile menu with ${reducedMotion} motion and restores focus`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion });
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(route);
+      const menuTrigger = page.getByRole("button", { name: messages[locale].nav.openMenu });
+      await menuTrigger.click();
+      const menu = page.getByRole("dialog", { name: messages[locale].nav.menuTitle, exact: true });
+      const menuLogo = menu.getByRole("link").first();
+      for (let click = 0; click < 3; click += 1) await menuLogo.click();
+      const dialog = page.getByRole("dialog", { name: messages[locale].hiddenVersions.title });
+      await expect(dialog).toBeVisible();
+      await expect(menu).toHaveCount(0);
+      await expect(dialog.getByRole("link", { name: /^Creative/ })).toBeFocused();
+      await dialog.getByRole("button", { name: messages[locale].nav.closeMenu }).click();
+      // Include the exiting sheet: getByRole ignores it once the chooser hides it.
+      await expect(page.locator('[role="dialog"]')).toHaveCount(0);
+      await expect(page.locator("nav").getByRole("link").first()).toBeFocused();
+
+      // The handoff must not suppress restoration on an ordinary menu close.
+      await menuTrigger.click();
+      await menu.getByRole("button", { name: messages[locale].nav.closeMenu, exact: true }).click();
+      await expect(page.locator('[role="dialog"]')).toHaveCount(0);
+      await expect(menuTrigger).toBeFocused();
+    });
+  }
+}
 
 test("opens Old and returns to the current portfolio from an archive route", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });

@@ -33,6 +33,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
   const homePath = localize(ROUTES.HOME);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileProjectsOpen, setMobileProjectsOpen] = useState(false);
+  const mobileMenuFocusHandoffRef = useRef(false);
   const [contactOpen, setContactOpen] = useState(false);
   const contactReturnFocusRef = useRef<HTMLElement | null>(null);
   const [hiddenVersionsOpen, setHiddenVersionsOpen] = useState(false);
@@ -53,6 +54,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
     pathname: location.pathname,
     homePath,
     onUnlock: () => {
+      if (mobileMenuOpen) mobileMenuFocusHandoffRef.current = true;
       setMobileMenuOpen(false);
       setMobileProjectsOpen(false);
       projectsMenu.closeProjectsMenuNow();
@@ -73,10 +75,18 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
 
   const openContact = (returnFocusTo: HTMLElement | null) => {
     contactReturnFocusRef.current = returnFocusTo;
+    if (mobileMenuOpen) mobileMenuFocusHandoffRef.current = true;
     setMobileMenuOpen(false);
     setMobileProjectsOpen(false);
     projectsMenu.closeProjectsMenuNow();
     setContactOpen(true);
+  };
+
+  const handleMobileMenuCloseAutoFocus = (event: Event) => {
+    if (!mobileMenuFocusHandoffRef.current) return;
+    // The sheet's exit animation can finish after the replacement dialog closes.
+    event.preventDefault();
+    mobileMenuFocusHandoffRef.current = false;
   };
 
   const navPosition = isHome ? "fixed" : "sticky";
@@ -116,6 +126,7 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
             setMobileProjectsOpen={setMobileProjectsOpen}
             projectMenu={projectsMenu.projectMenu}
             onContactClick={openContact}
+            onCloseAutoFocus={handleMobileMenuCloseAutoFocus}
           />
         </div>
       </div>

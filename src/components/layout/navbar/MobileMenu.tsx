@@ -33,6 +33,7 @@ type MobileMenuProps = {
   setMobileProjectsOpen: Dispatch<SetStateAction<boolean>>;
   projectMenu: ProjectSummary[];
   onContactClick: (returnFocusTo: HTMLElement | null) => void;
+  onCloseAutoFocus: (event: Event) => void;
 };
 
 export const MobileMenu = ({
@@ -46,6 +47,7 @@ export const MobileMenu = ({
   setMobileProjectsOpen,
   projectMenu,
   onContactClick,
+  onCloseAutoFocus,
 }: MobileMenuProps) => {
   const { t, localize } = useI18n();
   return (
@@ -67,6 +69,7 @@ export const MobileMenu = ({
       </SheetTrigger>
       <SheetContent
         side="right"
+        onCloseAutoFocus={onCloseAutoFocus}
         className="!w-full !max-w-full !inset-0 !p-0 bg-white dark:bg-slate-950 border-none flex flex-col [&>button:last-child]:hidden"
       >
         <SheetHeader className="sr-only">
