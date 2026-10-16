@@ -161,11 +161,7 @@ export const LanguageSwitch = ({ className, onSwitch }: LanguageSwitchProps) => 
             </span>
           </>
         );
-        return isActive ? (
-          <span key={target} data-indicator-value={target} aria-current="true" lang={target} title={label.full} className={labelClass}>
-            {content}
-          </span>
-        ) : (
+        return (
           <Link
             key={target}
             data-indicator-value={target}
@@ -174,12 +170,18 @@ export const LanguageSwitch = ({ className, onSwitch }: LanguageSwitchProps) => 
             lang={target}
             title={label.full}
             aria-label={label.full}
+            aria-current={isActive ? "true" : undefined}
             draggable={false}
-            onClick={() => {
+            onClick={(event) => {
+              if (event.button !== 0 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
+              if (isActive) {
+                event.preventDefault();
+                return;
+              }
               rememberLocale(target);
               onSwitch?.();
             }}
-            className={cn(labelClass, "focus-visible:outline focus-visible:outline-2 focus-visible:outline-volt-ink dark:focus-visible:outline-volt")}
+            className={cn(labelClass, isActive && "cursor-default", "focus-visible:outline focus-visible:outline-2 focus-visible:outline-volt-ink dark:focus-visible:outline-volt")}
           >
             {content}
           </Link>

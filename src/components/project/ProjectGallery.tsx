@@ -1,5 +1,6 @@
+import { LocalizedText } from "@/components/ui/LocalizedText";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import type { Project } from "@/data/projects";
+import { getLocalizedProject, type Project } from "@/data/projects";
 import type { ProjectStyle } from "@/constants/projectStyles";
 import ProjectMediaFrame from "@/components/project/ProjectMediaFrame";
 import type { ProjectPlatformId } from "@/data/projectCatalog";
@@ -58,10 +59,10 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                 <div className="border-t border-neutral-200 dark:border-neutral-800 pt-12 md:pt-16">
                     <div className="flex items-center gap-4 mb-6">
                         <span className="inline-block h-px w-8 shrink-0 bg-volt-ink dark:bg-volt" aria-hidden="true" />
-                        <h2 className="text-heading-2 text-gray-900 dark:text-white">{t.project.screens}</h2>
+                        <h2 className="text-heading-2 text-gray-900 dark:text-white"><LocalizedText>{copy => copy.project.screens}</LocalizedText></h2>
                     </div>
                     <p className="font-mono text-caption text-neutral-500 dark:text-neutral-400">
-                        {t.project.screensSoon}
+                        <LocalizedText>{copy => copy.project.screensSoon}</LocalizedText>
                     </p>
                 </div>
             </section>
@@ -77,7 +78,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                 <div className="flex items-end justify-between gap-6 mb-8 md:mb-10">
                     <div className="flex items-center gap-4 min-w-0">
                         <span className="inline-block h-px w-8 shrink-0 bg-volt-ink dark:bg-volt" aria-hidden="true" />
-                        <h2 className="text-heading-2 text-gray-900 dark:text-white">{t.project.screens}</h2>
+                        <h2 className="text-heading-2 text-gray-900 dark:text-white"><LocalizedText>{copy => copy.project.screens}</LocalizedText></h2>
                     </div>
 
                     <div className="flex items-center gap-4 shrink-0">
@@ -207,17 +208,17 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                     className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 mt-4 flex min-h-[6.5rem] justify-center"
                 >
                     <p
-                        key={activeCaption.title + activeCaption.detail}
+                        key={activeScreen?.id}
                         className="max-w-lg text-center animate-in fade-in duration-500 motion-reduce:animate-none"
                     >
-                        <span className="block text-body-lg font-semibold text-gray-900 dark:text-white">
-                            {activeCaption.title}
-                        </span>
-                        {activeCaption.detail ? (
-                            <span className="mt-1.5 block text-body-base text-gray-500 dark:text-slate-400">
-                                {activeCaption.detail}
-                            </span>
-                        ) : null}
+                        <LocalizedText>{(_, locale) => {
+                            const screen = getLocalizedProject(project, locale).screens.find(({ id }) => id === activeScreen?.id);
+                            const caption = screen ? splitCaption(screen.title) : activeCaption;
+                            return <>
+                                <span className="block text-body-lg font-semibold text-gray-900 dark:text-white">{caption.title}</span>
+                                {caption.detail && <span className="mt-1.5 block text-body-base text-gray-500 dark:text-slate-400">{caption.detail}</span>}
+                            </>;
+                        }}</LocalizedText>
                     </p>
                 </div>
             ) : null}

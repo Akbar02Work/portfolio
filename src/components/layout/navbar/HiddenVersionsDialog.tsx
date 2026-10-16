@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/ui/LocalizedText";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { ArrowUpRight, X } from "lucide-react";
 import type { RefObject } from "react";
@@ -13,8 +14,8 @@ type HiddenVersionsDialogProps = {
 export const HiddenVersionsDialog = ({ open, onOpenChange, returnFocusRef }: HiddenVersionsDialogProps) => {
   const { t } = useI18n();
   const versions = [
-    { title: "Creative", description: t.hiddenVersions.creative, href: getCreativeUrl() },
-    { title: "Old", description: t.hiddenVersions.old, href: getOldUrl() },
+    { title: "Creative", description: "creative" as const, href: getCreativeUrl() },
+    { title: "Old", description: "old" as const, href: getOldUrl() },
   ];
 
   return (
@@ -39,10 +40,10 @@ export const HiddenVersionsDialog = ({ open, onOpenChange, returnFocusRef }: Hid
             className="relative w-full max-w-[32rem] max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-background p-6 sm:p-8 shadow-2xl data-[state=open]:animate-in data-[state=open]:zoom-in-95 motion-reduce:animate-none"
           >
             <DialogPrimitive.Title className="pr-8 text-heading-3 text-gray-900 dark:text-white">
-              {t.hiddenVersions.title}
+              <LocalizedText>{copy => copy.hiddenVersions.title}</LocalizedText>
             </DialogPrimitive.Title>
             <DialogPrimitive.Description className="mt-3 text-body-sm text-gray-600 dark:text-slate-300">
-              {t.hiddenVersions.description}
+              <LocalizedText>{copy => copy.hiddenVersions.description}</LocalizedText>
             </DialogPrimitive.Description>
             <div className="mt-6 space-y-3">
               {versions.map((version) => (
@@ -63,7 +64,7 @@ export const HiddenVersionsDialog = ({ open, onOpenChange, returnFocusRef }: Hid
                       {version.title}
                     </span>
                     <span className="mt-1 block text-body-sm text-gray-600 dark:text-slate-300">
-                      {version.description}
+                      <LocalizedText>{copy => copy.hiddenVersions[version.description]}</LocalizedText>
                     </span>
                   </span>
                   <ArrowUpRight className="h-5 w-5 flex-none text-gray-600 dark:text-slate-300" aria-hidden="true" />

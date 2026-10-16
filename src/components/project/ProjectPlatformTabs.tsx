@@ -1,6 +1,8 @@
 import type { ProjectPlatform, ProjectPlatformId } from "@/data/projectCatalog";
 import { slidingIndicatorTransition, useSlidingIndicator } from "@/hooks/useSlidingIndicator";
 import { cn } from "@/lib/utils";
+import { LocalizedText } from "@/components/ui/LocalizedText";
+import type { Locale } from "@/i18n/locales";
 
 type ProjectPlatformTabsProps = {
   platforms: ProjectPlatform[];
@@ -9,6 +11,7 @@ type ProjectPlatformTabsProps = {
   label: string;
   className?: string;
   showStatus?: boolean;
+  localizeStatus?: (platform: ProjectPlatformId, locale: Locale) => string | undefined;
 };
 
 export const ProjectPlatformTabs = ({
@@ -18,6 +21,7 @@ export const ProjectPlatformTabs = ({
   label,
   className,
   showStatus = true,
+  localizeStatus,
 }: ProjectPlatformTabsProps) => {
   const active = platforms.find((platform) => platform.id === activePlatform);
   const { rootRef, indicatorRef } = useSlidingIndicator(activePlatform, {
@@ -86,7 +90,7 @@ export const ProjectPlatformTabs = ({
           aria-live="polite"
           className="font-mono text-[11px] uppercase tracking-[0.12em] text-neutral-500 dark:text-neutral-400"
         >
-          {active.status}
+          <LocalizedText>{(_, locale) => localizeStatus?.(active.id, locale) ?? active.status}</LocalizedText>
         </p>
       ) : null}
     </div>

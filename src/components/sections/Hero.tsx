@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/ui/LocalizedText";
 import { ArrowUpRight, Download, User } from "lucide-react";
 import { useState } from "react";
 import { withBase } from "@/lib/urls";
@@ -35,7 +36,7 @@ const NameStroke = () => (
 );
 
 const HeroText = () => {
-    const { t, locale } = useI18n();
+    const { locale } = useI18n();
     const cvLanguage = locale.toUpperCase();
     return (
     <div className="flex-1 space-y-7 text-center md:text-left">
@@ -46,15 +47,17 @@ const HeroText = () => {
                     <NameStroke />
                 </span>
                 <span className="text-display-role block mt-5 md:mt-6 text-neutral-400 dark:text-neutral-500">
-                    {t.hero.roleLine1}
-                    <br />
-                    {t.hero.founderOf} <span className="text-gray-900 dark:text-white">Lumingo</span>.
+                    <LocalizedText>{copy => <>
+                        {copy.hero.roleLine1}
+                        <br />
+                        {copy.hero.founderOf} <span className="text-gray-900 dark:text-white">Lumingo</span>.
+                    </>}</LocalizedText>
                 </span>
             </h1>
         </div>
         <div className="hero-reveal" style={{ animationDelay: "120ms" }}>
             <p className="text-body-lg text-gray-600 dark:text-slate-300 max-w-md mx-auto md:mx-0">
-                {t.hero.description}
+                <LocalizedText>{copy => copy.hero.description}</LocalizedText>
             </p>
         </div>
         <div className="hero-reveal" style={{ animationDelay: "200ms" }}>
@@ -65,7 +68,7 @@ const HeroText = () => {
                             type="button"
                             className={`${ctaBase} bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:bg-volt-ink dark:hover:bg-volt`}
                         >
-                            {t.hero.contact}
+                            <LocalizedText>{copy => copy.hero.contact}</LocalizedText>
                             <ArrowUpRight className="w-[1.125rem] h-[1.125rem]" strokeWidth={2} aria-hidden="true" />
                         </button>
                     }
@@ -75,7 +78,7 @@ const HeroText = () => {
                     download={`Akbar_Azizov_CV_${cvLanguage}.pdf`}
                     className={`${ctaBase} border border-gray-300 dark:border-slate-600 text-gray-900 dark:text-slate-200 hover:border-volt-ink dark:hover:border-volt hover:text-volt-ink dark:hover:text-volt`}
                 >
-                    {t.hero.downloadCv}
+                    <LocalizedText>{copy => copy.hero.downloadCv}</LocalizedText>
                     <Download className="w-[1.125rem] h-[1.125rem]" strokeWidth={2} aria-hidden="true" />
                 </a>
             </div>

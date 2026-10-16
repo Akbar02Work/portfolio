@@ -1,3 +1,4 @@
+import { getLocalizedProjectSummary } from "@/data/projectsSummary";
 import { useI18n } from "@/i18n/useI18n";
 import ProjectMediaFrame from "@/components/project/ProjectMediaFrame";
 import { ProjectPlatformTabs } from "@/components/project/ProjectPlatformTabs";
@@ -54,6 +55,7 @@ const ProjectCardMedia = ({
         activePlatform={activePreview.id}
         onSelect={onPlatformChange}
         label={t.projects.choosePlatform(project.title)}
+        localizeStatus={(platform, locale) => getLocalizedProjectSummary(project, locale).platforms.find(({ id }) => id === platform)?.status}
         className="justify-center md:justify-start"
       />
 

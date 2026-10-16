@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/ui/LocalizedText";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { ArrowUpRight, Check, Copy, Eye, X } from "lucide-react";
 import { useState, type MouseEvent, type ReactNode, type RefObject } from "react";
@@ -27,9 +28,9 @@ const RowValue = ({ children, wrap = false }: { children: ReactNode; wrap?: bool
 
 const iconClass = "w-4 h-4 flex-none text-neutral-400 group-hover:text-volt-ink dark:group-hover:text-volt transition-colors";
 
-const CopiedMark = ({ label }: { label: string }) => (
+const CopiedMark = () => (
   <span className="inline-flex items-center gap-1.5 font-mono text-caption uppercase tracking-[0.14em] text-volt-ink dark:text-volt">
-    <span className="hidden min-[420px]:inline">{label}</span>
+    <span className="hidden min-[420px]:inline"><LocalizedText>{copy => copy.contact.copied}</LocalizedText></span>
     <Check className="w-4 h-4" strokeWidth={2} aria-hidden="true" />
   </span>
 );
@@ -88,7 +89,7 @@ const ContactList = () => {
             className={rowClass}
             aria-label={t.contact.emailAria(CONTACT_EMAIL)}
           >
-            <RowLabel>{t.contact.email}</RowLabel>
+            <RowLabel><LocalizedText>{copy => copy.contact.email}</LocalizedText></RowLabel>
             <RowValue wrap>
               {/* Wraps only at "@" on narrow screens. */}
               <span className="flex flex-wrap">
@@ -100,7 +101,7 @@ const ContactList = () => {
               active={copiedKey === "email"}
               className="justify-items-end"
               idle={<Copy className={iconClass} strokeWidth={2} aria-hidden="true" />}
-              done={<CopiedMark label={t.contact.copied} />}
+              done={<CopiedMark />}
             />
           </a>
         </li>
@@ -111,13 +112,13 @@ const ContactList = () => {
             className={rowClass}
             aria-label={phone ? t.contact.phoneCopyAria(phone.display) : t.contact.phoneRevealAria}
           >
-            <RowLabel>{t.contact.phone}</RowLabel>
+            <RowLabel><LocalizedText>{copy => copy.contact.phone}</LocalizedText></RowLabel>
             <RowValue>
               <CopySwap
                 active={Boolean(phone)}
                 idle={
                   <span className="text-neutral-500 dark:text-neutral-400 group-hover:text-volt-ink dark:group-hover:text-volt">
-                    {t.contact.showNumber}
+                    <LocalizedText>{copy => copy.contact.showNumber}</LocalizedText>
                   </span>
                 }
                 done={phone ? <span className="select-text tabular-nums">{phone.display}</span> : null}
@@ -133,12 +134,12 @@ const ContactList = () => {
                   <Eye className={iconClass} strokeWidth={2} aria-hidden="true" />
                 )
               }
-              done={<CopiedMark label={t.contact.copied} />}
+              done={<CopiedMark />}
             />
           </button>
           {phoneCopyFailed ? (
             <p role="alert" className="pb-4 text-body-sm text-gray-600 dark:text-slate-300">
-              {t.contact.phoneCopyFailed}
+              <LocalizedText>{copy => copy.contact.phoneCopyFailed}</LocalizedText>
             </p>
           ) : null}
         </li>
@@ -189,13 +190,13 @@ export const ContactDialog = ({ trigger, open, onOpenChange, returnFocusRef }: C
         >
           <div aria-hidden="true" className="md:hidden absolute top-3 left-1/2 -translate-x-1/2 h-1 w-10 rounded-full bg-neutral-300 dark:bg-neutral-700" />
           <p className="font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400 mb-3">
-            {t.contact.eyebrow}
+            <LocalizedText>{copy => copy.contact.eyebrow}</LocalizedText>
           </p>
           <DialogPrimitive.Title className="text-heading-2 text-gray-900 dark:text-white">
-            {t.contact.title}
+            <LocalizedText>{copy => copy.contact.title}</LocalizedText>
           </DialogPrimitive.Title>
           <DialogPrimitive.Description className="mt-2 mb-8 text-body-sm text-neutral-500 dark:text-neutral-400">
-            {t.contact.availability}
+            <LocalizedText>{copy => copy.contact.availability}</LocalizedText>
           </DialogPrimitive.Description>
           <ContactList />
           <DialogPrimitive.Close

@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/ui/LocalizedText";
 import type {
   Dispatch,
   MouseEventHandler,
@@ -73,8 +74,8 @@ export const MobileMenu = ({
         className="!w-full !max-w-full !inset-0 !p-0 bg-white dark:bg-slate-950 border-none flex flex-col [&>button:last-child]:hidden"
       >
         <SheetHeader className="sr-only">
-          <SheetTitle>{t.nav.menuTitle}</SheetTitle>
-          <SheetDescription>{t.nav.menuDescription}</SheetDescription>
+          <SheetTitle><LocalizedText>{copy => copy.nav.menuTitle}</LocalizedText></SheetTitle>
+          <SheetDescription><LocalizedText>{copy => copy.nav.menuDescription}</LocalizedText></SheetDescription>
         </SheetHeader>
 
         {/* ── Header: Logo + Close — mirrors the navbar row so nothing moves on open ── */}
@@ -92,7 +93,7 @@ export const MobileMenu = ({
           </Link>
           <SheetClose className="text-gray-500 dark:text-slate-400 p-2 w-10 h-10 inline-flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
             <X className="w-5 h-5" />
-            <span className="sr-only">{t.nav.closeMenu}</span>
+            <span className="sr-only"><LocalizedText>{copy => copy.nav.closeMenu}</LocalizedText></span>
           </SheetClose>
         </div>
 
@@ -127,7 +128,7 @@ export const MobileMenu = ({
                     />
                   )}
                   <span>
-                    {t.nav[link.id]}
+                    <LocalizedText>{copy => copy.nav[link.id]}</LocalizedText>
                   </span>
                   {isProjects && (
                     <ChevronRight
@@ -186,7 +187,7 @@ export const MobileMenu = ({
               }
               className="relative flex items-center py-[clamp(0.25rem,1vh,0.75rem)] text-left text-[clamp(1.75rem,5vh,3rem)] font-light text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-300 transition-colors"
             >
-              {t.nav.contact}
+              <LocalizedText>{copy => copy.nav.contact}</LocalizedText>
             </button>
           </div>
         </nav>

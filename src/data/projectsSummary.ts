@@ -1,5 +1,5 @@
 import type { Locale } from "@/i18n/locales";
-import { allProjects, projects, projectsByLocale } from "./projects";
+import { allProjects, allProjectsByLocale, projects, projectsByLocale } from "./projects";
 import type { ProjectPlatformView } from "./projects";
 import type {
   ProjectMediaType,
@@ -19,6 +19,7 @@ export type ProjectSummary = {
   id: number;
   title: string;
   slug: string;
+  activePlatform?: ProjectPlatformId;
   summary: string;
   year: number;
   metrics: ProjectMetric[];
@@ -78,6 +79,7 @@ export const resolveProjectSummaryPlatform = (
 
   return {
     ...project,
+    activePlatform: platform.id,
     summary: platform.summary,
     metrics: platform.metrics,
     media: {
@@ -86,4 +88,11 @@ export const resolveProjectSummaryPlatform = (
     },
     image: platform.image,
   };
+};
+
+export const getLocalizedProjectSummary = (project: ProjectSummary, locale: Locale): ProjectSummary => {
+  const translated = allProjectsByLocale[locale].find(({ slug }) => slug === project.slug);
+  return translated ? (project.activePlatform
+    ? resolveProjectSummaryPlatform(toProjectSummary(translated), project.activePlatform)
+    : toProjectSummary(translated)) : project;
 };

@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/ui/LocalizedText";
 import { ChevronDown } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -76,8 +77,8 @@ export const DesktopNav = ({
     {/* True center — section links only.
         pointer-events-none on the absolute shell so it can't steal hits from
         right-side utilities (theme / version) when the centered row is wide. */}
-    <div ref={navRef} className="pointer-events-none hidden min-[901px]:flex absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
-    <ul className="flex flex-row items-center space-x-8">
+    <div ref={navRef} className="pointer-events-none hidden min-[901px]:flex absolute w-max left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
+    <ul className="flex flex-row items-center space-x-4 lg:space-x-8">
       {navLinks.map((link) => {
         const isActive = activeSection === link.id;
         if (link.id === "projects") {
@@ -108,7 +109,7 @@ export const DesktopNav = ({
                   : "text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
                   }`}
               >
-                {t.nav[link.id]}
+                <LocalizedText>{copy => copy.nav[link.id]}</LocalizedText>
                 <ChevronDown
                   aria-hidden="true"
                   className={`w-4 h-4 transition-transform [transition-duration:420ms] [transition-timing-function:cubic-bezier(0.45,0,0.55,1)] motion-reduce:transition-none ${projectsMenu.isProjectsMenuOpen ? "rotate-180" : "rotate-0"}`}
@@ -161,7 +162,7 @@ export const DesktopNav = ({
                 : "text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white"
                 }`}
             >
-              {t.nav[link.id]}
+              <LocalizedText>{copy => copy.nav[link.id]}</LocalizedText>
             </button>
           </li>
         );
@@ -173,7 +174,7 @@ export const DesktopNav = ({
           onClick={(event) => onContactClick(event.currentTarget)}
           className={`relative block py-2 px-3 text-[0.9375rem] text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors ${navFocus} focus-visible:outline-offset-2`}
         >
-          {t.nav.contact}
+          <LocalizedText>{copy => copy.nav.contact}</LocalizedText>
         </button>
       </li>
     </ul>

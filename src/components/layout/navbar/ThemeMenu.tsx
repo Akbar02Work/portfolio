@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/ui/LocalizedText";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Moon, Sun, SunMoon } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
@@ -179,7 +180,7 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
           >
             <span className="inline-flex items-center gap-2">
               <Sun className="w-4 h-4" />
-              {t.theme.light}
+              <LocalizedText>{copy => copy.theme.light}</LocalizedText>
             </span>
           </button>
           <button
@@ -191,7 +192,7 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
           >
             <span className="inline-flex items-center gap-2">
               <Moon className="w-4 h-4" />
-              {t.theme.dark}
+              <LocalizedText>{copy => copy.theme.dark}</LocalizedText>
             </span>
           </button>
           <button
@@ -203,7 +204,7 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
           >
             <span className="inline-flex items-center gap-2">
               <SunMoon className="w-4 h-4" />
-              {t.theme.system}
+              <LocalizedText>{copy => copy.theme.system}</LocalizedText>
             </span>
           </button>
         </div>

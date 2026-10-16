@@ -98,4 +98,18 @@ describe("LanguageSwitch", () => {
     expect(onSwitch).toHaveBeenCalledTimes(1);
     expect(screen.getByRole("link", { name: "English" })).toBeInTheDocument();
   });
+
+  it("keeps keyboard focus on the selected segment and ignores an already active choice", () => {
+    const { onSwitch } = setup();
+    fireEvent.click(screen.getByRole("link", { name: "English" }));
+    expect(onSwitch).not.toHaveBeenCalled();
+
+    const russian = screen.getByRole("link", { name: "Русский" });
+    russian.focus();
+    fireEvent.click(russian);
+    expect(screen.getByRole("link", { name: "Русский" })).toBe(russian);
+    expect(russian).toHaveFocus();
+    expect(russian).toHaveAttribute("aria-current", "true");
+    expect(onSwitch).toHaveBeenCalledTimes(1);
+  });
 });

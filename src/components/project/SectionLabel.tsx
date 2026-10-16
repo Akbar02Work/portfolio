@@ -1,5 +1,7 @@
+import type { ReactNode } from "react";
+
 /** Case-study section heading with the short accent rule. */
-export const SectionLabel = ({ children }: { children: string }) => (
+export const SectionLabel = ({ children }: { children: ReactNode }) => (
     <div className="flex items-center gap-4 mb-6">
         <span
             className="inline-block h-px w-8 shrink-0 bg-volt-ink dark:bg-volt"

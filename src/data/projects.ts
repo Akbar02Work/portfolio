@@ -45,6 +45,8 @@ export interface Project {
   id: number;
   title: string;
   slug: string;
+  /** Set only on a resolved platform view, so localized copy uses that same view. */
+  activePlatform?: ProjectPlatformId;
   summary: string;
   role: string;
   year: number;
@@ -144,6 +146,7 @@ export const resolveProjectPlatform = (
 
   return {
     ...project,
+    activePlatform: platform.id,
     summary: platform.summary,
     role: platform.role,
     metrics: platform.metrics,
@@ -159,4 +162,12 @@ export const resolveProjectPlatform = (
     features: platform.features,
     engineeringNote: platform.engineeringNote,
   };
+};
+
+/** The same project/platform in another language; preserves ad-hoc project fixtures. */
+export const getLocalizedProject = (project: Project, locale: Locale): Project => {
+  const translated = allProjectsByLocale[locale].find(({ slug }) => slug === project.slug);
+  return translated ? (project.activePlatform
+    ? resolveProjectPlatform(translated, project.activePlatform)
+    : translated) : project;
 };

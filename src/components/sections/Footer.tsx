@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/ui/LocalizedText";
 import { type MouseEvent } from "react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { CopySwap } from "@/components/ui/CopySwap";
@@ -47,7 +48,7 @@ export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boole
                     {/* Section header — numbering only on home (01 Projects / 02 About / 03 Contact) */}
                     <header className="mb-8 md:mb-10">
                         <h2 className="font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400">
-                            {showSectionNumber ? t.footer.eyebrow : t.footer.eyebrowPlain}
+                            <LocalizedText scramble>{copy => showSectionNumber ? copy.footer.eyebrow : copy.footer.eyebrowPlain}</LocalizedText>
                         </h2>
                     </header>
 
@@ -76,8 +77,8 @@ export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boole
                                     </span>
                                 }
                                 done={
-                                    <span className="inline-flex items-center gap-3 md:gap-4 whitespace-nowrap self-center text-volt-ink dark:text-volt">
-                                        {t.footer.copied}
+                                    <span className="inline-flex items-center gap-3 md:gap-4 whitespace-normal self-center text-volt-ink dark:text-volt">
+                                        <LocalizedText>{copy => copy.footer.copied}</LocalizedText>
                                         <CircleCheck className="flex-none w-[0.72em] h-[0.72em]" strokeWidth={2} aria-hidden="true" />
                                     </span>
                                 }
@@ -107,7 +108,7 @@ export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boole
                 </div>
                 <div className="border-t border-neutral-200 dark:border-neutral-800 py-6">
                     <p className="px-6 text-center font-mono text-caption uppercase tracking-[0.2em] text-neutral-500">
-                        {t.footer.credit}
+                        <LocalizedText>{copy => copy.footer.credit}</LocalizedText>
                     </p>
                 </div>
             </footer>

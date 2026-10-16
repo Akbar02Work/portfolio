@@ -3,6 +3,8 @@ import { ROUTES } from "@/constants/routes";
 import ServerLoader from "@/components/ui/ServerLoader";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { useI18n } from "@/i18n/useI18n";
+import { localizePath } from "@/i18n/locales";
+import { LocalizedText } from "@/components/ui/LocalizedText";
 
 type NotFoundViewProps = {
   eyebrow: string;
@@ -15,14 +17,14 @@ type NotFoundViewProps = {
 /** Shared 404 layout for unknown routes and unknown project slugs. */
 export const NotFoundView = ({ eyebrow, hint, actionLabel, scrollTo }: NotFoundViewProps) => {
   const location = useLocation();
-  const { t, localize } = useI18n();
+  const { locale, localize } = useI18n();
 
   return (
     <section className="flex min-h-[calc(100svh-88px)] min-h-[calc(100dvh-88px)] max-w-full items-center justify-center overflow-hidden px-4 py-[clamp(0.75rem,2.2vh,2rem)]">
       <div className="flex w-full max-w-4xl flex-col items-center gap-[clamp(0.75rem,2vh,1.75rem)]">
         {/* MONO/VOLT eyebrow */}
         <p className="font-mono text-caption uppercase tracking-[0.2em] text-volt-ink dark:text-volt">
-          {eyebrow}
+          <LocalizedText>{(copy, language) => language === locale ? eyebrow : scrollTo === "projects" ? copy.project.notFoundEyebrow : copy.notFound.eyebrow}</LocalizedText>
         </p>
 
         {/* 404 - Large background-style text */}
@@ -38,14 +40,16 @@ export const NotFoundView = ({ eyebrow, hint, actionLabel, scrollTo }: NotFoundV
         {/* Message */}
         <div className="mt-3 space-y-1 text-center text-gray-500 dark:text-slate-400">
           <p className="mx-auto max-w-[46rem] text-body-lg">
-            {t.notFound.triedBefore}{" "}
-            <span className="font-mono text-gray-600 dark:text-slate-300 sm:whitespace-nowrap">
-              "{location.pathname}"
-            </span>{" "}
-            {t.notFound.triedAfter}
+            <LocalizedText>{(copy, language) => <>
+              {copy.notFound.triedBefore}{" "}
+              <span className="font-mono text-gray-600 dark:text-slate-300 sm:whitespace-nowrap">
+                "{localizePath(location.pathname, language)}"
+              </span>{" "}
+              {copy.notFound.triedAfter}
+            </>}</LocalizedText>
           </p>
           <p className="mx-auto max-w-[46rem] text-body-base">
-            {hint}
+            <LocalizedText>{(copy, language) => language === locale ? hint : scrollTo === "projects" ? copy.project.notFoundHint : copy.notFound.hint}</LocalizedText>
           </p>
         </div>
 
@@ -56,7 +60,7 @@ export const NotFoundView = ({ eyebrow, hint, actionLabel, scrollTo }: NotFoundV
             state={{ scrollTo }}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-foreground px-6 py-2.5 text-button text-background transition-all duration-300 hover:scale-105 hover:opacity-90 sm:px-8 sm:py-3"
           >
-            {actionLabel}
+            <LocalizedText>{(copy, language) => language === locale ? actionLabel : scrollTo === "projects" ? copy.project.backToProjects : copy.notFound.returnHome}</LocalizedText>
           </Link>
         </Magnetic>
       </div>

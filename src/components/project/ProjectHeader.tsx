@@ -1,6 +1,7 @@
+import { LocalizedText } from "@/components/ui/LocalizedText";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ROUTES } from "@/constants/routes";
-import type { Project } from "@/data/projects";
+import { getLocalizedProject, type Project } from "@/data/projects";
 import { isAllowedExternalUrl } from "@/lib/externalLinks";
 import { sanitizeUrl } from "@/lib/urlSanitizer";
 import { ViewTransitionLink } from "@/hooks/usePageTransition";
@@ -32,13 +33,13 @@ export const ProjectHeader = ({ project, activePlatform, onPlatformChange }: Pro
                     className="group inline-flex items-center gap-2 justify-self-start pt-2 font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 transition-colors hover:text-volt-ink dark:text-neutral-400 dark:hover:text-volt"
                 >
                     <ArrowLeft className="w-4 h-4 shrink-0 transition-transform group-hover:-translate-x-1" strokeWidth={2} />
-                    <span className="hidden sm:inline">{t.project.back}</span>
-                    <span className="sm:hidden">{t.project.backShort}</span>
+                    <span className="hidden sm:inline"><LocalizedText>{copy => copy.project.back}</LocalizedText></span>
+                    <span className="sm:hidden"><LocalizedText>{copy => copy.project.backShort}</LocalizedText></span>
                 </ViewTransitionLink>
 
                 <div className="order-3 col-span-2 min-w-0 text-center sm:order-none sm:col-span-1">
                     <h1 className="text-heading-1 text-gray-900 dark:text-white">
-                        {project.title}
+                        <LocalizedText>{(_, locale) => getLocalizedProject(project, locale).title}</LocalizedText>
                     </h1>
                     {project.platforms.length > 0 && activePlatform && onPlatformChange ? (
                         <ProjectPlatformTabs
@@ -51,7 +52,7 @@ export const ProjectHeader = ({ project, activePlatform, onPlatformChange }: Pro
                         />
                     ) : null}
                     <p className="text-body-lg text-gray-600 dark:text-slate-300 mt-4 max-w-xl mx-auto">
-                        {project.summary}
+                        <LocalizedText>{(_, locale) => getLocalizedProject(project, locale).summary}</LocalizedText>
                     </p>
                 </div>
 
@@ -63,7 +64,7 @@ export const ProjectHeader = ({ project, activePlatform, onPlatformChange }: Pro
                         className="group inline-flex items-center gap-1.5 justify-self-end pt-2 font-mono text-caption uppercase tracking-[0.14em] text-volt-ink transition-opacity hover:opacity-75 dark:text-volt"
                     >
                         <span className="underline decoration-volt-ink/40 decoration-1 underline-offset-[5px] transition-[text-decoration-color] group-hover:decoration-volt-ink dark:decoration-volt/40 dark:group-hover:decoration-volt">
-                            {project.links.website ? t.project.website : "GitHub"}
+                            <LocalizedText>{copy => project.links.website ? copy.project.website : "GitHub"}</LocalizedText>
                         </span>
                         <ArrowUpRight
                             className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"

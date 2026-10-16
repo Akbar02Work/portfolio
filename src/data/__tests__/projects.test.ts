@@ -6,10 +6,12 @@ import {
   type ProjectData,
   type ProjectMediaType,
 } from "@/data/projectCatalog";
-import { allProjects, projects, resolveProjectPlatform } from "@/data/projects";
+import { allProjects, allProjectsByLocale, getLocalizedProject, projects, resolveProjectPlatform } from "@/data/projects";
 import {
   allProjectsSummary,
+  getLocalizedProjectSummary,
   projectsSummary,
+  resolveProjectSummaryPlatform,
 } from "@/data/projectsSummary";
 
 const validMediaTypes: ProjectMediaType[] = ["phone", "browser"];
@@ -190,5 +192,23 @@ describe("project data model", () => {
     ]);
     expect(ios.summary).toMatch(/in development/i);
     expect(ios.engineeringNote).toMatch(/planned/i);
+  });
+
+  it("keeps the selected platform's copy when switching languages in cards and cases", () => {
+    const project = allProjects.find(({ slug }) => slug === "lumingo")!;
+    const summary = allProjectsSummary.find(({ slug }) => slug === "lumingo")!;
+    const russian = allProjectsByLocale.ru.find(({ slug }) => slug === "lumingo")!;
+    for (const platform of russian.platforms) {
+      const translated = getLocalizedProject(resolveProjectPlatform(project, platform.id), "ru");
+      expect(translated.summary).toBe(platform.summary);
+      expect(translated.overview).toBe(platform.overview);
+      expect(translated.features).toEqual(platform.features);
+      const translatedSummary = getLocalizedProjectSummary(resolveProjectSummaryPlatform(summary, platform.id), "ru");
+      expect(translatedSummary.summary).toBe(platform.summary);
+      expect(translatedSummary.metrics).toEqual(platform.metrics);
+      expect(getLocalizedProjectSummary(translatedSummary, "en").summary).toBe(
+        project.platforms.find(({ id }) => id === platform.id)?.summary,
+      );
+    }
   });
 });

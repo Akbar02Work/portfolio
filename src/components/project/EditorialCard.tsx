@@ -1,8 +1,10 @@
+import { LocalizedText } from "@/components/ui/LocalizedText";
 import { ArrowUpRight } from "lucide-react";
 import { useState } from "react";
 import type { ProjectStyle } from "@/constants/projectStyles";
 import {
     resolveProjectSummaryPlatform,
+    getLocalizedProjectSummary,
     type ProjectSummary,
 } from "@/data/projectsSummary";
 import type { ProjectPlatformId } from "@/data/projectCatalog";
@@ -19,7 +21,7 @@ interface EditorialCardProps {
 }
 
 const EditorialCard = ({ project, index, reversed = false, style }: EditorialCardProps) => {
-    const { t, localize } = useI18n();
+    const { localize } = useI18n();
     const number = String(index + 1).padStart(2, "0");
     const firstPlatform = project.platformPreviews[0];
     const [activePlatform, setActivePlatform] = useState<ProjectPlatformId>(
@@ -47,7 +49,7 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
                             to={href}
                             className="inline-flex items-baseline gap-2 transition-colors hover:text-volt-ink group-hover/card:text-volt-ink dark:hover:text-volt dark:group-hover/card:text-volt"
                         >
-                            {project.title}
+                            <LocalizedText>{(_, locale) => getLocalizedProjectSummary(project, locale).title}</LocalizedText>
                             <ArrowUpRight
                                 className="relative top-[0.08em] h-[0.7em] w-[0.7em] shrink-0 opacity-0 -translate-x-1 translate-y-1 transition-all duration-300 group-hover/card:opacity-100 group-hover/card:translate-x-0 group-hover/card:translate-y-0"
                                 strokeWidth={2}
@@ -57,18 +59,18 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
                     </h3>
 
                     <p className="text-body-lg md:text-[1.375rem] leading-[1.75] text-gray-600 dark:text-slate-300 max-w-xl">
-                        {activeProject.summary}
+                        <LocalizedText>{(_, locale) => getLocalizedProjectSummary(activeProject, locale).summary}</LocalizedText>
                     </p>
 
-                    <dl className="grid grid-cols-3 gap-5 border-t border-neutral-200 dark:border-neutral-800 pt-7 mt-1">
-                        {activeProject.metrics.map((metric) => (
-                            <div key={metric.label}>
+                    <dl className="grid grid-cols-3 gap-3 lg:gap-5 border-t border-neutral-200 dark:border-neutral-800 pt-7 mt-1">
+                        {activeProject.metrics.map((metric, metricIndex) => (
+                            <div key={metricIndex}>
                                 <dt className="sr-only">{metric.label}</dt>
-                                <dd className="text-xl md:text-[1.375rem] font-semibold leading-snug tracking-[-0.01em] text-gray-900 dark:text-white">
-                                    {metric.value}
+                                <dd className="text-lg min-[380px]:text-xl md:text-[1.375rem] font-semibold leading-snug tracking-[-0.01em] text-gray-900 dark:text-white">
+                                    <LocalizedText>{(_, locale) => getLocalizedProjectSummary(activeProject, locale).metrics[metricIndex]?.value}</LocalizedText>
                                 </dd>
-                                <dd className="text-sm text-neutral-500 dark:text-neutral-400 mt-1.5">
-                                    {metric.label}
+                                <dd className="text-xs min-[380px]:text-sm text-neutral-500 dark:text-neutral-400 mt-1.5">
+                                    <LocalizedText>{(_, locale) => getLocalizedProjectSummary(activeProject, locale).metrics[metricIndex]?.label}</LocalizedText>
                                 </dd>
                             </div>
                         ))}
@@ -78,7 +80,7 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
                         to={href}
                         className="group/cta mt-1 inline-flex w-fit items-center gap-2 border-b border-volt-ink pb-1.5 text-base font-medium text-volt-ink transition-opacity hover:opacity-75 dark:border-volt dark:text-volt"
                     >
-                        {t.projects.openCase}
+                        <LocalizedText>{copy => copy.projects.openCase}</LocalizedText>
                         <ArrowUpRight
                             className="h-5 w-5 transition-transform duration-200 group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5"
                             strokeWidth={2}

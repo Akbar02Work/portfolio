@@ -2,6 +2,66 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Translations share a sizing cell, so wrapping never moves neighbouring UI.
+   Hidden copy participates in layout but is excluded from selection and a11y. */
+.locale-text {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: minmax(0, 1fr);
+  max-inline-size: 100%;
+  vertical-align: bottom;
+  align-items: start;
+}
+
+.locale-text__value,
+.locale-text__scramble {
+  grid-area: 1 / 1;
+  min-inline-size: 0;
+}
+
+.locale-text__value {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 220ms ease, visibility 0s 220ms;
+}
+
+.locale-text__value[aria-hidden="true"] {
+  pointer-events: none;
+  user-select: none;
+}
+
+.locale-text__value[data-active="true"] {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 220ms ease;
+}
+
+.locale-text[data-scramble] > .locale-text__value {
+  opacity: 0;
+}
+
+.locale-text__scramble {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .locale-text__value,
+  .locale-text__value[data-active="true"] {
+    transition: none;
+  }
+
+  .locale-text[data-scramble] > .locale-text__value[data-active="true"] {
+    opacity: 1;
+  }
+
+  .locale-text__scramble {
+    display: none;
+  }
+}
+
 /* Geist + Geist Mono (Vercel, OFL 1.1, via Fontsource 5.3.0). Cyrillic subsets load
    only when Cyrillic text renders. */
 @font-face {
