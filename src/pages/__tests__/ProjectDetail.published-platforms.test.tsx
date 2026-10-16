@@ -53,11 +53,14 @@ describe("published platform routing", () => {
     fireEvent.click(screen.getByRole("tab", { name: /Web/ }));
     expect(screen.getByTestId("query").textContent).toBe("?platform=web&ref=portfolio");
     fireEvent.click(screen.getByRole("button", { name: "History back" }));
-    expect(screen.getByRole("tab", { selected: true }).textContent).toBe("Android");
+    expect(screen.getByRole("tab", { selected: true })).toHaveAccessibleName("Android — Release candidate");
+    expect(screen.getByTestId("query").textContent).toBe("?platform=android&ref=portfolio");
     fireEvent.click(screen.getByRole("button", { name: "History forward" }));
-    expect(screen.getByRole("tab", { selected: true }).textContent).toBe("Web");
+    expect(screen.getByRole("tab", { selected: true })).toHaveAccessibleName("Web — Public beta");
+    expect(screen.getByTestId("query").textContent).toBe("?platform=web&ref=portfolio");
     fireEvent.keyDown(screen.getByRole("tab", { selected: true }), { key: "ArrowRight" });
-    expect(screen.getByRole("tab", { selected: true }).textContent).toBe("iOS");
+    expect(screen.getByRole("tab", { selected: true })).toHaveAccessibleName("iOS — In development");
+    expect(screen.getByTestId("query").textContent).toBe("?platform=ios&ref=portfolio");
     expect(screen.queryByRole("button", { name: "Next screen" })).toBeNull();
     expect(screen.getAllByRole("img", { name: /iOS — native client/ })).toHaveLength(1);
   });
