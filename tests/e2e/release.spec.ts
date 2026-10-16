@@ -61,7 +61,8 @@ for (const [route, locale] of [["/", "en"], ["/ru", "ru"]] as const) {
     await page.locator("#home").getByRole("button", { name: messages[locale].hero.contact }).click();
     const dialog = page.getByRole("dialog", { name: messages[locale].contact.title });
     await dialog.getByRole("button", { name: messages[locale].contact.phoneRevealAria }).click();
-    await expect(dialog.getByRole("alert")).toHaveText(messages[locale].contact.phoneCopyFailed);
+    // The hidden translation reserves space; compare only the rendered message.
+    await expect(dialog.getByRole("alert")).toHaveText(messages[locale].contact.phoneCopyFailed, { useInnerText: true });
     const number = dialog.getByText("+998 90 964 67 69", { exact: true });
     await expect(number).toBeVisible();
     await expect(number.locator("..")).toHaveCSS("opacity", "1");
