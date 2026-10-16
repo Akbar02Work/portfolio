@@ -1,7 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { ProjectPlatformTabs } from "@/components/project/ProjectPlatformTabs";
-import type { ProjectPlatform } from "@/data/projectCatalog";
+import type { ProjectPlatform, ProjectPlatformId } from "@/data/projectCatalog";
 
 const platforms: ProjectPlatform[] = [
   {
@@ -48,10 +49,31 @@ describe("ProjectPlatformTabs", () => {
 
     expect(onSelect).toHaveBeenCalledWith("web");
     expect(screen.getByRole("tab", { name: "iOS — In development" })).toBeTruthy();
-    expect(
-      screen
-        .getByRole("tab", { name: "Android — Release candidate" })
-        .className
-    ).toContain("bg-volt-ink");
+    expect(screen.getAllByRole("tab")).toHaveLength(3);
+    expect(screen.getByRole("tab", { name: "Android — Release candidate" })).toHaveAttribute("tabindex", "0");
+  });
+
+  it("keeps keyboard selection, focus, and status in sync with the shared indicator", () => {
+    const ControlledTabs = () => {
+      const [value, setValue] = useState<ProjectPlatformId>("android");
+      return <ProjectPlatformTabs platforms={platforms} activePlatform={value} onSelect={setValue} label="Platforms" />;
+    };
+    render(<ControlledTabs />);
+    const [android, web, ios] = screen.getAllByRole("tab") as [HTMLButtonElement, HTMLButtonElement, HTMLButtonElement];
+
+    fireEvent.keyDown(android, { key: "ArrowLeft" });
+    expect(ios).toHaveFocus();
+    expect(ios).toHaveAttribute("aria-selected", "true");
+    expect(ios).toHaveAttribute("tabindex", "0");
+    expect(android).toHaveAttribute("tabindex", "-1");
+    expect(screen.getByText("In development")).toBeInTheDocument();
+
+    fireEvent.keyDown(ios, { key: "Home" });
+    expect(android).toHaveFocus();
+    fireEvent.keyDown(android, { key: "ArrowRight" });
+    expect(web).toHaveFocus();
+    fireEvent.keyDown(web, { key: "End" });
+    expect(ios).toHaveFocus();
+    expect(ios).toHaveAttribute("aria-selected", "true");
   });
 });

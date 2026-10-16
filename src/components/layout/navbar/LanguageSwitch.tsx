@@ -1,5 +1,6 @@
 import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { slidingIndicatorTransition, useSlidingIndicator } from "@/hooks/useSlidingIndicator";
 import { rememberLocale, useI18n } from "@/i18n/useI18n";
 import { LOCALES, localizePath, type Locale } from "@/i18n/locales";
 import { cn } from "@/lib/utils";
@@ -37,10 +38,12 @@ export const LanguageSwitch = ({ className, onSwitch }: LanguageSwitchProps) => 
 
   const [pressed, setPressed] = useState(false);
   const [dragX, setDragX] = useState<number | null>(null);
+  const { rootRef, indicatorRef } = useSlidingIndicator(locale, { position: dragX });
   const gestureRef = useRef<{
     pointerId: number;
     startX: number;
     thumbX: number;
+    x: number;
     dragging: boolean;
   } | null>(null);
   const suppressClickRef = useRef(false);
@@ -55,14 +58,21 @@ export const LanguageSwitch = ({ className, onSwitch }: LanguageSwitchProps) => 
   };
 
   const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (event.button !== 0) return;
+    if (event.button !== 0 || gestureRef.current) return;
     // A touch drag is often not followed by a click, so a stale flag would
     // swallow the next real click.
     suppressClickRef.current = false;
+    const first = event.currentTarget.querySelector<HTMLElement>("[data-indicator-value]");
+    const thumb = indicatorRef.current?.getBoundingClientRect();
+    // Grab the visible position when a previous click is still animating.
+    const thumbX = first && thumb?.width
+      ? clamp(thumb.left - first.getBoundingClientRect().left)
+      : activeIndex * STEP;
     gestureRef.current = {
       pointerId: event.pointerId,
       startX: event.clientX,
-      thumbX: activeIndex * STEP,
+      thumbX,
+      x: thumbX,
       dragging: false,
     };
     setPressed(true);
@@ -79,7 +89,8 @@ export const LanguageSwitch = ({ className, onSwitch }: LanguageSwitchProps) => 
       event.currentTarget.setPointerCapture(event.pointerId);
     }
 
-    setDragX(clamp(gesture.thumbX + dx));
+    gesture.x = clamp(gesture.thumbX + dx);
+    setDragX(gesture.x);
   };
 
   const endGesture = (event: ReactPointerEvent<HTMLDivElement>, cancelled: boolean) => {
@@ -90,7 +101,7 @@ export const LanguageSwitch = ({ className, onSwitch }: LanguageSwitchProps) => 
 
     if (gesture.dragging) {
       suppressClickRef.current = true;
-      const x = dragX ?? gesture.thumbX;
+      const x = gesture.x;
       setDragX(null);
       if (!cancelled) {
         const index = Math.round(clamp(x) / STEP);
@@ -100,18 +111,16 @@ export const LanguageSwitch = ({ className, onSwitch }: LanguageSwitchProps) => 
     }
   };
 
-  const dragging = dragX !== null;
-  const thumbX = dragging ? dragX : activeIndex * STEP;
-  const visualIndex = Math.round(thumbX / STEP);
-
   return (
     <div
+      ref={rootRef}
       role="group"
       aria-label={t.nav.language}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={(event) => endGesture(event, false)}
       onPointerCancel={(event) => endGesture(event, true)}
+      onLostPointerCapture={(event) => endGesture(event, true)}
       onClickCapture={(event) => {
         if (!suppressClickRef.current) return;
         suppressClickRef.current = false;
@@ -126,31 +135,40 @@ export const LanguageSwitch = ({ className, onSwitch }: LanguageSwitchProps) => 
       )}
     >
       <span
+        ref={indicatorRef}
         aria-hidden="true"
-        className={cn(
-          "pointer-events-none absolute left-0.5 top-0.5 bottom-0.5 w-9 rounded-md bg-white dark:bg-black shadow-sm shadow-black/5",
-          dragging
-            ? "transition-none"
-            : "transition-transform duration-300 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
-        )}
-        style={{ transform: `translate3d(${thumbX}px, 0, 0)` }}
+        className={cn("pointer-events-none absolute left-0 top-0 rounded-md bg-white dark:bg-black shadow-sm shadow-black/5 opacity-0", slidingIndicatorTransition)}
       />
-      {LOCALES.map((target, index) => {
+      {LOCALES.map((target) => {
         const isActive = target === locale;
-        const isVisual = index === visualIndex;
         const label = LABELS[target];
         const labelClass = cn(
-          "relative z-10 flex w-9 items-center justify-center rounded-md py-1.5 transition-colors",
-          isVisual ? "text-gray-900 dark:text-white font-semibold" : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white",
+          "relative z-10 flex w-9 shrink-0 items-center justify-center rounded-md py-1.5 font-semibold text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white",
           !isActive && "cursor-pointer"
         );
-        return isActive ? (
-          <span key={target} aria-current="true" lang={target} title={label.full} className={labelClass}>
+        const content = (
+          <>
             {label.short}
+            <span
+              aria-hidden="true"
+              data-indicator-label=""
+              className={cn(
+                "pointer-events-none absolute inset-0 flex items-center justify-center text-gray-900 dark:text-white",
+                isActive ? "[clip-path:inset(0)]" : "[clip-path:inset(0_100%_0_0)]",
+              )}
+            >
+              {label.short}
+            </span>
+          </>
+        );
+        return isActive ? (
+          <span key={target} data-indicator-value={target} aria-current="true" lang={target} title={label.full} className={labelClass}>
+            {content}
           </span>
         ) : (
           <Link
             key={target}
+            data-indicator-value={target}
             to={targetPath(target)}
             hrefLang={target}
             lang={target}
@@ -163,7 +181,7 @@ export const LanguageSwitch = ({ className, onSwitch }: LanguageSwitchProps) => 
             }}
             className={cn(labelClass, "focus-visible:outline focus-visible:outline-2 focus-visible:outline-volt-ink dark:focus-visible:outline-volt")}
           >
-            {label.short}
+            {content}
           </Link>
         );
       })}

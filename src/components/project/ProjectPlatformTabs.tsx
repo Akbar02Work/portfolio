@@ -1,4 +1,5 @@
 import type { ProjectPlatform, ProjectPlatformId } from "@/data/projectCatalog";
+import { slidingIndicatorTransition, useSlidingIndicator } from "@/hooks/useSlidingIndicator";
 import { cn } from "@/lib/utils";
 
 type ProjectPlatformTabsProps = {
@@ -19,14 +20,23 @@ export const ProjectPlatformTabs = ({
   showStatus = true,
 }: ProjectPlatformTabsProps) => {
   const active = platforms.find((platform) => platform.id === activePlatform);
+  const { rootRef, indicatorRef } = useSlidingIndicator(activePlatform, {
+    itemsKey: platforms.map((platform) => platform.id).join(","),
+  });
 
   return (
     <div className={cn("flex flex-wrap items-center gap-x-4 gap-y-2", className)}>
       <div
+        ref={rootRef}
         role="tablist"
         aria-label={label}
-        className="inline-flex items-center border border-neutral-200 bg-background/90 p-1 dark:border-neutral-700"
+        className="relative isolate inline-flex items-center border border-neutral-200 bg-background/90 p-1 dark:border-neutral-700"
       >
+        <span
+          ref={indicatorRef}
+          aria-hidden="true"
+          className={cn("pointer-events-none absolute left-0 top-0 bg-volt-ink dark:bg-volt opacity-0", slidingIndicatorTransition)}
+        />
         {platforms.map((platform, index) => {
           const selected = platform.id === activePlatform;
 
@@ -35,6 +45,7 @@ export const ProjectPlatformTabs = ({
               key={platform.id}
               type="button"
               role="tab"
+              data-indicator-value={platform.id}
               aria-selected={selected}
               tabIndex={selected ? 0 : -1}
               aria-label={`${platform.label} — ${platform.status}`}
@@ -52,14 +63,19 @@ export const ProjectPlatformTabs = ({
                 onSelect(next.id);
                 event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]')[nextIndex]?.focus();
               }}
-              className={cn(
-                "px-3 py-2 font-mono text-[11px] uppercase tracking-[0.1em] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-volt-ink dark:focus-visible:outline-volt",
-                selected
-                  ? "bg-volt-ink text-white dark:bg-volt dark:text-black"
-                  : "text-neutral-500 hover:text-gray-900 dark:text-neutral-400 dark:hover:text-white"
-              )}
+              className="relative z-10 shrink-0 whitespace-nowrap bg-transparent px-3 py-2 font-mono text-[11px] uppercase tracking-[0.1em] text-neutral-500 hover:text-gray-900 dark:text-neutral-400 dark:hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-volt-ink dark:focus-visible:outline-volt"
             >
               {platform.label}
+              <span
+                aria-hidden="true"
+                data-indicator-label=""
+                className={cn(
+                  "pointer-events-none absolute inset-0 flex items-center justify-center text-white dark:text-black",
+                  selected ? "[clip-path:inset(0)]" : "[clip-path:inset(0_100%_0_0)]",
+                )}
+              >
+                {platform.label}
+              </span>
             </button>
           );
         })}
