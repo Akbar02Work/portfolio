@@ -5,6 +5,7 @@
   },
   "include": [
     "src/vite-env.d.ts",
+    "src/test/setup.ts",
     "src/**/*.{test,spec}.{ts,tsx}",
     "src/**/__tests__/**/*"
   ]

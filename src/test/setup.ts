@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 
 // Mock HTMLCanvasElement (Restored from original)
 Object.defineProperty(HTMLCanvasElement.prototype, "getContext", {
