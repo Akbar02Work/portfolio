@@ -17,8 +17,8 @@ import { usePageTransitionNavigate } from "@/hooks/usePageTransitionNavigate";
 
 type TransitionPhase = "idle" | "cover" | "reveal";
 
-const COVER_MS = 420;
-const REVEAL_MS = 420;
+const COVER_MS = 380;
+const REVEAL_MS = 380;
 const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 
 const prefersReducedMotion = () =>
