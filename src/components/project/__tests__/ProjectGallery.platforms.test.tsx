@@ -6,6 +6,7 @@ import ProjectGallery from "@/components/project/ProjectGallery";
 import { ProjectHeader } from "@/components/project/ProjectHeader";
 import { projectStylesBySlug } from "@/constants/projectStyles";
 import { allProjects, resolveProjectPlatform } from "@/data/projects";
+import { ThemeProvider } from "@/hooks/useTheme";
 
 describe("ProjectGallery platform switching", () => {
   it("shows one Lumingo platform at a time and keeps iOS visible in development", () => {
@@ -35,7 +36,7 @@ describe("ProjectGallery platform switching", () => {
       );
     };
 
-    render(<MemoryRouter><ControlledGallery /></MemoryRouter>);
+    render(<ThemeProvider><MemoryRouter><ControlledGallery /></MemoryRouter></ThemeProvider>);
 
     expect(
       screen

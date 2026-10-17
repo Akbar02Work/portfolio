@@ -12,13 +12,13 @@ import {
   type NavigateOptions,
   type To,
 } from "react-router-dom";
-import { PageTransitionContext } from "@/hooks/pageTransitionContext";
+import { PageTransitionContext, type PageTransitionContextValue } from "@/hooks/pageTransitionContext";
 import { usePageTransitionNavigate } from "@/hooks/usePageTransitionNavigate";
 
 type TransitionPhase = "idle" | "cover" | "reveal";
 
-const COVER_MS = 420;
-const REVEAL_MS = 420;
+const COVER_MS = 304;
+const REVEAL_MS = 304;
 const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 
 const prefersReducedMotion = () =>
@@ -28,46 +28,81 @@ const prefersReducedMotion = () =>
 
 const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 
+/** Decode the new theme's visible screenshots and video posters under the curtain. */
+const waitForVisibleMedia = async () => {
+  const inViewport = (element: Element) => {
+    const rect = element.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.right > 0 &&
+      rect.top < window.innerHeight && rect.left < window.innerWidth;
+  };
+  const images = Array.from(document.images).filter(inViewport);
+  for (const video of document.querySelectorAll<HTMLVideoElement>("video[poster]")) {
+    if (!inViewport(video)) continue;
+    const poster = new Image();
+    poster.src = video.poster;
+    images.push(poster);
+  }
+
+  // A slow or failed request must not leave the page covered indefinitely.
+  await new Promise<void>((resolve) => {
+    const timeout = window.setTimeout(resolve, 1500);
+    void Promise.all(images.map((image) => image.decode().catch(() => {}))).then(() => {
+      window.clearTimeout(timeout);
+      resolve();
+    });
+  });
+};
+
 export function PageTransitionProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const [phase, setPhase] = useState<TransitionPhase>("idle");
+  const [background, setBackground] = useState<string>();
+  const overlayRef = useRef<HTMLDivElement>(null);
   const busyRef = useRef(false);
 
-  const navigateWithTransition = useCallback(
-    (to: To, options?: NavigateOptions) => {
+  const runWithTransition = useCallback<PageTransitionContextValue["runWithTransition"]>(
+    (update, options) => {
       if (busyRef.current) return;
 
       if (prefersReducedMotion()) {
-        navigate(to, options);
+        update();
         return;
       }
 
       busyRef.current = true;
+      // Keep the old color above the newly themed page throughout the reveal.
+      setBackground(overlayRef.current ? getComputedStyle(overlayRef.current).backgroundColor : undefined);
 
       void (async () => {
-        // Rise from bottom → cover
-        setPhase("cover");
-        await wait(COVER_MS);
+        try {
+          // Rise from bottom → cover, then update the page out of sight.
+          setPhase("cover");
+          await wait(COVER_MS);
+          update();
+          await wait(48);
+          if (options?.waitForMedia) await waitForVisibleMedia();
 
-        navigate(to, options);
-        // Destination mounts + instant scroll under the curtain
-        await wait(48);
-
-        // Continue upward and exit through the top (same direction, both ways)
-        setPhase("reveal");
-        await wait(REVEAL_MS);
-
-        // Snap back under the viewport with no animation
-        setPhase("idle");
-        busyRef.current = false;
+          // Continue upward and reveal the updated page from the bottom.
+          setPhase("reveal");
+          await wait(REVEAL_MS);
+        } finally {
+          setPhase("idle");
+          setBackground(undefined);
+          busyRef.current = false;
+        }
       })();
     },
-    [navigate]
+    []
+  );
+
+  const navigateWithTransition = useCallback(
+    (to: To, options?: NavigateOptions) => runWithTransition(() => navigate(to, options)),
+    [navigate, runWithTransition]
   );
 
   const value = useMemo(
-    () => ({ navigateWithTransition }),
-    [navigateWithTransition]
+    () => ({ navigateWithTransition, runWithTransition }),
+    [navigateWithTransition, runWithTransition]
   );
 
   // idle/reveal-end: below screen → cover: on screen → reveal: above screen
@@ -85,11 +120,14 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
     <PageTransitionContext.Provider value={value}>
       {children}
       <div
+        ref={overlayRef}
         className="page-transition-overlay"
+        data-phase={phase}
         aria-hidden="true"
         style={{
           transform: overlayTransform,
           transition: overlayTransition,
+          backgroundColor: background,
           pointerEvents: phase === "idle" ? "none" : "auto",
         }}
       />

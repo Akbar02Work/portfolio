@@ -78,18 +78,26 @@ describe("project data model", () => {
   it("exposes AI Voice Notes screenshots for the editorial gallery", () => {
     const voiceNotes = projects.find((project) => project.slug === "voicenotes");
     expect(voiceNotes).toBeDefined();
-    expect(voiceNotes?.image).toBe("/projects/voicenotes/screen-01.png");
+    expect(voiceNotes?.image).toBe("/projects/voicenotes/screen-01-light.jpg");
     expect(voiceNotes?.screens.map((screen) => screen.image)).toEqual([
-      "/projects/voicenotes/screen-01.webp",
-      "/projects/voicenotes/screen-02.webp",
-      "/projects/voicenotes/screen-03.webp",
-      "/projects/voicenotes/screen-04.webp",
-      "/projects/voicenotes/screen-05.webp",
-      "/projects/voicenotes/screen-06.webp",
+      "/projects/voicenotes/screen-01-light.webp",
+      "/projects/voicenotes/screen-02-light.webp",
+      "/projects/voicenotes/screen-03-light.webp",
+      "/projects/voicenotes/screen-04-light.webp",
+      "/projects/voicenotes/screen-05-light.webp",
+      "/projects/voicenotes/screen-06-light.webp",
+    ]);
+    expect(voiceNotes?.screens.map((screen) => screen.darkImage)).toEqual([
+      "/projects/voicenotes/screen-01-dark.webp",
+      "/projects/voicenotes/screen-02-dark.webp",
+      "/projects/voicenotes/screen-03-dark.webp",
+      "/projects/voicenotes/screen-04-dark.webp",
+      "/projects/voicenotes/screen-05-dark.webp",
+      "/projects/voicenotes/screen-06-dark.webp",
     ]);
 
     const summary = projectsSummary.find((project) => project.slug === "voicenotes");
-    expect(summary?.image).toBe("/projects/voicenotes/screen-01.webp");
+    expect(summary?.image).toBe("/projects/voicenotes/screen-01-light.webp");
   });
 
   it("models Lumingo as one product across Android, Web, and iOS", () => {
