@@ -27,6 +27,7 @@ export interface ProjectScreen {
   title: string;
   description?: string;
   image: string;
+  darkImage?: string;
   platform: ProjectPlatformId;
   mediaType: ProjectMediaType;
 }
@@ -110,6 +111,7 @@ const toProject = (project: (typeof projectsCatalog)[number]): Project => ({
     title: screen.caption,
     description: "",
     image: toWebpPath(screen.imageUrl),
+    darkImage: screen.darkImageUrl ? toWebpPath(screen.darkImageUrl) : undefined,
     platform: screen.platform ?? "android",
     mediaType: screen.mediaType ?? project.media.type,
   })),

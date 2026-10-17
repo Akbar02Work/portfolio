@@ -197,12 +197,31 @@ test("keeps tablet navigation clear of the logo", async ({ page }) => {
   await expect(menu).toHaveCount(0);
 });
 
+test("matches all six English screenshots to the selected website theme", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/projects/voicenotes");
+  const gallery = page.getByRole("region", { name: "Project screens carousel" });
+  await page.getByRole("button", { name: "Next screen", exact: true }).click();
+
+  for (const theme of ["Dark", "Light"]) {
+    await page.getByRole("button", { name: "Select theme" }).click();
+    await page.getByRole("menuitem", { name: theme, exact: true }).click();
+    for (let index = 1; index <= 6; index++) {
+      const image = gallery.locator(`figure[data-real-index="${index}"][aria-hidden="false"] img`);
+      await expect(image).toHaveAttribute("src", `/projects/voicenotes/screen-0${index}-${theme.toLowerCase()}.webp`);
+      await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.complete && element.naturalWidth)).toBe(1080);
+    }
+    await expect(gallery.getByRole("button", { name: "Show screen 2", exact: true })).toHaveAttribute("aria-pressed", "true");
+  }
+});
+
 test("keeps screenshots visible if the optional AVIF variant is unavailable", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
   await page.route("**/projects/voicenotes/*.avif", (route) => route.fulfill({ status: 404, body: "" }));
   await page.goto("/projects/voicenotes");
   const gallery = page.getByRole("region", { name: "Project screens carousel" });
   const image = gallery.getByRole("button", { name: "Show screen 2", exact: true }).locator("img");
   await page.getByRole("button", { name: "Next screen", exact: true }).click();
   await expect.poll(() => image.evaluate((element) => element.complete && element.naturalWidth > 0)).toBe(true);
-  await expect(image).toHaveJSProperty("currentSrc", "http://127.0.0.1:4173/projects/voicenotes/screen-01.webp");
+  await expect(image).toHaveJSProperty("currentSrc", "http://127.0.0.1:4173/projects/voicenotes/screen-01-light.webp");
 });

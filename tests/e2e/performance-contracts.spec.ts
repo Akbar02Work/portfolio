@@ -27,7 +27,7 @@ for (const width of [390, 1440]) {
 test("preloads only the project's actual cover and retains cache safety for HTML", async ({ page, request }) => {
   const requests: string[] = [];
   page.on("request", req => {
-    if (req.url().includes("screen-01.avif")) requests.push(req.url());
+    if (req.url().includes("screen-01-light.avif")) requests.push(req.url());
   });
   await page.goto("/projects/voicenotes");
   const cover = page.getByRole("button", { name: "Show screen 1", exact: true }).locator("img");
@@ -42,7 +42,7 @@ test("preloads only the project's actual cover and retains cache safety for HTML
   for (const url of ["/", "/creative/", "/projects/voicenotes", "/projects/voicenotes/index.html"]) {
     expect((await request.get(url)).headers()["cache-control"] ?? "").not.toMatch(/max-age=[1-9]|immutable/);
   }
-  for (const url of ["/avatar.webp", "/projects/voicenotes/screen-01.avif", "/mockups/android-phone-frame-512.webp", "/creative/fonts/syne-latin.woff2"]) {
+  for (const url of ["/avatar.webp", "/projects/voicenotes/screen-01-light.avif", "/mockups/android-phone-frame-512.webp", "/creative/fonts/syne-latin.woff2"]) {
     expect((await request.get(url)).headers()["cache-control"]).toBe("public, max-age=86400");
   }
   for (const font of await page.locator('link[rel="preload"][as="font"]').evaluateAll(links => links.map(link => link.getAttribute("href")!))) {

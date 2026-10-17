@@ -8,6 +8,7 @@ import { ProjectPromoMedia } from "@/components/project/ProjectPromoMedia";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n/useI18n";
 import { useLoopCarousel } from "@/hooks/useLoopCarousel";
+import { useTheme } from "@/hooks/useTheme";
 
 interface ProjectGalleryProps {
     project: Project;
@@ -24,6 +25,7 @@ const splitCaption = (caption: string) => {
 
 const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
     const { t } = useI18n();
+    const { theme } = useTheme();
     const screens: Array<ProjectScreen & { promo?: ProjectPromo }> = project.promo
         ? [{
             id: `${project.slug}-promo`,
@@ -201,7 +203,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                                         <ProjectPromoMedia promo={screen.promo} playable={isPlayer} className="w-full" />
                                     ) : (
                                         <ProjectMediaFrame
-                                            image={screen.image}
+                                            image={theme === "dark" ? screen.darkImage ?? screen.image : screen.image}
                                             alt={screen.title || project.media.alt}
                                             style={style}
                                             phoneClassName="w-full"

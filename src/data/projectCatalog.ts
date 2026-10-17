@@ -59,6 +59,7 @@ export interface ProjectData {
   };
   gallery: Array<{
     imageUrl: string;
+    darkImageUrl?: string;
     caption: string;
     platform?: ProjectPlatformId;
     mediaType?: ProjectMediaType;
@@ -160,28 +161,34 @@ const projectDefinitions = [
     },
     gallery: [
       {
-        imageUrl: "/projects/voicenotes/screen-01.png",
+        imageUrl: "/projects/voicenotes/screen-01-light.jpg",
+        darkImageUrl: "/projects/voicenotes/screen-01-dark.jpg",
         caption: "Notes list — structured AI summaries and a one-tap record button.",
       },
       {
-        imageUrl: "/projects/voicenotes/screen-02.png",
+        imageUrl: "/projects/voicenotes/screen-02-light.jpg",
+        darkImageUrl: "/projects/voicenotes/screen-02-dark.jpg",
         caption: "Processing — live status while a new recording is summarized.",
       },
       {
-        imageUrl: "/projects/voicenotes/screen-03.png",
+        imageUrl: "/projects/voicenotes/screen-03-light.jpg",
+        darkImageUrl: "/projects/voicenotes/screen-03-dark.jpg",
         caption: "Note detail — playback, summary, and full transcription.",
       },
       {
-        imageUrl: "/projects/voicenotes/screen-04.png",
-        caption: "Cloud setup — choose Gemini, OpenAI, or Groq while keeping the provider key on-device.",
+        imageUrl: "/projects/voicenotes/screen-04-light.jpg",
+        darkImageUrl: "/projects/voicenotes/screen-04-dark.jpg",
+        caption: "Model selection — choose a transcription model from the active provider's catalog.",
       },
       {
-        imageUrl: "/projects/voicenotes/screen-05.png",
-        caption: "Model selection — discover separate transcription and summary models for the active provider.",
+        imageUrl: "/projects/voicenotes/screen-05-light.jpg",
+        darkImageUrl: "/projects/voicenotes/screen-05-dark.jpg",
+        caption: "Offline models — the installed Russian speech model is active and ready to use on-device.",
       },
       {
-        imageUrl: "/projects/voicenotes/screen-06.png",
-        caption: "Settings — provider, model catalog, theme, language, and offline model controls.",
+        imageUrl: "/projects/voicenotes/screen-06-light.jpg",
+        darkImageUrl: "/projects/voicenotes/screen-06-dark.jpg",
+        caption: "Settings — light, dark, and system themes, dynamic color, and language preferences.",
       },
     ],
     overview:
