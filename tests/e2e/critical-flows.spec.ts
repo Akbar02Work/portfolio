@@ -15,7 +15,7 @@ test("follows the editorial project detail flow", async ({ page }) => {
   ).toBeVisible();
 
   const detailSections = detailFlow.locator(":scope > section");
-  await expect(detailSections.nth(0).getByText("Screens", { exact: true })).toBeVisible();
+  await expect(detailSections.nth(0).getByText("Film & screens", { exact: true })).toBeVisible();
   await expect(detailSections.nth(1).getByRole("heading", { level: 2, name: "Overview" })).toBeVisible();
 });
 

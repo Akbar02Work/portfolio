@@ -154,7 +154,7 @@ test("changes theme under the route curtain and waits for visible screenshots", 
     await expect(overlay).toHaveCSS("background-color", oldColor);
     await expect.poll(() => overlay.evaluate((element) => Math.abs(element.getBoundingClientRect().top))).toBeLessThan(1);
     releaseImages();
-    await expect(overlay).toHaveAttribute("data-phase", "reveal");
+    await expect.poll(() => overlay.getAttribute("data-phase"), { intervals: [16] }).toBe("reveal");
     await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.complete && element.naturalWidth)).toBe(1080);
     await page.screenshot({ path: test.info().outputPath("light-theme-reveal.png") });
     await expect(overlay).toHaveAttribute("data-phase", "idle");
@@ -167,7 +167,7 @@ test("changes theme under the route curtain and waits for visible screenshots", 
     await page.getByRole("menuitem", { name: "Dark", exact: true }).click();
     await expect(overlay).toHaveAttribute("data-phase", "cover");
     await expect(page.locator("html")).not.toHaveClass(/dark/);
-    await expect(overlay).toHaveAttribute("data-phase", "reveal");
+    await expect.poll(() => overlay.getAttribute("data-phase"), { intervals: [16] }).toBe("reveal");
     await expect(page.locator("html")).toHaveClass(/dark/);
     await expect(overlay).toHaveCSS("background-color", lightColor);
     await expect(image).toHaveAttribute("src", "/projects/voicenotes/screen-01-dark.webp");

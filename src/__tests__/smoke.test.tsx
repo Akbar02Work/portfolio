@@ -24,7 +24,7 @@ describe("smoke", () => {
     render(<App />);
 
     expect(await screen.findByRole("heading", { level: 1, name: "AI Voice Notes" })).toBeTruthy();
-    expect(screen.getByRole("heading", { level: 2, name: "Screens" })).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 2, name: "Film & screens" })).toBeTruthy();
     expect(screen.getByRole("heading", { level: 2, name: "Engineering note" })).toBeTruthy();
     expect(screen.getByRole("heading", { level: 2, name: "Overview" })).toBeTruthy();
     expect(screen.getByRole("heading", { level: 2, name: "Key Features" })).toBeTruthy();

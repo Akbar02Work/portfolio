@@ -18,19 +18,20 @@ for (const width of [390, 1440]) {
     expect(transferred).toHaveLength(1);
     await expect(portrait).toHaveAttribute("loading", "eager");
     await expect(page.locator('link[rel="preload"][as="image"]')).toHaveCount(1);
-    const frame = page.locator('img[src*="android-phone-frame"]').first();
-    await frame.scrollIntoViewIfNeeded();
-    await expect.poll(() => frame.evaluate(image => image.complete && image.currentSrc.endsWith("android-phone-frame-512.webp"))).toBe(true);
+    const poster = page.locator('img[src*="promo-v3-"][src$="-poster.webp"]');
+    await poster.scrollIntoViewIfNeeded();
+    await expect.poll(() => poster.evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
+    await expect(page.locator("video")).toHaveCount(0);
   });
 }
 
-test("preloads only the project's actual cover and retains cache safety for HTML", async ({ page, request }) => {
+test("loads project screenshots once and retains cache safety for HTML", async ({ page, request }) => {
   const requests: string[] = [];
   page.on("request", req => {
     if (req.url().includes("screen-01-light.avif")) requests.push(req.url());
   });
   await page.goto("/projects/voicenotes");
-  const cover = page.getByRole("button", { name: "Show screen 1", exact: true }).locator("img");
+  const cover = page.getByRole("button", { name: "Show screen 2", exact: true }).locator("img");
   await expect.poll(() => cover.evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
   const currentSrc = await cover.evaluate(image => image.currentSrc);
   expect([...new Set(requests)]).toEqual([currentSrc]);
@@ -38,7 +39,8 @@ test("preloads only the project's actual cover and retains cache safety for HTML
     .filter(entry => (entry as PerformanceResourceTiming).transferSize > 0).length, currentSrc);
   expect(coverTransfers).toBe(1);
   await expect(cover).toHaveAttribute("loading", "eager");
-  await expect(page.locator('link[rel="preload"][as="image"]')).toHaveAttribute("href", new URL(currentSrc).pathname);
+  // The social share card is not displayed in the gallery and needs no preload.
+  await expect(page.locator('link[rel="preload"][as="image"]')).toHaveCount(0);
   for (const url of ["/", "/creative/", "/projects/voicenotes", "/projects/voicenotes/index.html"]) {
     expect((await request.get(url)).headers()["cache-control"] ?? "").not.toMatch(/max-age=[1-9]|immutable/);
   }
