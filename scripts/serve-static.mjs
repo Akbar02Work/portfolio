@@ -17,6 +17,7 @@ const mimeTypes = {
   ".svg": "image/svg+xml", ".png": "image/png", ".webp": "image/webp",
   ".avif": "image/avif", ".jpg": "image/jpeg", ".ico": "image/x-icon",
   ".woff2": "font/woff2", ".pdf": "application/pdf", ".webmanifest": "application/manifest+json",
+  ".mp4": "video/mp4", ".vtt": "text/vtt; charset=utf-8",
 };
 
 // Only the route patterns used by this repository, not a Vercel emulator.

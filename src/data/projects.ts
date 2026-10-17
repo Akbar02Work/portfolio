@@ -11,6 +11,7 @@ import type {
   ProjectMetric,
   ProjectPlatform,
   ProjectPlatformId,
+  ProjectPromo,
 } from "./projectCatalog";
 
 const toWebpPath = (imagePath: string): string =>
@@ -55,6 +56,8 @@ export interface Project {
     type: ProjectMediaType;
     alt: string;
   };
+  promo?: ProjectPromo;
+  socialImage?: string;
   platforms: ProjectPlatformView[];
   overview: string;
   image: string;
@@ -81,6 +84,8 @@ const toProject = (project: (typeof projectsCatalog)[number]): Project => ({
   year: project.year,
   metrics: project.metrics,
   media: project.media,
+  promo: project.promo,
+  socialImage: project.socialImage,
   platforms: (project.platforms ?? []).map((platform) => ({
     id: platform.id,
     label: platform.label,

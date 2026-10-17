@@ -4,6 +4,13 @@ import { projectTranslationsRu } from "./i18n/projects.ru.ts";
 export type ProjectMediaType = "phone" | "browser";
 export type ProjectPlatformId = "android" | "web" | "ios";
 
+export interface ProjectPromo {
+  alt: string;
+  captions: string;
+  light: { video: string; poster: string };
+  dark: { video: string; poster: string };
+}
+
 export interface ProjectPlatform {
   id: ProjectPlatformId;
   label: string;
@@ -43,6 +50,8 @@ export interface ProjectData {
     type: ProjectMediaType;
     alt: string;
   };
+  promo?: ProjectPromo;
+  socialImage?: string;
   platforms?: ProjectPlatformContent[];
   links: {
     github?: string;
@@ -68,6 +77,7 @@ export type ProjectTranslation = Partial<
   Pick<ProjectData, "description" | "role" | "metrics" | "overview" | "challenge" | "keyFeatures" | "engineeringNote">
 > & {
   mediaAlt?: string;
+  promoAlt?: string;
   galleryCaptions?: string[];
   platforms?: Partial<
     Record<
@@ -132,6 +142,19 @@ const projectDefinitions = [
       type: "phone",
       alt: "AI Voice Notes notes list with generated titles, summaries, and one-tap recording",
     },
+    promo: {
+      alt: "AI cleans it up — a spoken grocery list above a tangled voice waveform",
+      captions: "/projects/voicenotes/promo-v3-en.vtt",
+      light: {
+        video: "/projects/voicenotes/promo-v3-light-9x16.mp4",
+        poster: "/projects/voicenotes/promo-v3-light-poster.webp",
+      },
+      dark: {
+        video: "/projects/voicenotes/promo-v3-dark-9x16.mp4",
+        poster: "/projects/voicenotes/promo-v3-dark-poster.webp",
+      },
+    },
+    socialImage: "/projects/voicenotes/promo-v3-social.png",
     links: {
       github: "https://github.com/Akbar02Work/AI-Voice-Notes",
     },
@@ -489,12 +512,13 @@ const translationsByLocale: Record<Locale, Record<string, ProjectTranslation>> =
 const localizeProject = (project: CatalogProject, locale: Locale): CatalogProject => {
   const translation = translationsByLocale[locale][project.slug];
   if (!translation) return project;
-  const { mediaAlt, galleryCaptions, platforms, ...fields } = translation;
+  const { mediaAlt, promoAlt, galleryCaptions, platforms, ...fields } = translation;
 
   return {
     ...project,
     ...fields,
     media: { ...project.media, alt: mediaAlt ?? project.media.alt },
+    promo: project.promo ? { ...project.promo, alt: promoAlt ?? project.promo.alt } : undefined,
     gallery: project.gallery.map((item, index) => ({
       ...item,
       caption: galleryCaptions?.[index] ?? item.caption,

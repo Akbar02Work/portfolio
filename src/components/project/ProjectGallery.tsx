@@ -1,9 +1,10 @@
 import { LocalizedText } from "@/components/ui/LocalizedText";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { getLocalizedProject, type Project } from "@/data/projects";
+import { getLocalizedProject, type Project, type ProjectScreen } from "@/data/projects";
 import type { ProjectStyle } from "@/constants/projectStyles";
 import ProjectMediaFrame from "@/components/project/ProjectMediaFrame";
-import type { ProjectPlatformId } from "@/data/projectCatalog";
+import type { ProjectPlatformId, ProjectPromo } from "@/data/projectCatalog";
+import { ProjectPromoMedia } from "@/components/project/ProjectPromoMedia";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n/useI18n";
 import { useLoopCarousel } from "@/hooks/useLoopCarousel";
@@ -23,7 +24,16 @@ const splitCaption = (caption: string) => {
 
 const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
     const { t } = useI18n();
-    const screens = project.screens;
+    const screens: Array<ProjectScreen & { promo?: ProjectPromo }> = project.promo
+        ? [{
+            id: `${project.slug}-promo`,
+            title: `${t.project.film} — ${t.project.filmDescription}`,
+            image: project.promo.dark.poster,
+            platform: "android",
+            mediaType: "phone",
+            promo: project.promo,
+        }, ...project.screens]
+        : project.screens;
     const total = screens.length;
     const {
         scrollerRef,
@@ -78,7 +88,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                 <div className="flex items-end justify-between gap-6 mb-8 md:mb-10">
                     <div className="flex items-center gap-4 min-w-0">
                         <span className="inline-block h-px w-8 shrink-0 bg-volt-ink dark:bg-volt" aria-hidden="true" />
-                        <h2 className="text-heading-2 text-gray-900 dark:text-white"><LocalizedText>{copy => copy.project.screens}</LocalizedText></h2>
+                        <h2 className="text-heading-2 text-gray-900 dark:text-white"><LocalizedText>{copy => project.promo ? copy.project.filmAndScreens : copy.project.screens}</LocalizedText></h2>
                     </div>
 
                     <div className="flex items-center gap-4 shrink-0">
@@ -129,6 +139,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                     aria-label={t.project.carousel}
                     onKeyDown={(event) => {
                         if (event.metaKey || event.ctrlKey || event.altKey || event.defaultPrevented) return;
+                        if (event.target instanceof Element && event.target.closest("video")) return;
                         if (event.key === "ArrowLeft") {
                             event.preventDefault();
                             step(-1);
@@ -150,18 +161,20 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                     {loopedScreens.map((screen) => {
                         const isActive = screen.loopIndex === activeLoopIndex;
                         const isBuffer = total > 1 && (screen.loopIndex < middleStart || screen.loopIndex >= middleStart + total);
+                        const isPlayer = Boolean(screen.promo && isActive && !isBuffer);
                         return (
                             <figure
                                 key={screen.loopKey}
                                 data-loop-index={screen.loopIndex}
                                 data-real-index={screen.realIndex}
-                                role="button"
-                                tabIndex={isActive && !isBuffer ? 0 : -1}
+                                role={isPlayer ? "group" : "button"}
+                                tabIndex={isActive && !isBuffer && !isPlayer ? 0 : -1}
                                 aria-hidden={isBuffer}
                                 aria-label={t.project.showScreen(screen.realIndex + 1)}
-                                aria-pressed={isActive}
-                                onClick={() => focusLoopIndex(screen.loopIndex)}
+                                aria-pressed={isPlayer ? undefined : isActive}
+                                onClick={() => { if (!isPlayer) focusLoopIndex(screen.loopIndex); }}
                                 onKeyDown={(event) => {
+                                    if (isPlayer) return;
                                     if (event.key === "Enter" || event.key === " ") {
                                         event.preventDefault();
                                         focusLoopIndex(screen.loopIndex);
@@ -184,15 +197,19 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                                             "ring-1 ring-volt-ink shadow-[0_0_0_1px_rgba(0,0,0,0.03)] dark:ring-volt"
                                     )}
                                 >
-                                    <ProjectMediaFrame
-                                        image={screen.image}
-                                        alt={screen.title || project.media.alt}
-                                        style={style}
-                                        phoneClassName="w-full"
-                                        mediaType={screen.mediaType}
-                                        mockup={false}
-                                        priority
-                                    />
+                                    {screen.promo ? (
+                                        <ProjectPromoMedia promo={screen.promo} playable={isPlayer} className="w-full" />
+                                    ) : (
+                                        <ProjectMediaFrame
+                                            image={screen.image}
+                                            alt={screen.title || project.media.alt}
+                                            style={style}
+                                            phoneClassName="w-full"
+                                            mediaType={screen.mediaType}
+                                            mockup={false}
+                                            priority
+                                        />
+                                    )}
                                 </div>
                                 {/* Shown once, in full, below the strip. */}
                                 <figcaption className="sr-only">{screen.title}</figcaption>
@@ -211,9 +228,11 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                         key={activeScreen?.id}
                         className="max-w-lg text-center animate-in fade-in duration-500 motion-reduce:animate-none"
                     >
-                        <LocalizedText>{(_, locale) => {
+                        <LocalizedText>{(copy, locale) => {
                             const screen = getLocalizedProject(project, locale).screens.find(({ id }) => id === activeScreen?.id);
-                            const caption = screen ? splitCaption(screen.title) : activeCaption;
+                            const caption = activeScreen?.promo
+                                ? { title: copy.project.film, detail: copy.project.filmDescription }
+                                : screen ? splitCaption(screen.title) : activeCaption;
                             return <>
                                 <span className="block text-body-lg font-semibold text-gray-900 dark:text-white">{caption.title}</span>
                                 {caption.detail && <span className="mt-1.5 block text-body-base text-gray-500 dark:text-slate-400">{caption.detail}</span>}

@@ -93,13 +93,17 @@ test("keeps a single set of route metadata through navigation and reload", async
   const canonical = page.locator('link[rel="canonical"]');
   const description = page.locator('meta[name="description"]');
   const ogTitle = page.locator('meta[property="og:title"]');
+  const ogImage = page.locator('meta[property="og:image"]');
   await expect(canonical).toHaveCount(1);
   await expect(canonical).toHaveAttribute("href", `${SITE_URL}/projects/voicenotes`);
   await expect(description).toHaveCount(1);
   await expect(ogTitle).toHaveCount(1);
   await expect(ogTitle).toHaveAttribute("content", "AI Voice Notes | Akbar Azizov");
+  await expect(ogImage).toHaveCount(1);
+  await expect(ogImage).toHaveAttribute("content", `${SITE_URL}/projects/voicenotes/promo-v3-social.png`);
   await page.reload();
   await expect(description).toHaveCount(1);
+  await expect(ogImage).toHaveAttribute("content", `${SITE_URL}/projects/voicenotes/promo-v3-social.png`);
   await page.getByRole("link", { name: "Back to projects", exact: true }).click();
   await expect(page).toHaveTitle(HOME_TITLE);
   await expect(canonical).toHaveAttribute("href", `${SITE_URL}/`);
@@ -124,13 +128,28 @@ test("supports keyboard theme selection and exposes only usable gallery controls
   await expect(trigger).toBeFocused();
   const gallery = page.getByRole("region", { name: "Project screens carousel" });
   await expect(gallery.getByRole("button")).toHaveCount(6);
+  const video = gallery.locator("video");
+  await expect(video).toHaveCount(1);
+  await expect(video).toHaveAttribute("src", "/projects/voicenotes/promo-v3-dark-9x16.mp4");
+  await expect(video).toHaveAttribute("poster", "/projects/voicenotes/promo-v3-dark-poster.webp");
+  await expect(video).toHaveAttribute("preload", "none");
+  await expect(video).not.toHaveAttribute("autoplay");
+  await expect(video).toHaveJSProperty("paused", true);
+  await video.evaluate((element: HTMLVideoElement) => element.play());
+  await expect.poll(() => video.evaluate((element: HTMLVideoElement) => element.currentTime)).toBeGreaterThan(0);
+  await video.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(video).toHaveCount(1);
+  await expect(gallery.getByRole("group", { name: "Show screen 1", exact: true })).toBeVisible();
   await gallery.focus();
   await page.keyboard.press("ArrowRight");
+  await expect(video).toHaveCount(0);
   await expect(gallery.getByRole("button", { name: "Show screen 2", exact: true })).toHaveAttribute("aria-pressed", "true");
   await page.keyboard.press("ArrowLeft");
-  await expect(gallery.getByRole("button", { name: "Show screen 1", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(video).toHaveCount(1);
+  await expect(video).toHaveJSProperty("paused", true);
   await page.keyboard.press("ArrowLeft");
-  await expect(gallery.getByRole("button", { name: "Show screen 6", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(gallery.getByRole("button", { name: "Show screen 7", exact: true })).toHaveAttribute("aria-pressed", "true");
 });
 
 test("renders and switches theme when browser storage is denied", async ({ page }) => {
@@ -179,7 +198,9 @@ test("keeps tablet navigation clear of the logo", async ({ page }) => {
 test("keeps screenshots visible if the optional AVIF variant is unavailable", async ({ page }) => {
   await page.route("**/projects/voicenotes/*.avif", (route) => route.fulfill({ status: 404, body: "" }));
   await page.goto("/projects/voicenotes");
-  const image = page.getByRole("region", { name: "Project screens carousel" }).getByRole("button", { name: "Show screen 1", exact: true }).locator("img");
+  const gallery = page.getByRole("region", { name: "Project screens carousel" });
+  const image = gallery.getByRole("button", { name: "Show screen 2", exact: true }).locator("img");
+  await page.getByRole("button", { name: "Next screen", exact: true }).click();
   await expect.poll(() => image.evaluate((element) => element.complete && element.naturalWidth > 0)).toBe(true);
   await expect(image).toHaveJSProperty("currentSrc", "http://127.0.0.1:4173/projects/voicenotes/screen-01.webp");
 });

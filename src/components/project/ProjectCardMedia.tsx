@@ -1,6 +1,7 @@
 import { getLocalizedProjectSummary } from "@/data/projectsSummary";
 import { useI18n } from "@/i18n/useI18n";
 import ProjectMediaFrame from "@/components/project/ProjectMediaFrame";
+import { ProjectPromoMedia } from "@/components/project/ProjectPromoMedia";
 import { ProjectPlatformTabs } from "@/components/project/ProjectPlatformTabs";
 import type { ProjectStyle } from "@/constants/projectStyles";
 import type { ProjectPlatformId } from "@/data/projectCatalog";
@@ -25,8 +26,9 @@ const ProjectCardMedia = ({
   activePlatform,
   onPlatformChange,
 }: ProjectCardMediaProps) => {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const firstPlatform = project.platformPreviews[0];
+  const promo = getLocalizedProjectSummary(project, locale).promo;
 
   if (!firstPlatform) {
     return (
@@ -35,11 +37,15 @@ const ProjectCardMedia = ({
         className={mediaLinkClass}
         aria-label={t.projects.openCaseAria(project.title)}
       >
-        <ProjectMediaFrame
-          image={project.image}
-          alt={project.media.alt}
-          style={style}
-        />
+        {promo ? (
+          <ProjectPromoMedia promo={promo} />
+        ) : (
+          <ProjectMediaFrame
+            image={project.image}
+            alt={project.media.alt}
+            style={style}
+          />
+        )}
       </ViewTransitionLink>
     );
   }
