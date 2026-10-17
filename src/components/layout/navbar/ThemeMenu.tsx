@@ -38,7 +38,7 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
     if (!isOpen) return;
     if (focusOnOpenRef.current) {
       const items = menuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]');
-      items?.[openAtLastRef.current ? items.length - 1 : 0]?.focus();
+      items?.[openAtLastRef.current ? items.length - 1 : 0]?.focus({ preventScroll: true });
     }
 
     const handleClickOutside = (event: MouseEvent) => {
@@ -55,7 +55,7 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
       closeMenu();
-      triggerRef.current?.focus();
+      triggerRef.current?.focus({ preventScroll: true });
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -70,7 +70,7 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
   const applyTheme = (nextMode: "light" | "dark" | "system") => {
     if (transition?.isTransitioning) return;
     closeMenu();
-    triggerRef.current?.focus();
+    triggerRef.current?.focus({ preventScroll: true });
     const nextTheme = nextMode === "system"
       ? (window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light")
       : nextMode;
@@ -150,7 +150,7 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
           setIsOpen(true);
           if (isOpen) {
             const items = menuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]');
-            items?.[openAtLastRef.current ? items.length - 1 : 0]?.focus();
+            items?.[openAtLastRef.current ? items.length - 1 : 0]?.focus({ preventScroll: true });
           }
         }}
         aria-label={t.theme.select}
@@ -176,7 +176,7 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
           else if (event.key === "End") nextIndex = items.length - 1;
           else return;
           event.preventDefault();
-          items[nextIndex]?.focus();
+          items[nextIndex]?.focus({ preventScroll: true });
         }}
         aria-hidden={!isOpen}
         className={`absolute right-0 z-50 w-36 rounded-2xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-black/80 backdrop-blur-3xl shadow-2xl shadow-black/10 dark:shadow-black/40 transition-all duration-200 ease-out overflow-hidden before:content-[''] before:absolute before:left-0 before:h-6 before:w-full before:bg-white/80 dark:before:bg-black/80 before:backdrop-blur-2xl ${direction === "down"

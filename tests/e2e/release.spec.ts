@@ -131,13 +131,18 @@ test("changes theme under the route curtain and waits for visible screenshots", 
   const image = activeScreen.locator("img");
   await expect(activeScreen).toHaveAttribute("aria-pressed", "true");
   await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.complete && element.naturalWidth)).toBe(1080);
-  const scrollY = await page.evaluate(() => window.scrollY);
   const trigger = page.getByRole("button", { name: "Select theme" });
 
   // Selecting the theme already on screen should not trigger a curtain.
   await trigger.click();
   await page.getByRole("menuitem", { name: "Dark", exact: true }).click();
   await expect(overlay).toHaveAttribute("data-phase", "idle");
+  await page.evaluate(() => document.fonts.ready);
+  const scrollY = await page.evaluate(() => {
+    // Finish any setup scroll before measuring the theme change itself.
+    window.scrollTo({ top: window.scrollY, behavior: "instant" });
+    return window.scrollY;
+  });
 
   let releaseImages!: () => void;
   const pendingImages = new Promise<void>((resolve) => { releaseImages = resolve; });
