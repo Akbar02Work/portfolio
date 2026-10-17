@@ -101,8 +101,8 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
   );
 
   const value = useMemo(
-    () => ({ navigateWithTransition, runWithTransition }),
-    [navigateWithTransition, runWithTransition]
+    () => ({ navigateWithTransition, runWithTransition, isTransitioning: phase !== "idle" }),
+    [navigateWithTransition, runWithTransition, phase]
   );
 
   // idle/reveal-end: below screen → cover: on screen → reveal: above screen

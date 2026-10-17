@@ -68,6 +68,7 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
   }, [closeMenu, isOpen]);
 
   const applyTheme = (nextMode: "light" | "dark" | "system") => {
+    if (transition?.isTransitioning) return;
     closeMenu();
     triggerRef.current?.focus();
     const nextTheme = nextMode === "system"
@@ -102,6 +103,7 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
         if (!event.currentTarget.contains(event.relatedTarget as Node | null)) closeMenu();
       }}
       onPointerEnter={(event) => {
+        if (transition?.isTransitioning) return;
         if (event.pointerType !== "mouse") return;
         clearHoverClose();
         if (isOpen) return;
@@ -119,7 +121,9 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
       <button
         ref={triggerRef}
         type="button"
+        aria-disabled={transition?.isTransitioning || undefined}
         onClick={() => {
+          if (transition?.isTransitioning) return;
           openAtLastRef.current = false;
           focusOnOpenRef.current = true;
           if (openedByHoverRef.current) {
@@ -134,6 +138,10 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
           setIsOpen((prev) => !prev);
         }}
         onKeyDown={(event) => {
+          if (transition?.isTransitioning) {
+            if (["ArrowDown", "ArrowUp", "Enter", " "].includes(event.key)) event.preventDefault();
+            return;
+          }
           if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
           event.preventDefault();
           openAtLastRef.current = event.key === "ArrowUp";

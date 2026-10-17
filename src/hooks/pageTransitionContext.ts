@@ -2,6 +2,7 @@ import { createContext } from "react";
 import type { NavigateOptions, To } from "react-router-dom";
 
 export type PageTransitionContextValue = {
+  isTransitioning: boolean;
   navigateWithTransition: (to: To, options?: NavigateOptions) => void;
   runWithTransition: (update: () => void, options?: { waitForMedia?: boolean }) => void;
 };

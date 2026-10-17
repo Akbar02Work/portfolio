@@ -69,6 +69,26 @@ const server = createServer(async (req, res) => {
     const status = file ? 200 : 404;
     const output = file ?? path.join(dist, "404.html");
     let body = await readFile(output);
+    // Match production byte-range responses so native video seeking can be tested.
+    const range = req.headers.range;
+    if (status === 200 && path.extname(output) === ".mp4" && range) {
+      const match = /^bytes=(\d+)-(\d*)$/.exec(range);
+      const start = match ? Number(match[1]) : NaN;
+      const end = match?.[2] ? Math.min(Number(match[2]), body.length - 1) : body.length - 1;
+      res.setHeader("Accept-Ranges", "bytes");
+      if (!Number.isSafeInteger(start) || start < 0 || start >= body.length || end < start) {
+        res.writeHead(416, { "Content-Range": `bytes */${body.length}` });
+        res.end();
+        return;
+      }
+      const slice = body.subarray(start, end + 1);
+      res.writeHead(206, {
+        "Content-Type": "video/mp4", "Content-Range": `bytes ${start}-${end}/${body.length}`,
+        "Content-Length": slice.length,
+      });
+      res.end(req.method === "HEAD" ? undefined : slice);
+      return;
+    }
     if (process.env.PORTFOLIO_COMPRESSION === "gzip" && /\bgzip\b/.test(req.headers["accept-encoding"] ?? "") && /\.(html|js|css|svg|json|xml|txt)$/.test(output)) {
       if (!compressedFiles.has(output)) compressedFiles.set(output, gzipSync(body));
       body = compressedFiles.get(output);

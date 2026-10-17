@@ -52,6 +52,22 @@ test("loads project screenshots once and retains cache safety for HTML", async (
   }
 });
 
+test("shows the film poster without downloading video", async ({ page, request }) => {
+  const videoRequests: string[] = [];
+  page.on("request", req => {
+    if (req.url().endsWith(".mp4")) videoRequests.push(req.url());
+  });
+  await page.goto("/projects/voicenotes");
+  const player = page.locator("video");
+  await player.scrollIntoViewIfNeeded();
+  await expect(player).toHaveAttribute("preload", "none");
+  await expect(player).toHaveJSProperty("paused", true);
+  const poster = await player.getAttribute("poster");
+  expect(poster).toMatch(/promo-v3-.*-9x19-poster\.webp$/);
+  expect((await request.get(poster!)).status()).toBe(200);
+  expect(videoRequests).toEqual([]);
+});
+
 test("preserves the Creative pointer trail without rendering an empty trail before input", async ({ page, browserName }) => {
   test.skip(browserName !== "chromium", "WebGL call-count regression is measured in the Chromium lab.");
   await page.addInitScript(() => {

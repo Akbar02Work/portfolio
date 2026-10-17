@@ -119,11 +119,18 @@ try {
     });
     // Never free an occupied port by killing its listener.
     for (const site of sites) {
-      await new Promise((resolve, reject) => {
-        const probe = createServer();
-        probe.once("error", () => reject(new Error(`Port ${site.port} is occupied; its process was left running.`)));
-        probe.listen(site.port, () => probe.close(resolve));
-      });
+      // BSD permits a wildcard bind alongside an existing loopback bind.
+      // Probe the exact loopbacks as well as both wildcard families.
+      for (const host of ["127.0.0.1", "::1", "0.0.0.0", "::"]) {
+        await new Promise((resolve, reject) => {
+          const probe = createServer();
+          probe.once("error", (error) => {
+            if (host.includes(":") && ["EAFNOSUPPORT", "EADDRNOTAVAIL"].includes(error.code)) resolve();
+            else reject(new Error(`Port ${site.port} is occupied; its process was left running.`));
+          });
+          probe.listen({ port: site.port, host, ipv6Only: host === "::" }, () => probe.close(resolve));
+        });
+      }
     }
     writeFileSync(pidFile, String(process.pid));
     ownsPidFile = true;

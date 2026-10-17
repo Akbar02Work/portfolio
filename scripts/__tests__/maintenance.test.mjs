@@ -16,9 +16,9 @@ const fixture = () => {
   mkdirSync(path.join(directory, "creative"));
   return directory;
 };
-const listen = async () => {
+const listen = async (host = "127.0.0.1") => {
   const server = createServer();
-  server.listen(0, "127.0.0.1");
+  server.listen(0, host);
   await once(server, "listening");
   return server;
 };
@@ -31,8 +31,13 @@ const run = (script, args = []) => new Promise((resolve, reject) => {
   child.on("exit", (code) => resolve({ code, output }));
 });
 
-test("dev supervisor preserves occupied ports and ignores a stale PID on stop", { timeout: 10_000 }, async () => {
-  const listener = await listen();
+for (const host of ["127.0.0.1", "::1"]) {
+test(`dev supervisor preserves occupied ${host} ports and ignores a stale PID on stop`, { timeout: 10_000 }, async (t) => {
+  const listener = await listen(host).catch((error) => {
+    if (host === "::1" && ["EAFNOSUPPORT", "EADDRNOTAVAIL"].includes(error.code)) return null;
+    throw error;
+  });
+  if (!listener) { t.skip("IPv6 is unavailable"); return; }
   const port = listener.address().port;
   const directory = fixture();
   const script = path.join(directory, "scripts/dev-portfolios.mjs");
@@ -52,6 +57,7 @@ test("dev supervisor preserves occupied ports and ignores a stale PID on stop", 
     rmSync(directory, { recursive: true, force: true });
   }
 });
+}
 
 test("archive rejects shell syntax as a ref before writing anything", () => {
   const marker = path.join(fixturesRoot, "archive-shell-marker");

@@ -1,6 +1,9 @@
 import { vi } from "vitest";
 import "@testing-library/jest-dom/vitest";
 
+// jsdom has no media engine; component cleanup still pauses real browser players.
+HTMLMediaElement.prototype.pause = vi.fn();
+
 // Mock HTMLCanvasElement (Restored from original)
 Object.defineProperty(HTMLCanvasElement.prototype, "getContext", {
     value: vi.fn(() => ({
