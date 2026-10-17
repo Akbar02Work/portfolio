@@ -130,12 +130,14 @@ test("supports keyboard theme selection and exposes only usable gallery controls
   await expect(gallery.getByRole("button")).toHaveCount(6);
   const video = gallery.locator("video");
   await expect(video).toHaveCount(1);
-  await expect(video).toHaveAttribute("src", "/projects/voicenotes/promo-v3-dark-9x16.mp4");
-  await expect(video).toHaveAttribute("poster", "/projects/voicenotes/promo-v3-dark-poster.webp");
+  await expect(video).toHaveAttribute("src", "/projects/voicenotes/promo-v3-dark-9x19.mp4");
+  await expect(video).toHaveAttribute("poster", "/projects/voicenotes/promo-v3-dark-9x19-poster.webp");
   await expect(video).toHaveAttribute("preload", "none");
   await expect(video).not.toHaveAttribute("autoplay");
   await expect(video).toHaveJSProperty("paused", true);
   await video.evaluate((element: HTMLVideoElement) => element.play());
+  await expect(video).toHaveJSProperty("videoWidth", 720);
+  await expect(video).toHaveJSProperty("videoHeight", 1520);
   await expect.poll(() => video.evaluate((element: HTMLVideoElement) => element.currentTime)).toBeGreaterThan(0);
   await video.focus();
   await page.keyboard.press("ArrowRight");

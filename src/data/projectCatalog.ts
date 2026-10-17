@@ -146,12 +146,12 @@ const projectDefinitions = [
       alt: "AI cleans it up — a spoken grocery list above a tangled voice waveform",
       captions: "/projects/voicenotes/promo-v3-en.vtt",
       light: {
-        video: "/projects/voicenotes/promo-v3-light-9x16.mp4",
-        poster: "/projects/voicenotes/promo-v3-light-poster.webp",
+        video: "/projects/voicenotes/promo-v3-light-9x19.mp4",
+        poster: "/projects/voicenotes/promo-v3-light-9x19-poster.webp",
       },
       dark: {
-        video: "/projects/voicenotes/promo-v3-dark-9x16.mp4",
-        poster: "/projects/voicenotes/promo-v3-dark-poster.webp",
+        video: "/projects/voicenotes/promo-v3-dark-9x19.mp4",
+        poster: "/projects/voicenotes/promo-v3-dark-9x19-poster.webp",
       },
     },
     socialImage: "/projects/voicenotes/promo-v3-social.png",

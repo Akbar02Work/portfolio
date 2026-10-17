@@ -34,7 +34,7 @@ export const ProjectPromoMedia = ({ promo, playable = false, className = "w-44 m
                     playsInline
                     preload="none"
                     aria-label={t.project.film}
-                    className="h-full w-full cursor-default object-contain"
+                    className="h-full w-full cursor-default object-cover"
                 >
                     <track kind="captions" src={withBase(promo.captions)} srcLang="en" label="English" />
                     <a href={withBase(media.video)}>{t.project.openVideo}</a>
@@ -44,11 +44,11 @@ export const ProjectPromoMedia = ({ promo, playable = false, className = "w-44 m
                     src={withBase(media.poster)}
                     alt={promo.alt}
                     width={720}
-                    height={1280}
+                    height={1520}
                     loading="lazy"
                     decoding="async"
                     draggable={false}
-                    className="h-full w-full object-contain"
+                    className="h-full w-full object-cover"
                 />
             )}
         </div>
