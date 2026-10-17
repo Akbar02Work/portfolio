@@ -627,7 +627,7 @@ html.dark {
   max-width: 86rem;
 }
 
-/* ── Page curtain transition (home ↔ case) ───────────────────────────── */
+/* ── Shared curtain for route and theme changes ─────────────────────── */
 .page-transition-overlay {
   position: fixed;
   inset: 0;

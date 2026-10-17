@@ -37,7 +37,7 @@ const publicRoutes: PrerenderRoute[] = LOCALES.flatMap((locale): PrerenderRoute[
       ...localeRouteFields(locale, `/projects/${project.slug}`),
       title: messages[locale].seo.projectTitle(project.title),
       description: project.description,
-      image: project.coverImage || OG_IMAGE[locale],
+      image: project.socialImage || project.coverImage || OG_IMAGE[locale],
     })
   ),
 ]);

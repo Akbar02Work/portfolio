@@ -5,6 +5,7 @@ import type {
   ProjectMediaType,
   ProjectMetric,
   ProjectPlatformId,
+  ProjectPromo,
 } from "./projectCatalog";
 
 export type ProjectPlatformPreview = ProjectPlatformView & {
@@ -27,6 +28,7 @@ export type ProjectSummary = {
     type: ProjectMediaType;
     alt: string;
   };
+  promo?: ProjectPromo;
   platforms: ProjectPlatformView[];
   platformPreviews: ProjectPlatformPreview[];
   image: string;
@@ -40,6 +42,7 @@ const toProjectSummary = (project: (typeof projects)[number]): ProjectSummary =>
   year: project.year,
   metrics: project.metrics,
   media: project.media,
+  promo: project.promo,
   platforms: project.platforms,
   platformPreviews: project.platforms.flatMap((platform) => {
     const preview = project.screens.find((screen) => screen.platform === platform.id);

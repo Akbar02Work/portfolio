@@ -49,7 +49,7 @@ const ProjectDetail = () => {
     ? t.seo.projectTitle(projectView.title)
     : t.seo.projectNotFound;
   const pageDescription = projectView ? projectView.summary : t.seo.defaultDescription;
-  const pageImage = projectView?.image || undefined;
+  const pageImage = projectView?.socialImage || projectView?.image || undefined;
   const selectPlatform = (platform: ProjectPlatformId) => {
     const nextParams = new URLSearchParams(searchParams);
     nextParams.set("platform", platform);

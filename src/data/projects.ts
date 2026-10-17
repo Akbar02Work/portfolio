@@ -11,6 +11,7 @@ import type {
   ProjectMetric,
   ProjectPlatform,
   ProjectPlatformId,
+  ProjectPromo,
 } from "./projectCatalog";
 
 const toWebpPath = (imagePath: string): string =>
@@ -26,6 +27,7 @@ export interface ProjectScreen {
   title: string;
   description?: string;
   image: string;
+  darkImage?: string;
   platform: ProjectPlatformId;
   mediaType: ProjectMediaType;
 }
@@ -55,6 +57,8 @@ export interface Project {
     type: ProjectMediaType;
     alt: string;
   };
+  promo?: ProjectPromo;
+  socialImage?: string;
   platforms: ProjectPlatformView[];
   overview: string;
   image: string;
@@ -81,6 +85,8 @@ const toProject = (project: (typeof projectsCatalog)[number]): Project => ({
   year: project.year,
   metrics: project.metrics,
   media: project.media,
+  promo: project.promo,
+  socialImage: project.socialImage,
   platforms: (project.platforms ?? []).map((platform) => ({
     id: platform.id,
     label: platform.label,
@@ -105,6 +111,7 @@ const toProject = (project: (typeof projectsCatalog)[number]): Project => ({
     title: screen.caption,
     description: "",
     image: toWebpPath(screen.imageUrl),
+    darkImage: screen.darkImageUrl ? toWebpPath(screen.darkImageUrl) : undefined,
     platform: screen.platform ?? "android",
     mediaType: screen.mediaType ?? project.media.type,
   })),

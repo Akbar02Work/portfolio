@@ -1,12 +1,14 @@
 import { LocalizedText } from "@/components/ui/LocalizedText";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useId, useRef, useState } from "react";
 import { Moon, Sun, SunMoon } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { useI18n } from "@/i18n/useI18n";
+import { PageTransitionContext } from "@/hooks/pageTransitionContext";
 
 export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" }) => {
   const { theme, mode, setTheme } = useTheme();
   const { t } = useI18n();
+  const transition = useContext(PageTransitionContext);
   const [isOpen, setIsOpen] = useState(false);
   const menuId = useId();
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -66,9 +68,16 @@ export const ThemeMenu = ({ direction = "down" }: { direction?: "up" | "down" })
   }, [closeMenu, isOpen]);
 
   const applyTheme = (nextMode: "light" | "dark" | "system") => {
-    setTheme(nextMode);
     closeMenu();
     triggerRef.current?.focus();
+    const nextTheme = nextMode === "system"
+      ? (window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+      : nextMode;
+    if (transition && nextTheme !== theme) {
+      transition.runWithTransition(() => setTheme(nextMode), { waitForMedia: true });
+    } else {
+      setTheme(nextMode);
+    }
   };
 
   const triggerIcon =

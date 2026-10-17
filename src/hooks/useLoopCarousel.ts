@@ -525,6 +525,8 @@ export const useLoopCarousel = <T extends HTMLElement = HTMLDivElement>(total: n
 
         const onPointerDown = (event: PointerEvent) => {
             if (event.pointerType !== "mouse" || event.button !== 0) return;
+            // Native video seeking and volume controls must not drag the gallery.
+            if (event.target instanceof Element && event.target.closest("video")) return;
             pointerId = event.pointerId;
             startX = lastX = event.clientX;
             lastTime = event.timeStamp;
