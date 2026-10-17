@@ -114,6 +114,75 @@ test("keeps a single set of route metadata through navigation and reload", async
   expect(sectionTop).toBeGreaterThanOrEqual(navBottom);
 });
 
+test("changes theme under the route curtain and waits for visible screenshots", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference", colorScheme: "light" });
+  await page.addInitScript(() => localStorage.setItem("theme-mode", "dark"));
+  await page.goto("/projects/voicenotes");
+  const overlay = page.locator(".page-transition-overlay");
+  const gallery = page.getByRole("region", { name: "Project screens carousel" });
+  await page.getByRole("button", { name: "Next screen", exact: true }).click();
+  const activeScreen = gallery.getByRole("button", { name: "Show screen 2", exact: true });
+  const image = activeScreen.locator("img");
+  await expect(activeScreen).toHaveAttribute("aria-pressed", "true");
+  await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.complete && element.naturalWidth)).toBe(1080);
+  const scrollY = await page.evaluate(() => window.scrollY);
+  const trigger = page.getByRole("button", { name: "Select theme" });
+
+  // Selecting the theme already on screen should not trigger a curtain.
+  await trigger.click();
+  await page.getByRole("menuitem", { name: "Dark", exact: true }).click();
+  await expect(overlay).toHaveAttribute("data-phase", "idle");
+
+  let releaseImages!: () => void;
+  const pendingImages = new Promise<void>((resolve) => { releaseImages = resolve; });
+  await page.route("**/projects/voicenotes/*-light.*", async (route) => {
+    await pendingImages;
+    await route.continue();
+  });
+
+  try {
+    const oldColor = await overlay.evaluate((element) => getComputedStyle(element).backgroundColor);
+    await trigger.click();
+    await page.getByRole("menuitem", { name: "Light", exact: true }).click();
+    await expect(overlay).toHaveAttribute("data-phase", "cover");
+    await expect(page.locator("html")).toHaveClass(/dark/);
+    await expect(image).toHaveAttribute("src", "/projects/voicenotes/screen-01-light.webp");
+    await expect(page.locator("html")).not.toHaveClass(/dark/);
+    // Past the normal 48 ms mount delay, the unavailable screenshot keeps it covered.
+    await page.waitForTimeout(150);
+    await expect(overlay).toHaveAttribute("data-phase", "cover");
+    await expect(overlay).toHaveCSS("background-color", oldColor);
+    await expect.poll(() => overlay.evaluate((element) => Math.abs(element.getBoundingClientRect().top))).toBeLessThan(1);
+    releaseImages();
+    await expect(overlay).toHaveAttribute("data-phase", "reveal");
+    await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.complete && element.naturalWidth)).toBe(1080);
+    await page.screenshot({ path: test.info().outputPath("light-theme-reveal.png") });
+    await expect(overlay).toHaveAttribute("data-phase", "idle");
+    await expect(activeScreen).toHaveAttribute("aria-pressed", "true");
+    expect(Math.abs(await page.evaluate(() => window.scrollY) - scrollY)).toBeLessThan(2);
+    await expect(trigger).toBeFocused();
+
+    const lightColor = await overlay.evaluate((element) => getComputedStyle(element).backgroundColor);
+    await trigger.click();
+    await page.getByRole("menuitem", { name: "Dark", exact: true }).click();
+    await expect(overlay).toHaveAttribute("data-phase", "cover");
+    await expect(page.locator("html")).not.toHaveClass(/dark/);
+    await expect(overlay).toHaveAttribute("data-phase", "reveal");
+    await expect(page.locator("html")).toHaveClass(/dark/);
+    await expect(overlay).toHaveCSS("background-color", lightColor);
+    await expect(image).toHaveAttribute("src", "/projects/voicenotes/screen-01-dark.webp");
+    await page.screenshot({ path: test.info().outputPath("dark-theme-reveal.png") });
+    await expect(overlay).toHaveAttribute("data-phase", "idle");
+  } finally {
+    releaseImages();
+  }
+
+  await page.getByRole("link", { name: "Back to projects", exact: true }).click();
+  await expect(overlay).toHaveAttribute("data-phase", "cover");
+  await expect(page).toHaveURL("http://127.0.0.1:4173/");
+  await expect(overlay).toHaveAttribute("data-phase", "idle");
+});
+
 test("supports keyboard theme selection and exposes only usable gallery controls", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/projects/voicenotes");
@@ -125,6 +194,7 @@ test("supports keyboard theme selection and exposes only usable gallery controls
   await expect(page.getByRole("menuitem", { name: "Dark" })).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.locator("html")).toHaveClass(/dark/);
+  await expect(page.locator(".page-transition-overlay")).toHaveAttribute("data-phase", "idle");
   await expect(trigger).toBeFocused();
   const gallery = page.getByRole("region", { name: "Project screens carousel" });
   await expect(gallery.getByRole("button")).toHaveCount(6);
