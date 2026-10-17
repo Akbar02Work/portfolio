@@ -138,11 +138,6 @@ test("changes theme under the route curtain and waits for visible screenshots", 
   await page.getByRole("menuitem", { name: "Dark", exact: true }).click();
   await expect(overlay).toHaveAttribute("data-phase", "idle");
   await page.evaluate(() => document.fonts.ready);
-  const scrollY = await page.evaluate(() => {
-    // Finish any setup scroll before measuring the theme change itself.
-    window.scrollTo({ top: window.scrollY, behavior: "instant" });
-    return window.scrollY;
-  });
 
   let releaseImages!: () => void;
   const pendingImages = new Promise<void>((resolve) => { releaseImages = resolve; });
@@ -153,8 +148,13 @@ test("changes theme under the route curtain and waits for visible screenshots", 
 
   try {
     const oldColor = await overlay.evaluate((element) => getComputedStyle(element).backgroundColor);
-    await trigger.click();
-    await page.getByRole("menuitem", { name: "Light", exact: true }).click();
+    await trigger.focus();
+    await page.keyboard.press("ArrowDown");
+    await expect(page.getByRole("menuitem", { name: "Light", exact: true })).toBeFocused();
+    // Locator clicks can scroll sticky menus before dispatching input. Measure
+    // from the user's selection instead, without that automation-only scroll.
+    const scrollY = await page.evaluate(() => window.scrollY);
+    await page.keyboard.press("Enter");
     await expect(overlay).toHaveAttribute("data-phase", "cover");
     await expect(trigger).toHaveAttribute("aria-disabled", "true");
     // Keyboard input must be blocked just like pointer input under the curtain.
