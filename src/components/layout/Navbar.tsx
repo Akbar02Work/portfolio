@@ -83,17 +83,21 @@ export const Navbar = ({ variant = "home" }: NavbarProps) => {
   };
 
   const handleMobileMenuCloseAutoFocus = (event: Event) => {
-    if (!mobileMenuFocusHandoffRef.current) return;
-    // The sheet's exit animation can finish after the replacement dialog closes.
     event.preventDefault();
-    mobileMenuFocusHandoffRef.current = false;
+    if (mobileMenuFocusHandoffRef.current) {
+      // A replacement dialog owns focus until it closes.
+      mobileMenuFocusHandoffRef.current = false;
+      return;
+    }
+    // Radix's default trigger.focus() can scroll the page in WebKit.
+    document.querySelector<HTMLElement>("[data-mobile-menu-trigger]")?.focus({ preventScroll: true });
   };
 
   const navPosition = isHome ? "fixed" : "sticky";
 
   return (
     <nav
-      className={`${navPosition} w-full z-50 top-0 start-0 bg-background/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800`}
+      className={`${navPosition} site-navbar w-full z-50 top-0 start-0 bg-background min-[901px]:bg-background/80 min-[901px]:backdrop-blur-md border-b border-gray-200 dark:border-gray-800`}
     >
       <div className="max-w-[86rem] mx-auto px-6 sm:px-8 lg:px-12">
         <div className="relative flex flex-wrap items-center justify-between mx-auto py-4">

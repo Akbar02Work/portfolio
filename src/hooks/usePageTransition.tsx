@@ -128,6 +128,7 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
           transform: overlayTransform,
           transition: overlayTransition,
           backgroundColor: background,
+          visibility: phase === "idle" ? "hidden" : "visible",
           pointerEvents: phase === "idle" ? "none" : "auto",
         }}
       />

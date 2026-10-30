@@ -1,4 +1,5 @@
 import { LocalizedText } from "@/components/ui/LocalizedText";
+import { useLayoutEffect, useRef } from "react";
 import type {
   Dispatch,
   MouseEventHandler,
@@ -51,9 +52,23 @@ export const MobileMenu = ({
   onCloseAutoFocus,
 }: MobileMenuProps) => {
   const { t, localize } = useI18n();
+  const scrollAtOpenRef = useRef(0);
+  const restoreScrollOnDismissRef = useRef(false);
+
+  useLayoutEffect(() => {
+    if (!mobileMenuOpen) return;
+    scrollAtOpenRef.current = window.scrollY;
+    restoreScrollOnDismissRef.current = false;
+    // The portal is outside #root. Hide the page's pixels beneath Safari's
+    // translucent browser bars without changing its layout or scroll position.
+    document.documentElement.setAttribute("data-mobile-menu-open", "");
+    return () => document.documentElement.removeAttribute("data-mobile-menu-open");
+  }, [mobileMenuOpen]);
+
   return (
   <div className="flex items-center gap-2 min-[901px]:hidden">
     <Sheet open={mobileMenuOpen} onOpenChange={(open) => {
+      restoreScrollOnDismissRef.current = !open;
       setMobileMenuOpen(open);
       if (!open) {
         setMobileProjectsOpen(false);
@@ -70,8 +85,19 @@ export const MobileMenu = ({
       </SheetTrigger>
       <SheetContent
         side="right"
-        onCloseAutoFocus={onCloseAutoFocus}
-        className="!w-full !max-w-full !inset-0 !p-0 bg-white dark:bg-slate-950 border-none flex flex-col [&>button:last-child]:hidden"
+        onCloseAutoFocus={(event) => {
+          onCloseAutoFocus(event);
+          if (restoreScrollOnDismissRef.current) {
+            restoreScrollOnDismissRef.current = false;
+            // Restore after the scroll lock and native focus have settled.
+            // Navigation closes the menu directly and keeps its own destination.
+            window.requestAnimationFrame(() => {
+              window.scrollTo({ top: scrollAtOpenRef.current, behavior: "instant" });
+            });
+          }
+        }}
+        overlayClassName="mobile-menu-backdrop"
+        className="mobile-menu-panel !w-full !max-w-full !inset-0 !p-0 bg-background border-none flex flex-col [&>button:last-child]:hidden"
       >
         <SheetHeader className="sr-only">
           <SheetTitle><LocalizedText>{copy => copy.nav.menuTitle}</LocalizedText></SheetTitle>
@@ -79,7 +105,7 @@ export const MobileMenu = ({
         </SheetHeader>
 
         {/* ── Header: Logo + Close — mirrors the navbar row so nothing moves on open ── */}
-        <div className="flex items-center justify-between px-6 sm:px-8 py-4">
+        <div className="mobile-menu-header flex shrink-0 items-center justify-between px-6 sm:px-8 py-4">
           <Link
             to={localize(ROUTES.HOME)}
             state={{ scrollTo: "home" }}
@@ -98,13 +124,14 @@ export const MobileMenu = ({
         </div>
 
         {/* ── Nav Links ── */}
-        <nav className="flex-1 flex flex-col justify-center px-16 gap-[clamp(0.25rem,1.5vh,1rem)]">
-          {navLinks.map((link) => {
+        <nav className="mobile-menu-navigation min-h-0 flex-1 overflow-y-auto overscroll-contain">
+          <div className="mobile-menu-links flex min-h-full flex-col justify-center px-16 py-4 gap-[clamp(0.25rem,1.5vh,1rem)]">
+          {navLinks.map((link, index) => {
             const isActive = activeSection === link.id;
             const isProjects = link.id === "projects";
 
             return (
-              <div key={link.id}>
+              <div key={link.id} className="mobile-menu-item" style={{ animationDelay: `${index * 60}ms` }}>
                 <button
                   type="button"
                   onClick={() => {
@@ -177,7 +204,7 @@ export const MobileMenu = ({
               </div>
             );
           })}
-          <div>
+          <div className="mobile-menu-item" style={{ animationDelay: `${navLinks.length * 60}ms` }}>
             <button
               type="button"
               aria-haspopup="dialog"
@@ -190,10 +217,11 @@ export const MobileMenu = ({
               <LocalizedText>{copy => copy.nav.contact}</LocalizedText>
             </button>
           </div>
+          </div>
         </nav>
 
         {/* ── Bottom: Theme ── */}
-        <div className="px-12 pb-[calc(clamp(1rem,4vh,2rem)+1.5rem)] pt-[clamp(0.5rem,2vh,1.5rem)]">
+        <div className="mobile-menu-controls shrink-0 px-12 pt-6 pb-8">
           <div className="flex items-center justify-between gap-3">
             <LanguageSwitch onSwitch={() => setMobileMenuOpen(false)} />
             <ThemeMenu direction="up" />

@@ -38,12 +38,14 @@ const ProjectCardMedia = ({
         aria-label={t.projects.openCaseAria(project.title)}
       >
         {promo ? (
-          <ProjectPromoMedia promo={promo} />
+          <ProjectPromoMedia promo={promo} className="w-40 md:w-52" />
         ) : (
           <ProjectMediaFrame
             image={project.image}
             alt={project.media.alt}
             style={style}
+            phoneClassName={project.media.type === "phone" ? "w-40 md:w-52" : undefined}
+            mediaType={project.media.type}
           />
         )}
       </ViewTransitionLink>

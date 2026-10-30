@@ -55,6 +55,11 @@ for (const [route, locale] of [["/", "en"], ["/ru", "ru"]] as const) {
           writeText: async () => { throw new DOMException("Clipboard denied", "NotAllowedError"); },
         },
       });
+      // A failed copy now means both the async API and the selection fallback fail.
+      Object.defineProperty(document, "execCommand", {
+        configurable: true,
+        value: () => false,
+      });
     });
     await page.setViewportSize({ width: 320, height: 740 });
     await page.goto(route);

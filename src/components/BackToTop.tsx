@@ -3,8 +3,9 @@ import { ArrowUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { scrollBehavior } from "@/lib/motion";
 import { useI18n } from "@/i18n/useI18n";
+import { LocalizedText } from "@/components/ui/LocalizedText";
 
-export const BackToTop = () => {
+export const BackToTop = ({ placement = "floating" }: { placement?: "floating" | "footer" }) => {
     const { t } = useI18n();
     const [isVisible, setIsVisible] = useState(false);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -15,6 +16,7 @@ export const BackToTop = () => {
     };
 
     useEffect(() => {
+        if (placement === "footer") return;
         const toggleVisibility = () => {
             if (window.scrollY > 300) {
                 setIsVisible(true);
@@ -41,7 +43,9 @@ export const BackToTop = () => {
             }
             window.removeEventListener("scroll", onScroll);
         };
-    }, []);
+    }, [placement]);
+
+    const visible = placement === "footer" || isVisible;
 
     const scrollToTop = () => {
         window.scrollTo({
@@ -61,15 +65,19 @@ export const BackToTop = () => {
             onTouchEnd={blurButton}
             onTouchCancel={blurButton}
             type="button"
-            tabIndex={isVisible ? 0 : -1}
-            aria-hidden={!isVisible}
+            tabIndex={visible ? 0 : -1}
+            aria-hidden={!visible}
             className={cn(
-                "no-touch-hover touch-no-ring fixed bottom-8 right-8 z-50 p-3 rounded-full bg-black dark:bg-white text-white dark:text-black shadow-lg transition-all duration-300 hover:scale-110 active:scale-95 focus:outline-none ring-2 ring-transparent ring-offset-2 ring-offset-white dark:ring-offset-slate-950 hover:ring-volt-ink dark:hover:ring-volt active:ring-volt-ink dark:active:ring-volt focus-visible:ring-volt-ink dark:focus-visible:ring-volt",
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+                "no-touch-hover touch-no-ring items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-volt-ink dark:focus-visible:outline-volt",
+                placement === "footer"
+                    ? "inline-flex min-[901px]:hidden shrink-0 gap-2 py-2 text-sm font-semibold text-volt-ink dark:text-volt transition-opacity duration-300 hover:opacity-75 active:translate-y-px"
+                    : "hidden min-[901px]:inline-flex fixed bottom-8 right-8 z-40 p-3 rounded-full bg-black dark:bg-white text-white dark:text-black shadow-lg transition-all duration-300 hover:scale-110 active:scale-95",
+                visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
             )}
             aria-label={t.nav.backToTop}
         >
-            <ArrowUp className="w-6 h-6" strokeWidth={2} />
+            {placement === "footer" && <LocalizedText>{copy => copy.nav.backToTop}</LocalizedText>}
+            <ArrowUp className={placement === "footer" ? "w-4 h-4" : "w-6 h-6"} strokeWidth={2} aria-hidden="true" />
         </button>
     );
 };

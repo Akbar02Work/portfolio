@@ -28,14 +28,15 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
         firstPlatform?.id ?? "android"
     );
     const activeProject = resolveProjectSummaryPlatform(project, activePlatform);
+    const isSinglePhone = !firstPlatform && project.media.type === "phone";
     const href = localize(buildProjectUrl(
         project.slug,
         firstPlatform ? activePlatform : undefined
     ));
 
     return (
-        <article className="group/card flex min-h-0 flex-col justify-center border-b border-neutral-200 dark:border-neutral-800 py-12 first:pt-6 last:pb-10 md:min-h-[72svh] md:py-20 md:first:pt-10 md:last:pb-12 last:border-b-0">
-            <div className="grid md:grid-cols-12 gap-12 md:gap-16 items-center">
+        <article className={`group/card flex min-h-0 flex-col justify-center border-b border-neutral-200 dark:border-neutral-800 py-12 first:pt-6 last:pb-10 md:py-20 md:first:pt-10 md:last:pb-12 last:border-b-0 ${isSinglePhone ? "" : "md:min-h-[72svh]"}`}>
+            <div className={`grid md:grid-cols-12 gap-12 md:gap-16 ${isSinglePhone ? "items-start" : "items-center"}`}>
                 {/* Text block */}
                 <div className={`flex flex-col gap-6 md:gap-7 md:col-span-6 ${reversed ? "md:order-2" : ""}`}>
                     <div className="flex items-center gap-4">
@@ -61,20 +62,6 @@ const EditorialCard = ({ project, index, reversed = false, style }: EditorialCar
                     <p className="text-body-lg md:text-[1.375rem] leading-[1.75] text-gray-600 dark:text-slate-300 max-w-xl">
                         <LocalizedText>{(_, locale) => getLocalizedProjectSummary(activeProject, locale).summary}</LocalizedText>
                     </p>
-
-                    <dl className="grid grid-cols-3 gap-3 lg:gap-5 border-t border-neutral-200 dark:border-neutral-800 pt-7 mt-1">
-                        {activeProject.metrics.map((metric, metricIndex) => (
-                            <div key={metricIndex}>
-                                <dt className="sr-only">{metric.label}</dt>
-                                <dd className="text-lg min-[380px]:text-xl md:text-[1.375rem] font-semibold leading-snug tracking-[-0.01em] text-gray-900 dark:text-white">
-                                    <LocalizedText>{(_, locale) => getLocalizedProjectSummary(activeProject, locale).metrics[metricIndex]?.value}</LocalizedText>
-                                </dd>
-                                <dd className="text-xs min-[380px]:text-sm text-neutral-500 dark:text-neutral-400 mt-1.5">
-                                    <LocalizedText>{(_, locale) => getLocalizedProjectSummary(activeProject, locale).metrics[metricIndex]?.label}</LocalizedText>
-                                </dd>
-                            </div>
-                        ))}
-                    </dl>
 
                     <ViewTransitionLink
                         to={href}

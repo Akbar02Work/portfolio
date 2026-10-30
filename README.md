@@ -58,6 +58,9 @@ For Business alone use `npm run dev`; for Creative alone use
 page open a chooser for Creative and Old. Creative's Business link returns to
 the main site.
 
+The header and mobile menu keep the text wordmark. The favicon and home-screen
+icons use a static A2W mark.
+
 ## Build and embed
 
 | Command | Behavior |

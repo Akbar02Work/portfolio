@@ -8,15 +8,15 @@ import { PageTransitionProvider } from "@/hooks/usePageTransition";
 import { ROUTES } from "@/constants/routes";
 import Index from "./pages/Index";
 import ProjectDetail from "./pages/ProjectDetail";
-import { useDynamicFavicon } from "./hooks/useDynamicFavicon";
 import { ThemeProvider } from "./hooks/useTheme";
 import { I18nProvider } from "./i18n/I18nProvider";
 import { localizePath } from "./i18n/locales";
+import { useSafariViewportClip } from "./hooks/useSafariViewportClip";
 
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const App = () => {
-  useDynamicFavicon();
+  useSafariViewportClip();
 
   return (
     <ThemeProvider>
