@@ -42,9 +42,9 @@ product identity stay the same.
 ## Media and Creative
 
 `public/projects/lumingo/*.svg` contains draft illustrations: three Android screens,
-three Web screens and one iOS development image. Android uses phone framing, Web
-browser framing. Prepare actual screenshots or clearly identify mockups before
-enabling the case; the current hidden state is intentional.
+three Web screens and one iOS development image. Android screenshots are displayed
+directly; Web uses browser framing. Prepare actual screenshots or clearly identify
+mockups before enabling the case; the current hidden state is intentional.
 
 Creative keeps its presentation in `creative/src/siteData.ts` and links to the
 Business case. Public visibility/order are injected from the catalog at build

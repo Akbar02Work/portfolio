@@ -57,7 +57,7 @@ const Scramble = ({ text }: { text: string }) => {
     };
   }, [text]);
 
-  return <span className="locale-text__scramble" aria-hidden="true">{display}</span>;
+  return <span className="locale-text__scramble" aria-hidden="true" data-nosnippet="">{display}</span>;
 };
 
 type LocalizedTextProps = {
@@ -89,7 +89,14 @@ export const LocalizedText = ({ children, className, scramble = false }: Localiz
           data-active={language === locale}
           aria-hidden={language !== locale || undefined}
         >
-          {content}
+          {/* Keep sizing layers stable for transitions. Recreate the copy when its
+              snippet eligibility changes instead of toggling data-nosnippet in place. */}
+          <span
+            key={language === locale ? "content" : "sizing"}
+            data-nosnippet={language !== locale ? "" : undefined}
+          >
+            {content}
+          </span>
         </span>
       ))}
       {useScramble && <Scramble text={activeText} />}

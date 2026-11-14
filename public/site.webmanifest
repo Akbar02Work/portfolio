@@ -3,6 +3,11 @@
     "short_name": "Akbar",
     "icons": [
         {
+            "src": "/favicon.svg?v=a2w",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        },
+        {
             "src": "/android-chrome-192x192.png?v=a2w",
             "sizes": "192x192",
             "type": "image/png"

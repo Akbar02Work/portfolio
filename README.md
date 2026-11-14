@@ -121,7 +121,7 @@ Business includes Vercel Speed Insights; actual telemetry configuration is check
 on the deployment. Production cross-app links default to the current origin.
 
 Hosting is configured for Vercel with `dist/` output and `vercel.json` routing,
-CSP and cache rules. Fonts, portraits, project images and mockups cache for one day;
+CSP and cache rules. Fonts, portraits and project images cache for one day;
 hashed JS/CSS cache for one year, immutable. HTML has no long-lived override.
 Rename unversioned assets when an immediate refresh is needed.
 
@@ -133,9 +133,8 @@ handoff. Publishing is a separate owner-authorized action.
 
 ## Images and performance
 
-`npm run optimize:images` creates raster derivatives; `-- --phone-frame` rebuilds
-only the phone bezel variant. These commands write public assets. Route preloads
-share responsive portrait sizes with React and select existing project covers.
+`npm run optimize:images` creates raster derivatives and writes public assets.
+Route preloads share responsive portrait sizes with React and select existing project covers.
 Profiling commands and measurement limits are in the
 [performance notes](docs/audits/2026-09-05-performance-optimization.md).
 

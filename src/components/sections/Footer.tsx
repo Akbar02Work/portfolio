@@ -28,6 +28,7 @@ export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boole
     const { t } = useI18n();
     const { copiedKeys, checkedKeys, copy } = useCopyFeedback<"email">();
     const emailCopied = copiedKeys.has("email");
+    const emailChecked = checkedKeys.has("email");
     const [copyFailed, setCopyFailed] = useState(false);
 
     const safeSocialLinks = socialLinks
@@ -67,10 +68,11 @@ export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boole
                             <span className="whitespace-nowrap">Akbar02work</span>
                             <span className="inline-flex items-center gap-2 md:gap-4 whitespace-nowrap">
                                 @gmail.com
+                                {/* Keep the outgoing copy icon until it is hidden behind the checkmark. */}
                                 <CopySwap
-                                    active={checkedKeys.has("email")}
-                                    className="translate-y-[0.06em] md:translate-y-0"
-                                    idle={emailCopied
+                                    active={emailChecked}
+                                    className="copy-swap--footer translate-y-[0.06em] md:translate-y-[0.08em]"
+                                    idle={emailCopied && !emailChecked
                                         ? <ArrowUpRight className="w-[0.6em] h-[0.6em] text-volt-ink dark:text-volt" strokeWidth={2} aria-hidden="true" />
                                         : <Copy className="w-[0.6em] h-[0.6em] text-volt-ink dark:text-volt" strokeWidth={2} aria-hidden="true" />}
                                     done={<CircleCheck className="w-[0.6em] h-[0.6em] text-volt-ink dark:text-volt" strokeWidth={2} aria-hidden="true" />}
@@ -78,7 +80,7 @@ export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boole
                             </span>
                         </a>
                         <span className="sr-only" aria-live="polite">
-                            {checkedKeys.has("email") ? t.contact.emailCopied : ""}
+                            {emailChecked ? t.contact.emailCopied : ""}
                         </span>
                         {copyFailed ? (
                             <p role="alert" className="mt-4 text-body-sm text-gray-600 dark:text-slate-300">

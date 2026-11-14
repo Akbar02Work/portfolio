@@ -208,7 +208,7 @@ const ProjectScreenCarousel = ({ project, style }: ProjectGalleryProps) => {
                                             style={style}
                                             phoneClassName="w-full"
                                             mediaType={screen.mediaType}
-                                            mockup={false}
+                                            browserChrome={false}
                                             priority
                                         />
                                     )}

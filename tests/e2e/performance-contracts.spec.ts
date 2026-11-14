@@ -44,7 +44,7 @@ test("loads project screenshots once and retains cache safety for HTML", async (
   for (const url of ["/", "/creative/", "/projects/voicenotes", "/projects/voicenotes/index.html"]) {
     expect((await request.get(url)).headers()["cache-control"] ?? "").not.toMatch(/max-age=[1-9]|immutable/);
   }
-  for (const url of ["/avatar.webp", "/projects/voicenotes/screen-01-light.avif", "/mockups/android-phone-frame-512.webp", "/creative/fonts/syne-latin.woff2"]) {
+  for (const url of ["/avatar.webp", "/projects/voicenotes/screen-01-light.avif", "/creative/fonts/syne-latin.woff2"]) {
     expect((await request.get(url)).headers()["cache-control"]).toBe("public, max-age=86400");
   }
   for (const font of await page.locator('link[rel="preload"][as="font"]').evaluateAll(links => links.map(link => link.getAttribute("href")!))) {

@@ -1,5 +1,4 @@
 import type { ProjectStyle } from "@/constants/projectStyles";
-import { ANDROID_PHONE_FRAME } from "@/constants/phoneMockup";
 import type { ProjectMediaType } from "@/data/projectCatalog";
 import { withBase } from "@/lib/urls";
 import { eagerPictureRef } from "@/lib/picture";
@@ -12,8 +11,8 @@ interface ProjectMediaFrameProps {
   phoneClassName?: string;
   priority?: boolean;
   mediaType?: ProjectMediaType;
-  /** Phone bezel mockup. Keep on home cards; omit in the case-study carousel. */
-  mockup?: boolean;
+  /** Browser window chrome on home cards; omit in the case-study carousel. */
+  browserChrome?: boolean;
 }
 
 const toSourceBase = (path: string) =>
@@ -92,18 +91,18 @@ const BrowserFrame = ({
   style,
   priority,
   className,
-  mockup,
+  chrome,
 }: {
   image: string;
   alt: string;
   style: ProjectStyle;
   priority: boolean;
   className?: string;
-  mockup: boolean;
+  chrome: boolean;
 }) => {
   const hasImage = Boolean(image && !/placeholder/i.test(image));
 
-  if (!mockup) {
+  if (!chrome) {
     return (
       <div
         className={`relative mx-auto aspect-[16/10] overflow-hidden rounded-2xl border border-neutral-300 bg-white shadow-xl dark:border-neutral-700 dark:bg-neutral-950 ${className ?? "w-full max-w-3xl"}`}
@@ -147,10 +146,9 @@ const ProjectMediaFrame = ({
   phoneClassName,
   priority = false,
   mediaType = "phone",
-  mockup = true,
+  browserChrome = true,
 }: ProjectMediaFrameProps) => {
   const hasImage = Boolean(image && !/placeholder/i.test(image));
-  const { left, top, width, height } = ANDROID_PHONE_FRAME.screenInset;
 
   if (mediaType === "browser") {
     return (
@@ -160,65 +158,20 @@ const ProjectMediaFrame = ({
         style={style}
         priority={priority}
         className={phoneClassName}
-        mockup={mockup}
+        chrome={browserChrome}
       />
-    );
-  }
-
-  if (!mockup) {
-    return (
-      <div
-        className={`relative mx-auto aspect-[9/19] overflow-hidden rounded-2xl border border-neutral-300 bg-white shadow-xl dark:border-neutral-700 dark:bg-neutral-950 ${phoneClassName ?? "w-44 md:w-64"}`}
-      >
-        {hasImage ? (
-          <Screenshot key={image} image={image} alt={alt} priority={priority} />
-        ) : (
-          <EmptyMedia style={style} iconLabel="// screenshot coming soon" />
-        )}
-      </div>
     );
   }
 
   return (
     <div
-      className={`relative mx-auto ${phoneClassName ?? "w-44 md:w-64"}`}
-      style={{ aspectRatio: ANDROID_PHONE_FRAME.aspectRatio }}
+      className={`relative mx-auto aspect-[9/19] overflow-hidden rounded-2xl border border-neutral-300 bg-white shadow-xl dark:border-neutral-700 dark:bg-neutral-950 ${phoneClassName ?? "w-44 md:w-64"}`}
     >
-      <div
-        className="absolute overflow-hidden bg-black"
-        style={{
-          left: `${left * 100}%`,
-          top: `${top * 100}%`,
-          width: `${width * 100}%`,
-          height: `${height * 100}%`,
-          borderRadius: "12% / 5.5%",
-        }}
-      >
-        {hasImage ? (
-          <Screenshot key={image} image={image} alt={alt} priority={priority} />
-        ) : (
-          <EmptyMedia style={style} iconLabel="// screenshot coming soon" />
-        )}
-      </div>
-
-      <img
-        loading={priority ? "eager" : "lazy"}
-        sizes="(min-width: 768px) 256px, 176px"
-        srcSet={`${withBase(ANDROID_PHONE_FRAME.webp512)} 512w, ${withBase(ANDROID_PHONE_FRAME.webp)} 1620w`}
-        src={withBase(ANDROID_PHONE_FRAME.webp)}
-        alt=""
-        aria-hidden="true"
-        draggable={false}
-        decoding="async"
-        className="pointer-events-none absolute inset-0 h-full w-full select-none drop-shadow-[0_12px_28px_rgba(0,0,0,0.5)]"
-        onError={(event) => {
-          const fallback = withBase(ANDROID_PHONE_FRAME.png);
-          if (event.currentTarget.getAttribute("src") !== fallback) {
-            event.currentTarget.removeAttribute("srcset");
-            event.currentTarget.src = fallback;
-          }
-        }}
-      />
+      {hasImage ? (
+        <Screenshot key={image} image={image} alt={alt} priority={priority} />
+      ) : (
+        <EmptyMedia style={style} iconLabel="// screenshot coming soon" />
+      )}
     </div>
   );
 };

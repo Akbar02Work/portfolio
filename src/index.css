@@ -451,8 +451,17 @@
     filter: blur(0);
   }
 
+  .copy-swap--footer .copy-swap__face {
+    transition-duration: 0.7s;
+  }
+
+  .copy-swap--footer .copy-swap__face[data-active="false"] {
+    filter: blur(3px);
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .copy-swap__face {
+    .copy-swap__face,
+    .copy-swap--footer .copy-swap__face {
       transition: opacity 0.2s linear;
       filter: none !important;
     }

@@ -146,7 +146,7 @@ const en = {
     reload: "Reload page",
   },
   seo: {
-    homeTitle: "Akbar — Android Engineer · Founder of Lumingo",
+    homeTitle: "Akbar Azizov — Android Engineer · Founder of Lumingo",
     homeDescription:
       "Android Engineer building offline-first Kotlin & Compose apps with AI features — from architecture to release.",
     projectTitle: (title: string) => `${title} | Akbar Azizov`,
@@ -310,7 +310,7 @@ const ru: Messages = {
     reload: "Перезагрузить",
   },
   seo: {
-    homeTitle: "Akbar — Android-разработчик · основатель Lumingo",
+    homeTitle: "Akbar Azizov — Android-разработчик · основатель Lumingo",
     homeDescription:
       "Android-разработчик: offline-first приложения на Kotlin и Compose с AI-функциями — от архитектуры до релиза.",
     projectTitle: (title) => `${title} | Akbar Azizov`,

@@ -71,12 +71,17 @@ export const BackToTop = ({ placement = "floating" }: { placement?: "floating" |
                 "no-touch-hover touch-no-ring items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-volt-ink dark:focus-visible:outline-volt",
                 placement === "footer"
                     ? "inline-flex min-[901px]:hidden shrink-0 gap-2 py-2 text-sm font-semibold text-volt-ink dark:text-volt transition-opacity duration-300 hover:opacity-75 active:translate-y-px"
-                    : "hidden min-[901px]:inline-flex fixed bottom-8 right-8 z-40 p-3 rounded-full bg-black dark:bg-white text-white dark:text-black shadow-lg transition-all duration-300 hover:scale-110 active:scale-95",
+                    : "hidden min-[901px]:inline-flex fixed bottom-8 right-8 z-40 p-3 rounded-full bg-black dark:bg-white text-white dark:text-black shadow-lg ring-2 ring-transparent ring-offset-2 ring-offset-white dark:ring-offset-slate-950 hover:ring-volt-ink dark:hover:ring-volt transition-all duration-300 hover:scale-110 active:scale-95",
                 visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
             )}
             aria-label={t.nav.backToTop}
         >
-            {placement === "footer" && <LocalizedText>{copy => copy.nav.backToTop}</LocalizedText>}
+            {placement === "footer" && (
+                <>
+                    <ArrowUp className="w-4 h-4" strokeWidth={2} aria-hidden="true" />
+                    <LocalizedText>{copy => copy.nav.backToTop}</LocalizedText>
+                </>
+            )}
             <ArrowUp className={placement === "footer" ? "w-4 h-4" : "w-6 h-6"} strokeWidth={2} aria-hidden="true" />
         </button>
     );
