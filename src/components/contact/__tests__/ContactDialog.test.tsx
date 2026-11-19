@@ -55,12 +55,13 @@ describe("ContactDialog", () => {
 
   it("reveals and copies the phone on the first press, then allows calling on the second", async () => {
     renderDialog();
-    expect(openDialog().textContent).not.toContain("964");
+    expect(openDialog().textContent).not.toContain("694");
     await revealAndCopyPhone();
-    expect(writeText).toHaveBeenCalledWith("+998909646769");
+    expect(writeText).toHaveBeenCalledWith("+998906946769");
     expect(screen.getByRole("status").textContent).toContain("Press the number again to open your phone app.");
     const link = screen.getByRole("link", { name: /Phone .* — call/ });
-    expect(link.getAttribute("href")).toBe("tel:+998909646769");
+    expect(link.textContent).toContain("+998 90 694 67 69");
+    expect(link.getAttribute("href")).toBe("tel:+998906946769");
     expect(clickLink(link)).toBe(false);
     expect(writeText).toHaveBeenCalledTimes(1);
   });

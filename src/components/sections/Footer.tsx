@@ -24,7 +24,7 @@ const sanitizeSocialLink = (link: (typeof socialLinks)[number]) => {
     return { ...link, href };
 };
 
-export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boolean }) => {
+export const Footer = () => {
     const { t } = useI18n();
     const { copiedKeys, checkedKeys, copy } = useCopyFeedback<"email">();
     const emailCopied = copiedKeys.has("email");
@@ -50,14 +50,7 @@ export const Footer = ({ showSectionNumber = true }: { showSectionNumber?: boole
     return (
         <AnimatedSection delay={ANIMATION_DELAYS.CONTACT_SECTION}>
             <footer id="contact" className="bg-background border-t border-neutral-200 dark:border-neutral-800">
-                <div className="max-w-[86rem] mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-10 md:pb-12">
-                    {/* Section header — numbering only on home (01 Projects / 02 About / 03 Contact) */}
-                    <header className="mb-8 md:mb-10">
-                        <h2 className="font-mono text-caption uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400">
-                            <LocalizedText scramble>{copy => showSectionNumber ? copy.footer.eyebrow : copy.footer.eyebrowPlain}</LocalizedText>
-                        </h2>
-                    </header>
-
+                <div className="max-w-[86rem] mx-auto px-6 sm:px-8 lg:px-12 py-10 md:py-12">
                     <div>
                         <a
                             href={`mailto:${EMAIL.toLowerCase()}`}

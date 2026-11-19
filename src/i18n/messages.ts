@@ -51,8 +51,6 @@ const en = {
     ndaTitle: "Work under a non-disclosure agreement — details on request",
   },
   footer: {
-    eyebrow: "03 / Contact",
-    eyebrowPlain: "Contact",
     emailHint: "Click to copy. Click again to open mail.",
     copied: "Copied to clipboard",
     socialLinks: "Social links",
@@ -215,8 +213,6 @@ const ru: Messages = {
     ndaTitle: "Работа под соглашением о неразглашении — подробности по запросу",
   },
   footer: {
-    eyebrow: "03 / Контакты",
-    eyebrowPlain: "Контакты",
     emailHint: "Нажмите, чтобы скопировать. Ещё раз — открыть почту.",
     copied: "Скопировано",
     socialLinks: "Соцсети",

@@ -1,9 +1,12 @@
 .archive-return {
+  --archive-return-left: max(1rem, env(safe-area-inset-left));
   position: fixed;
-  right: max(1rem, env(safe-area-inset-right));
+  left: var(--archive-return-left);
   bottom: max(1rem, env(safe-area-inset-bottom));
   z-index: 100;
-  max-width: calc(100vw - 2rem);
+  box-sizing: border-box;
+  /* Keep the lower-right Back to top button clear on narrow screens. */
+  max-width: calc(100% - var(--archive-return-left) - 6rem);
   padding: .75rem 1rem;
   border: 1px solid #64748b;
   border-radius: 999px;

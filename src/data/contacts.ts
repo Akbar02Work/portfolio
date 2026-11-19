@@ -19,7 +19,7 @@ export const footerLinkOrder: ContactLink["id"][] = ["github", "telegram", "link
 
 // The number is assembled on demand so it is not a plain string in the
 // prerendered HTML or an obvious pattern for simple scrapers.
-const PHONE_PARTS = ["+998", "90", "964", "67", "69"] as const;
+const PHONE_PARTS = ["+998", "90", "694", "67", "69"] as const;
 
 export const revealPhone = () => ({
   display: PHONE_PARTS.join(" "),
