@@ -180,11 +180,11 @@ test("hero contact dialog opens, reveals the phone on request and returns focus"
   await expect(dialog).toBeVisible();
   await expect(dialog.getByRole("link", { name: /telegram/i })).toBeFocused();
   await expect(dialog.getByRole("link", { name: /telegram/i })).toHaveAttribute("href", "https://t.me/Akbar02Work");
-  await expect(dialog).not.toContainText("964");
+  await expect(dialog).not.toContainText("694");
 
   await dialog.getByRole("button", { name: "Show and copy phone number" }).click();
-  await expect(dialog).toContainText("+998 90 964 67 69");
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe("+998909646769");
+  await expect(dialog).toContainText("+998 90 694 67 69");
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe("+998906946769");
 
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
