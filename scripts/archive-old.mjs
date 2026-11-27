@@ -22,6 +22,7 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const frozenSnapshotRef = "c148376";
+const siteUrl = "https://www.akbar02work.com";
 const ref = process.argv[2] || frozenSnapshotRef;
 // Resolve a commit before creating or deleting anything. Refs are arguments, never shell code.
 const commit = execFileSync("git", ["rev-parse", "--verify", "--end-of-options", `${ref}^{commit}`], {
@@ -80,15 +81,12 @@ try {
         '<head>\n  <meta name="robots" content="noindex, nofollow" />'
       );
     }
+    for (const sourceUrl of ["https://www.akbar02work.xyz", siteUrl]) {
+      html = html
+        .replaceAll(`content="${sourceUrl}/"`, `content="${siteUrl}/old/"`)
+        .replaceAll(`content="${sourceUrl}/og-image.png"`, `content="${siteUrl}/old/og-image.png"`);
+    }
     html = html
-      .replaceAll(
-        'content="https://www.akbar02work.xyz/"',
-        'content="https://www.akbar02work.xyz/old/"'
-      )
-      .replaceAll(
-        'content="https://www.akbar02work.xyz/og-image.png"',
-        'content="https://www.akbar02work.xyz/old/og-image.png"'
-      )
       .replace("</head>", '  <link rel="stylesheet" href="/styles/archive-return.css" />\n</head>')
       .replace("</body>", '  <a class="archive-return" href="/">← Return to the current portfolio</a>\n</body>');
     writeFileSync(indexPath, html);

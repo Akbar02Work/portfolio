@@ -3,4 +3,4 @@ Allow: /
 Disallow: /old
 Disallow: /old/
 
-Sitemap: https://www.akbar02work.xyz/sitemap.xml
+Sitemap: https://www.akbar02work.com/sitemap.xml

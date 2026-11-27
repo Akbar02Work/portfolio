@@ -3,18 +3,18 @@
 [![CI](https://github.com/Akbar02Work/portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Akbar02Work/portfolio/actions/workflows/ci.yml)
 
 <p align="center">
-  <a href="https://www.akbar02work.xyz">
+  <a href="https://www.akbar02work.com">
     <img src="public/og-image.png" alt="Business portfolio preview" width="49%" />
   </a>
-  <a href="https://www.akbar02work.xyz/creative/">
+  <a href="https://www.akbar02work.com/creative/">
     <img src="public/creative/og-image.png" alt="Creative portfolio preview" width="49%" />
   </a>
 </p>
 
-One portfolio, two interfaces: [Business](https://www.akbar02work.xyz) presents
-projects and engineering decisions; [Creative](https://www.akbar02work.xyz/creative/)
+One portfolio, two interfaces: [Business](https://www.akbar02work.com) presents
+projects and engineering decisions; [Creative](https://www.akbar02work.com/creative/)
 presents motion, atmosphere and personality. Both ship from one repository.
-Business supports English and [Russian](https://www.akbar02work.xyz/ru). Creative's
+Business supports English and [Russian](https://www.akbar02work.com/ru). Creative's
 desktop content is English; below 901 px it shows a Russian gate and a Business link.
 
 The public case is **AI Voice Notes** (`voicenotes`). **Lumingo is in development
